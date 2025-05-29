@@ -4,133 +4,134 @@
   <meta charset="UTF-8">
   <title>Калькулятор стоимости пресс-формы</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-    input, select { width: 100%; margin-top: 5px; padding: 8px; margin-bottom: 15px; }
-    button { padding: 10px 20px; }
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; }
+    button { padding: 10px 20px; margin-top: 15px; }
+    #result { margin-top: 20px; white-space: pre-wrap; font-weight: bold; }
   </style>
 </head>
 <body>
+  <h2>Калькулятор стоимости пресс-формы</h2>
+  <form id="form">
+    <label>Материал: <input type="text" id="материал" required></label>
+    <label>Число гнезд (например 1x2): <input type="text" id="гнезда" required></label>
+    <label>Тип системы: <input type="text" id="тип" required></label>
+    <label>Габариты (мм):</label>
+    <input type="number" id="длина" placeholder="Длина" required>
+    <input type="number" id="ширина" placeholder="Ширина" required>
+    <input type="number" id="высота" placeholder="Высота" required>
+    <label>Масса (кг): <input type="number" id="масса" required></label>
+    <label>Марка стали: <input type="text" id="сталь" required></label>
+    <label>Твердость (HRC): <input type="text" id="твердость" required></label>
+    <label>Ползуны: 
+      <select id="ползун">
+        <option value="Да">Да</option>
+        <option value="Нет">Нет</option>
+      </select>
+    </label>
+    <button type="submit">Рассчитать</button>
+  </form>
 
-<h2>Калькулятор стоимости пресс-формы</h2>
+  <div id="result"></div>
 
-<form id="form">
-  <label>Материал: <input id="материал" required></label>
-  <label>Число гнезд (например 1*2): <input id="гнезда" required></label>
-  <label>Тип литниковой системы: <input id="тип" required></label>
-  <label>Габариты (мм) — длина: <input type="number" id="длина" required></label>
-  <label>Габариты — ширина: <input type="number" id="ширина" required></label>
-  <label>Габариты — высота: <input type="number" id="высота" required></label>
-  <label>Масса (кг): <input type="number" id="масса" required></label>
-  <label>Марка стали: <input id="сталь" required></label>
-  <label>Твердость (HRC): <input type="number" id="твердость" required></label>
-  <label>Ползуны: 
-    <select id="ползун">
-      <option value="true">Да</option>
-      <option value="false">Нет</option>
-    </select>
-  </label>
-  <button type="submit">Рассчитать</button>
-</form>
+  <script>
+    const database = [
+      {
+        наименование: "GS.0219.0001-01",
+        материал: "PP",
+        гнезда: "1x2",
+        тип: "Горячеканальная YUDO",
+        габариты: [350, 450, 450],
+        масса: 553,
+        сталь: "738H",
+        твердость: "HRC 36-40",
+        ползун: "Да",
+        стоимость: 2611632
+      },
+      {
+        наименование: "GS.0514.0001",
+        материал: "POM",
+        гнезда: "1x1",
+        тип: "Горячеканальная YUDO",
+        габариты: [400, 650, 620],
+        масса: 1257,
+        сталь: "420",
+        твердость: "HRC 48-52",
+        ползун: "Да",
+        стоимость: 5887757
+      },
+      {
+        наименование: "GS.0514.0002",
+        материал: "PP",
+        гнезда: "1x8",
+        тип: "Холодноканальная",
+        габариты: [120, 180, 170],
+        масса: 29,
+        сталь: "420",
+        твердость: "HRC 48-52",
+        ползун: "Нет",
+        стоимость: 869577
+      }
+    ];
 
-<h3 id="result"></h3>
+    document.getElementById("form").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-<script>
-// БАЗА ДАННЫХ ВНУТРИ HTML
-const database = [
-  {
-    наименование: "GS.0219.0001-01",
-    материал: "PP",
-    гнезда: "1*2",
-    тип: "Горячеканальная YUDO",
-    габариты: [350, 450, 450],
-    масса: 553,
-    сталь: "738H",
-    твердость: [36, 40],
-    ползун: true,
-    стоимость: 2611632
-  },
-  {
-    наименование: "GS.0514.0001",
-    материал: "POM",
-    гнезда: "1*1",
-    тип: "Горячеканальная YUDO",
-    габариты: [400, 650, 620],
-    масса: 1257,
-    сталь: "420",
-    твердость: [48, 52],
-    ползун: true,
-    стоимость: 5887757
-  },
-  {
-    наименование: "GS.0514.0002",
-    материал: "PP",
-    гнезда: "1*8",
-    тип: "Холодноканальная",
-    габариты: [120, 180, 170],
-    масса: 29,
-    сталь: "420",
-    твердость: [48, 52],
-    ползун: false,
-    стоимость: 869577
-  }
-];
+      const formData = {
+        материал: document.getElementById("материал").value.trim(),
+        гнезда: document.getElementById("гнезда").value.trim(),
+        тип: document.getElementById("тип").value.trim(),
+        длина: parseFloat(document.getElementById("длина").value),
+        ширина: parseFloat(document.getElementById("ширина").value),
+        высота: parseFloat(document.getElementById("высота").value),
+        масса: parseFloat(document.getElementById("масса").value),
+        сталь: document.getElementById("сталь").value.trim(),
+        твердость: document.getElementById("твердость").value.trim(),
+        ползун: document.getElementById("ползун").value
+      };
 
-function similarityScore(form1, form2) {
-  let score = 0;
+      const volume = formData.длина * formData.ширина * formData.высота;
 
-  if (form1.материал === form2.материал) score += 2;
-  if (form1.тип === form2.тип) score += 2;
-  if (form1.сталь === form2.сталь) score += 2;
-  if (form1.ползун === form2.ползун) score += 1;
+      let bestMatch = null;
+      let minDiff = Infinity;
 
-  const hardDiff = Math.abs(form1.твердость - ((form2.твердость[0] + form2.твердость[1]) / 2));
-  score += Math.max(0, 2 - hardDiff / 5);
+      for (const item of database) {
+        const volBase = item.габариты[0] * item.габариты[1] * item.габариты[2];
+        const volDiff = Math.abs(volBase - volume);
+        const massDiff = Math.abs(item.масса - formData.масса);
+        const totalDiff = volDiff + massDiff;
+        if (totalDiff < minDiff) {
+          minDiff = totalDiff;
+          bestMatch = item;
+        }
+      }
 
-  const massDiff = Math.abs(form1.масса - form2.масса);
-  score += Math.max(0, 2 - massDiff / 500);
+      if (bestMatch) {
+        let price = bestMatch.стоимость;
+        const massRatio = formData.масса / bestMatch.масса;
+        const gnezdaRatio = parseInt(formData.гнезда.split("x")[1]) / parseInt(bestMatch.гнезда.split("x")[1]);
+        let coef = 1;
 
-  const dims1 = [form1.длина, form1.ширина, form1.высота];
-  const dims2 = form2.габариты;
-  const dimDiff = dims1.map((val, i) => Math.abs(val - dims2[i]));
-  const avgDimDiff = dimDiff.reduce((a, b) => a + b, 0) / 3;
-  score += Math.max(0, 2 - avgDimDiff / 200);
+        coef *= massRatio;
+        coef *= gnezdaRatio;
 
-  return score;
-}
+        if (formData.ползун === "Да" && bestMatch.ползун === "Нет") coef *= 1.15;
+        else if (formData.ползун === "Нет" && bestMatch.ползун === "Да") coef *= 0.90;
 
-document.getElementById('form').addEventListener('submit', function (e) {
-  e.preventDefault();
-  const formData = {
-    материал: document.getElementById('материал').value.trim(),
-    гнезда: document.getElementById('гнезда').value.trim(),
-    тип: document.getElementById('тип').value.trim(),
-    длина: +document.getElementById('длина').value,
-    ширина: +document.getElementById('ширина').value,
-    высота: +document.getElementById('высота').value,
-    масса: +document.getElementById('масса').value,
-    сталь: document.getElementById('сталь').value.trim(),
-    твердость: +document.getElementById('твердость').value,
-    ползун: document.getElementById('ползун').value === 'true'
-  };
+        let finalPrice = price * coef;
+        let minPrice = Math.round(finalPrice * 0.93);
+        let maxPrice = Math.round(finalPrice * 1.07);
 
-  let bestMatch = null;
-  let bestScore = -Infinity;
-
-  for (const item of database) {
-    const score = similarityScore(formData, item);
-    if (score > bestScore) {
-      bestScore = score;
-      bestMatch = item;
-    }
-  }
-
-  if (bestMatch) {
-    document.getElementById('result').innerText = 
-      `Похожая форма: ${bestMatch.наименование}\nПримерная стоимость: ${bestMatch.стоимость.toLocaleString('ru-RU')} руб.`;
-  } else {
-    document.getElementById('result').innerText = 'Подходящая форма не найдена.';
-  }
-});
-</script>
+        document.getElementById("result").innerText = 
+          `Похожая форма: ${bestMatch.наименование}
+Примерная стоимость: от ${minPrice.toLocaleString('ru-RU')} ₽ до ${maxPrice.toLocaleString('ru-RU')} ₽
+(Базовая: ${price.toLocaleString('ru-RU')} ₽, коэффициент: ${coef.toFixed(2)})`;
+      } else {
+        document.getElementById("result").innerText = "Похожая форма не найдена. Требуется ручной расчёт.";
+      }
+    });
+  </script>
 </body>
 </html>
+        
