@@ -4,134 +4,139 @@
   <meta charset="UTF-8">
   <title>Калькулятор стоимости пресс-формы</title>
   <style>
-    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-    label { display: block; margin-top: 10px; }
-    input, select { width: 100%; padding: 8px; margin-top: 5px; }
-    button { padding: 10px 20px; margin-top: 15px; }
-    #result { margin-top: 20px; white-space: pre-wrap; font-weight: bold; }
+    body {
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      color: #000000;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #003366;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: #f0f4f8;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 25px;
+      background-color: #0055cc;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #003a99;
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #003366;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <h2>Калькулятор стоимости пресс-формы</h2>
-  <form id="form">
-    <label>Материал: <input type="text" id="материал" required></label>
-    <label>Число гнезд (например 1x2): <input type="text" id="гнезда" required></label>
-    <label>Тип системы: <input type="text" id="тип" required></label>
-    <label>Габариты (мм):</label>
-    <input type="number" id="длина" placeholder="Длина" required>
-    <input type="number" id="ширина" placeholder="Ширина" required>
-    <input type="number" id="высота" placeholder="Высота" required>
-    <label>Масса (кг): <input type="number" id="масса" required></label>
-    <label>Марка стали: <input type="text" id="сталь" required></label>
-    <label>Твердость (HRC): <input type="text" id="твердость" required></label>
-    <label>Ползуны: 
-      <select id="ползун">
-        <option value="Да">Да</option>
-        <option value="Нет">Нет</option>
-      </select>
-    </label>
-    <button type="submit">Рассчитать</button>
-  </form>
 
-  <div id="result"></div>
+  <h1>Калькулятор стоимости пресс-формы</h1>
+
+  <div class="container">
+    <label for="mass">Масса (в кг):</label>
+    <input type="number" id="mass" required>
+
+    <label for="gnezda">Число гнёзд:</label>
+    <select id="gnezda">
+      <option value="1×1">1×1</option>
+      <option value="1×2">1×2</option>
+      <option value="1×4">1×4</option>
+      <option value="1×8">1×8</option>
+    </select>
+
+    <label for="system">Тип системы:</label>
+    <select id="system">
+      <option value="Холодноканальная">Холодноканальная</option>
+      <option value="Горячеканальная">Горячеканальная</option>
+    </select>
+
+    <label for="polzun">Ползуны:</label>
+    <select id="polzun">
+      <option value="Нет">Нет</option>
+      <option value="Да">Да</option>
+    </select>
+
+    <button onclick="calculate()">Рассчитать</button>
+
+    <div class="result" id="result"></div>
+  </div>
 
   <script>
-    const database = [
-      {
-        наименование: "GS.0219.0001-01",
-        материал: "PP",
-        гнезда: "1x2",
-        тип: "Горячеканальная YUDO",
-        габариты: [350, 450, 450],
-        масса: 553,
-        сталь: "738H",
-        твердость: "HRC 36-40",
-        ползун: "Да",
-        стоимость: 2611632
-      },
-      {
-        наименование: "GS.0514.0001",
-        материал: "POM",
-        гнезда: "1x1",
-        тип: "Горячеканальная YUDO",
-        габариты: [400, 650, 620],
-        масса: 1257,
-        сталь: "420",
-        твердость: "HRC 48-52",
-        ползун: "Да",
-        стоимость: 5887757
-      },
-      {
-        наименование: "GS.0514.0002",
-        материал: "PP",
-        гнезда: "1x8",
-        тип: "Холодноканальная",
-        габариты: [120, 180, 170],
-        масса: 29,
-        сталь: "420",
-        твердость: "HRC 48-52",
-        ползун: "Нет",
-        стоимость: 869577
+    function calculate() {
+      const A = 21000;
+      const B = 0.91;
+
+      const mass = parseFloat(document.getElementById("mass").value);
+      const gnezda = document.getElementById("gnezda").value;
+      const system = document.getElementById("system").value;
+      const polzun = document.getElementById("polzun").value;
+
+      if (isNaN(mass) || mass <= 0) {
+        document.getElementById("result").innerText = "Введите корректную массу.";
+        return;
       }
-    ];
 
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const formData = {
-        материал: document.getElementById("материал").value.trim(),
-        гнезда: document.getElementById("гнезда").value.trim(),
-        тип: document.getElementById("тип").value.trim(),
-        длина: parseFloat(document.getElementById("длина").value),
-        ширина: parseFloat(document.getElementById("ширина").value),
-        высота: parseFloat(document.getElementById("высота").value),
-        масса: parseFloat(document.getElementById("масса").value),
-        сталь: document.getElementById("сталь").value.trim(),
-        твердость: document.getElementById("твердость").value.trim(),
-        ползун: document.getElementById("ползун").value
+      const K_gnezda = {
+        "1×1": 1.0,
+        "1×2": 1.1,
+        "1×4": 1.3,
+        "1×8": 1.6
       };
 
-      const volume = formData.длина * formData.ширина * formData.высота;
+      const K_system = {
+        "Холодноканальная": 1.0,
+        "Горячеканальная": 1.2
+      };
 
-      let bestMatch = null;
-      let minDiff = Infinity;
+      const K_polzun = {
+        "Нет": 1.0,
+        "Да": 1.15
+      };
 
-      for (const item of database) {
-        const volBase = item.габариты[0] * item.габариты[1] * item.габариты[2];
-        const volDiff = Math.abs(volBase - volume);
-        const massDiff = Math.abs(item.масса - formData.масса);
-        const totalDiff = volDiff + massDiff;
-        if (totalDiff < minDiff) {
-          minDiff = totalDiff;
-          bestMatch = item;
-        }
-      }
+      const base = A * Math.pow(mass, B);
+      const finalPrice = base * K_gnezda[gnezda] * K_system[system] * K_polzun[polzun];
+      const roundedPrice = Math.round(finalPrice).toLocaleString("ru-RU");
 
-      if (bestMatch) {
-        let price = bestMatch.стоимость;
-        const massRatio = formData.масса / bestMatch.масса;
-        const gnezdaRatio = parseInt(formData.гнезда.split("x")[1]) / parseInt(bestMatch.гнезда.split("x")[1]);
-        let coef = 1;
-
-        coef *= massRatio;
-        coef *= gnezdaRatio;
-
-        if (formData.ползун === "Да" && bestMatch.ползун === "Нет") coef *= 1.15;
-        else if (formData.ползун === "Нет" && bestMatch.ползун === "Да") coef *= 0.90;
-
-        let finalPrice = price * coef;
-        let minPrice = Math.round(finalPrice * 0.93);
-        let maxPrice = Math.round(finalPrice * 1.07);
-
-        document.getElementById("result").innerText = 
-          `Похожая форма: ${bestMatch.наименование}
-Примерная стоимость: от ${minPrice.toLocaleString('ru-RU')} ₽ до ${maxPrice.toLocaleString('ru-RU')} ₽
-(Базовая: ${price.toLocaleString('ru-RU')} ₽, коэффициент: ${coef.toFixed(2)})`;
-      } else {
-        document.getElementById("result").innerText = "Похожая форма не найдена. Требуется ручной расчёт.";
-      }
-    });
+      document.getElementById("result").innerText = `Примерная стоимость: ${roundedPrice} ₽`;
+    }
   </script>
+
 </body>
 </html>
-        
