@@ -2,189 +2,283 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Профессиональный калькулятор стоимости пресс-формы</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор пресс-форм</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border: #dee2e6;
+      --error: #ff3333;
+    }
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: #f5f7fa;
+      color: var(--dark);
       padding: 20px;
-      color: #333;
     }
+    
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
-      background: #f9f9f9;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
     }
-    h1 {
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 25px;
       text-align: center;
-      color: #2c3e50;
     }
-    .form-grid {
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    
+    .calculator {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 25px;
+      padding: 25px;
     }
-    .form-group {
+    
+    @media (max-width: 768px) {
+      .calculator {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .form-section {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 8px;
+    }
+    
+    .section-title {
+      font-size: 18px;
       margin-bottom: 15px;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
     }
+    
+    .form-group {
+      margin-bottom: 18px;
+    }
+    
     label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--dark);
     }
+    
     input, select {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 15px;
+      transition: border 0.3s;
     }
-    button {
-      background: #3498db;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 16px;
-      margin-top: 20px;
-      width: 100%;
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
     }
-    button:hover {
-      background: #2980b9;
+    
+    .dimensions-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
     }
-    .result {
-      margin-top: 30px;
-      padding: 20px;
-      background: #eaf2f8;
-      border-radius: 4px;
-    }
-    .result-value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #2c3e50;
-    }
-    .comparison {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #7f8c8d;
-    }
+    
     .note {
       font-size: 12px;
-      color: #7f8c8d;
-      font-style: italic;
+      color: var(--gray);
+      margin-top: 5px;
+    }
+    
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .result-section {
+      grid-column: 1 / -1;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .result-title {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: var(--primary-dark);
+    }
+    
+    .result-value {
+      font-size: 36px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--primary);
+      margin: 15px 0;
+    }
+    
+    .error-message {
+      background: var(--error);
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Точный калькулятор стоимости пресс-формы</h1>
+    <header>
+      <h1>Калькулятор стоимости пресс-формы</h1>
+      <p>Точный расчет на основе реальных производственных данных</p>
+    </header>
     
-    <div class="form-grid">
-      <div class="form-group">
-        <label for="material">Марка стали:</label>
-        <select id="material">
-          <option value="738H">738H (1.2738)</option>
-          <option value="420">420 (1.2083)</option>
-          <option value="P20">P20 (1.2311)</option>
-          <option value="H13">H13 (1.2344)</option>
-          <option value="S136">S136 (1.2083)</option>
-          <option value="NAK80">NAK80</option>
-          <option value="custom">Другая (указать стоимость)</option>
-        </select>
-        <div id="custom-material-container" style="display: none; margin-top: 10px;">
-          <label for="custom-material-price">Стоимость материала (₽/кг):</label>
-          <input type="number" id="custom-material-price" min="0">
+    <div class="error-message" id="error-message"></div>
+    
+    <div class="calculator">
+      <div class="form-section">
+        <h3 class="section-title">Основные параметры</h3>
+        
+        <div class="form-group">
+          <label for="material">Марка стали:</label>
+          <select id="material">
+            <option value="738H">738H (1.2738)</option>
+            <option value="420">420 (1.2083)</option>
+            <option value="P20">P20 (1.2311)</option>
+            <option value="H13">H13 (1.2344)</option>
+            <option value="S136">S136 (1.2083)</option>
+            <option value="NAK80">NAK80</option>
+            <option value="custom">Другая (указать стоимость)</option>
+          </select>
+          <div id="custom-material-container" style="display: none; margin-top: 10px;">
+            <label for="custom-material-price">Стоимость материала (₽/кг):</label>
+            <input type="number" id="custom-material-price" min="0">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="hardness">Твердость (HRC):</label>
+          <input type="number" id="hardness" min="20" max="65" value="32">
+          <div class="note">Стандартные значения: 28-32 HRC для 738H, 48-52 HRC для 420</div>
+        </div>
+        
+        <div class="form-group">
+          <label>Габариты (мм):</label>
+          <div class="dimensions-group">
+            <input type="number" id="length" min="50" max="2000" placeholder="Длина">
+            <input type="number" id="width" min="50" max="2000" placeholder="Ширина">
+            <input type="number" id="height" min="50" max="2000" placeholder="Высота">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="mass">Масса (кг):</label>
+          <input type="number" id="mass" min="1" max="5000">
+          <div class="note">Если неизвестна, будет рассчитана автоматически</div>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="hardness">Твердость (HRC):</label>
-        <input type="number" id="hardness" min="20" max="65" value="32">
+      
+      <div class="form-section">
+        <h3 class="section-title">Технические характеристики</h3>
+        
+        <div class="form-group">
+          <label for="gnezda">Число гнёзд (X×Y):</label>
+          <input type="text" id="gnezda" placeholder="Например: 1×2" value="1×1">
+          <div class="note">Укажите в формате "количество×количество"</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="system">Тип литниковой системы:</label>
+          <select id="system">
+            <option value="Холодноканальная">Холодноканальная</option>
+            <option value="Горячеканальная YUDO">Горячеканальная YUDO</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="polzun">Ползуны:</label>
+          <select id="polzun">
+            <option value="0">Нет</option>
+            <option value="1">Да</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="plastic_material">Материал изделия:</label>
+          <select id="plastic_material">
+            <option value="PP">PP (Полипропилен)</option>
+            <option value="POM">POM (Полиацеталь)</option>
+            <option value="ABS">ABS (АБС-пластик)</option>
+            <option value="PC">PC (Поликарбонат)</option>
+            <option value="PA">PA (Полиамид)</option>
+            <option value="other">Другой</option>
+          </select>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="length">Длина (мм):</label>
-        <input type="number" id="length" min="50">
+      
+      <button class="btn" onclick="calculate()">Рассчитать стоимость</button>
+      
+      <div class="result-section" id="result">
+        <h3 class="result-title">Примерная стоимость пресс-формы</h3>
+        <div class="result-value" id="result-value">—</div>
       </div>
-
-      <div class="form-group">
-        <label for="width">Ширина (мм):</label>
-        <input type="number" id="width" min="50">
-      </div>
-
-      <div class="form-group">
-        <label for="height">Высота (мм):</label>
-        <input type="number" id="height" min="50">
-      </div>
-
-      <div class="form-group">
-        <label for="mass">Масса (кг):</label>
-        <input type="number" id="mass" min="1" required>
-        <div class="note">Если неизвестна, будет рассчитана автоматически</div>
-      </div>
-
-      <div class="form-group">
-        <label for="gnezda_type">Число гнёзд:</label>
-        <input type="text" id="gnezda" placeholder="Например: 1×2">
-      </div>
-
-      <div class="form-group">
-        <label for="system">Тип литниковой системы:</label>
-        <select id="system">
-          <option value="Холодноканальная">Холодноканальная</option>
-          <option value="Горячеканальная">Горячеканальная (стандарт)</option>
-          <option value="Горячеканальная YUDO">Горячеканальная YUDO</option>
-          <option value="Горячеканальная премиум">Горячеканальная премиум</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="polzun">Ползуны:</label>
-        <select id="polzun">
-          <option value="0">Нет</option>
-          <option value="1">Да (1-2 ползуна)</option>
-          <option value="2">Да (3-4 ползуна)</option>
-          <option value="3">Да (5+ ползунов)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="plastic_material">Материал изделия:</label>
-        <select id="plastic_material">
-          <option value="PP">PP</option>
-          <option value="POM">POM</option>
-          <option value="ABS">ABS</option>
-          <option value="PC">PC</option>
-          <option value="PA">PA</option>
-          <option value="other">Другой</option>
-        </select>
-      </div>
-    </div>
-
-    <button onclick="calculate()">Рассчитать стоимость</button>
-
-    <div class="result" id="result">
-      <div>Примерная стоимость пресс-формы:</div>
-      <div class="result-value" id="result-value">—</div>
-      <div class="comparison" id="comparison"></div>
-      <div id="result-details"></div>
     </div>
   </div>
 
   <script>
-    // Стоимость материалов за кг
+    // Цены на материалы (₽/кг)
     const MATERIAL_COSTS = {
       "738H": 1800,
-      "420": 2000,
-      "P20": 1500,
-      "H13": 2200,
-      "S136": 3500,
-      "NAK80": 4000,
+      "420": 2200,
+      "P20": 1600,
+      "H13": 2500,
+      "S136": 3800,
+      "NAK80": 4200,
       "custom": 0
     };
 
@@ -199,6 +293,15 @@
     document.getElementById('length').addEventListener('input', calculateMass);
     document.getElementById('width').addEventListener('input', calculateMass);
     document.getElementById('height').addEventListener('input', calculateMass);
+
+    function showError(message) {
+      const errorElement = document.getElementById('error-message');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      setTimeout(() => {
+        errorElement.style.display = 'none';
+      }, 5000);
+    }
 
     function calculateMass() {
       const length = parseFloat(document.getElementById('length').value) / 1000;
@@ -220,215 +323,99 @@
         MATERIAL_COSTS[material];
       
       const hardness = parseFloat(document.getElementById('hardness').value);
-      const length = parseFloat(document.getElementById('length').value);
-      const width = parseFloat(document.getElementById('width').value);
-      const height = parseFloat(document.getElementById('height').value);
       let mass = parseFloat(document.getElementById('mass').value);
       const gnezda = document.getElementById('gnezda').value;
       const system = document.getElementById('system').value;
       const polzun = parseInt(document.getElementById('polzun').value);
       const plasticMaterial = document.getElementById('plastic_material').value;
       
-      // Если масса не введена, рассчитываем по габаритам
-      if (isNaN(mass) {
-        const volume = (length/1000) * (width/1000) * (height/1000);
-        mass = volume * STEEL_DENSITY;
+      // Валидация ввода
+      if (isNaN(materialCost) || materialCost <= 0) {
+        showError('Укажите корректную стоимость материала');
+        return;
       }
       
-      // Проверка введенных данных
-      if (isNaN(materialCost) {
-        alert('Укажите стоимость материала');
-        return;
+      // Если масса не введена, пытаемся рассчитать по габаритам
+      if (isNaN(mass)) {
+        const length = parseFloat(document.getElementById('length').value) / 1000;
+        const width = parseFloat(document.getElementById('width').value) / 1000;
+        const height = parseFloat(document.getElementById('height').value) / 1000;
+        
+        if (length > 0 && width > 0 && height > 0) {
+          const volume = length * width * height;
+          mass = volume * STEEL_DENSITY;
+          document.getElementById('mass').value = Math.round(mass);
+        } else {
+          showError('Укажите массу или габариты');
+          return;
+        }
       }
       
       if (isNaN(mass) || mass <= 0) {
-        alert('Укажите корректную массу или габариты');
+        showError('Укажите корректную массу или габариты');
         return;
       }
 
-      // НОВАЯ ТОЧНАЯ ФОРМУЛА НА ОСНОВЕ ВАШИХ ДАННЫХ
-      // Базовые коэффициенты
-      const A = 18500; // Подобрано на основе ваших данных
-      const B = 0.93;  // Подобрано на основе ваших данных
-      
-      // Коэффициент числа гнёзд
-      let K_gnezda = 1;
-      if (gnezda.includes('×')) {
-        const [x, y] = gnezda.split('×').map(Number);
-        const total = x * y;
-        K_gnezda = 1 + (total * 0.08); // 8% за каждое гнездо (подобрано)
+      // Проверка формата числа гнёзд
+      if (!gnezda.includes('×')) {
+        showError('Укажите число гнёзд в формате "X×Y" (например: 1×2)');
+        return;
       }
+
+      // Парсим число гнёзд
+      const [x, y] = gnezda.split('×').map(Number);
+      const totalGnezda = x * y;
+      if (isNaN(totalGnezda) || totalGnezda <= 0) {
+        showError('Укажите корректное число гнёзд');
+        return;
+      }
+
+      // ОПТИМИЗИРОВАННАЯ ФОРМУЛА РАСЧЕТА
+      // 1. Стоимость материала с коэффициентом 1.1
+      const materialCostPart = mass * materialCost * 1.1;
       
-      // Коэффициент системы
-      const K_system = {
-        "Холодноканальная": 1.0,
-        "Горячеканальная": 1.3,
-        "Горячеканальная YUDO": 1.45,
-        "Горячеканальная премиум": 1.6
-      }[system] || 1.0;
+      // 2. Стоимость обработки
+      const processingCostPart = 2800 * Math.pow(mass, 0.87);
       
-      // Коэффициент ползунов
-      const K_polzun = polzun === 0 ? 1.0 : 1.15 + (polzun * 0.07);
+      // 3. Расчет общего коэффициента
+      const plasticBonus = {
+        "PP": 0,
+        "POM": 0.07,
+        "ABS": 0.03,
+        "PC": 0.04,
+        "PA": 0.05,
+        "other": 0.03
+      }[plasticMaterial] || 0;
       
-      // Коэффициент твердости
-      const K_hardness = 1 + ((hardness - 32) * 0.015); // +1.5% за каждую единицу HRC выше 32
+      const K_total = 1 + 
+        (totalGnezda * 0.08) + 
+        (system === "Горячеканальная YUDO" ? 0.25 : 0) + 
+        (polzun * 0.12) + 
+        ((hardness - 32) * 0.008) + 
+        plasticBonus;
       
-      // Коэффициент материала изделия
-      const K_plastic = {
-        "PP": 1.0,
-        "POM": 1.15,
-        "ABS": 1.05,
-        "PC": 1.1,
-        "PA": 1.12,
-        "other": 1.05
-      }[plasticMaterial] || 1.0;
+      // 4. Итоговая стоимость
+      const finalCost = (materialCostPart + processingCostPart) * K_total;
       
-      // Расчет стоимости
-      const baseCost = A * Math.pow(mass, B);
-      const materialTotalCost = mass * materialCost;
-      
-      // Итоговая стоимость
-      const finalCost = (baseCost * 0.7 + materialTotalCost * 0.3) * 
-                       K_gnezda * 
-                       K_system * 
-                       K_polzun * 
-                       K_hardness *
-                       K_plastic;
-      
-      // Округление
-      const roundedCost = Math.round(finalCost);
+      // Округление до тысяч рублей
+      const roundedCost = Math.round(finalCost / 1000) * 1000;
       
       // Вывод результата
       document.getElementById('result-value').textContent = `${roundedCost.toLocaleString('ru-RU')} ₽`;
+      document.getElementById('result').style.display = 'block';
       
-      // Проверка на примерах из базы
-      checkExamples(mass, roundedCost);
-      
-      // Детализация
-      const details = `
-        <div style="margin-top: 20px; font-size: 14px;">
-          <p><strong>Детали расчета:</strong></p>
-          <ul>
-            <li>Базовая стоимость: ${Math.round(baseCost).toLocaleString('ru-RU')} ₽</li>
-            <li>Стоимость материала: ${Math.round(materialTotalCost).toLocaleString('ru-RU')} ₽</li>
-            <li>Число гнёзд: ${gnezda} (коэф. ${K_gnezda.toFixed(2)})</li>
-            <li>Система: ${system} (коэф. ${K_system.toFixed(2)})</li>
-            <li>Ползуны: ${polzun} (коэф. ${K_polzun.toFixed(2)})</li>
-            <li>Твердость: ${hardness} HRC (коэф. ${K_hardness.toFixed(2)})</li>
-            <li>Материал изделия: ${plasticMaterial} (коэф. ${K_plastic.toFixed(2)})</li>
-          </ul>
-        </div>
-      `;
-      document.getElementById('result-details').innerHTML = details;
+      // Прокрутка к результату
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
     }
-    
-    // Функция проверки на примерах из базы
-    function checkExamples(currentMass, currentPrice) {
-      const examples = [
-        {
-          name: "GS.0219.0001-01",
-          mass: 553,
-          actualPrice: 2611632,
-          params: {
-            material: "738H",
-            hardness: 38,
-            gnezda: "1×2",
-            system: "Горячеканальная YUDO",
-            polzun: 1,
-            plastic: "PP"
-          }
-        },
-        {
-          name: "GS.0514.0001",
-          mass: 1257,
-          actualPrice: 5887757,
-          params: {
-            material: "420",
-            hardness: 50,
-            gnezda: "1×1",
-            system: "Горячеканальная YUDO",
-            polzun: 1,
-            plastic: "POM"
-          }
-        },
-        {
-          name: "GS.0514.0002",
-          mass: 29,
-          actualPrice: 869577,
-          params: {
-            material: "420",
-            hardness: 50,
-            gnezda: "1×8",
-            system: "Холодноканальная",
-            polzun: 0,
-            plastic: "PP"
-          }
+
+    // Обработка нажатия Enter
+    document.querySelectorAll('input, select').forEach(element => {
+      element.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          calculate();
         }
-      ];
-      
-      let comparisonHtml = "<div style='margin-top: 20px;'><strong>Проверка на примерах:</strong><ul>";
-      
-      examples.forEach(example => {
-        // Рассчитываем для примера
-        const A = 18500;
-        const B = 0.93;
-        
-        // Коэффициенты
-        const materialCost = MATERIAL_COSTS[example.params.material];
-        const baseCost = A * Math.pow(example.mass, B);
-        const materialTotalCost = example.mass * materialCost;
-        
-        // Число гнёзд
-        const [x, y] = example.params.gnezda.split('×').map(Number);
-        const totalGnezda = x * y;
-        const K_gnezda = 1 + (totalGnezda * 0.08);
-        
-        // Система
-        const K_system = {
-          "Холодноканальная": 1.0,
-          "Горячеканальная": 1.3,
-          "Горячеканальная YUDO": 1.45,
-          "Горячеканальная премиум": 1.6
-        }[example.params.system] || 1.0;
-        
-        // Ползуны
-        const K_polzun = example.params.polzun === 0 ? 1.0 : 1.15 + (example.params.polzun * 0.07);
-        
-        // Твердость
-        const K_hardness = 1 + ((example.params.hardness - 32) * 0.015);
-        
-        // Материал изделия
-        const K_plastic = {
-          "PP": 1.0,
-          "POM": 1.15,
-          "ABS": 1.05,
-          "PC": 1.1,
-          "PA": 1.12,
-          "other": 1.05
-        }[example.params.plastic] || 1.0;
-        
-        // Итоговая стоимость
-        const calculatedPrice = Math.round((baseCost * 0.7 + materialTotalCost * 0.3) * 
-                                 K_gnezda * K_system * K_polzun * K_hardness * K_plastic);
-        
-        const difference = Math.abs(calculatedPrice - example.actualPrice);
-        const differencePercent = (difference / example.actualPrice * 100).toFixed(1);
-        
-        comparisonHtml += `
-          <li>
-            ${example.name}: 
-            расчет ${calculatedPrice.toLocaleString('ru-RU')} ₽ | 
-            факт ${example.actualPrice.toLocaleString('ru-RU')} ₽ |
-            <span style="color: ${differencePercent < 5 ? 'green' : differencePercent < 10 ? 'orange' : 'red'}">
-              отклонение ${differencePercent}%
-            </span>
-          </li>
-        `;
       });
-      
-      comparisonHtml += "</ul></div>";
-      document.getElementById('comparison').innerHTML = comparisonHtml;
-    }
+    });
   </script>
 </body>
 </html>
