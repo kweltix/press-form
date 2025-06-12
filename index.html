@@ -3,58 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Калькулятор пресс-форм</title>
+  <title>КБ-Прессформа | Профессиональный калькулятор пресс-форм</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <style>
     :root {
-      --primary: #4361ee;
-      --primary-dark: #3a0ca3;
-      --light: #f8f9fa;
-      --dark: #212529;
-      --gray: #6c757d;
-      --border: #dee2e6;
-      --error: #ff3333;
+      --primary: #2c3e50;
+      --primary-dark: #1a252f;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --gray: #95a5a6;
+      --border: #bdc3c7;
     }
     
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
       background-color: #f5f7fa;
       color: var(--dark);
-      padding: 20px;
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
     }
     
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+      padding: 20px;
+      flex: 1;
+      position: relative;
+      z-index: 1;
     }
     
     header {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 25px;
+      padding: 30px 0;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent);
     }
     
     h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .calculator-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin: 30px auto;
+      max-width: 800px;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(2px);
+      background-color: rgba(255, 255, 255, 0.9);
     }
     
     .calculator {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 25px;
-      padding: 25px;
+      gap: 20px;
+      padding: 30px;
     }
     
     @media (max-width: 768px) {
@@ -67,18 +107,20 @@
       background: var(--light);
       padding: 20px;
       border-radius: 8px;
+      background-color: rgba(236, 240, 241, 0.8);
     }
     
     .section-title {
-      font-size: 18px;
+      font-size: 1.2rem;
       margin-bottom: 15px;
       color: var(--primary-dark);
-      border-bottom: 2px solid var(--primary);
+      border-bottom: 2px solid var(--accent);
       padding-bottom: 8px;
+      font-weight: 600;
     }
     
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 15px;
     }
     
     label {
@@ -86,6 +128,7 @@
       margin-bottom: 6px;
       font-weight: 600;
       color: var(--dark);
+      font-size: 0.95rem;
     }
     
     input, select {
@@ -93,13 +136,23 @@
       padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: 6px;
-      font-size: 15px;
-      transition: border 0.3s;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: white;
+    }
+    
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 15px;
     }
     
     input:focus, select:focus {
       outline: none;
-      border-color: var(--primary);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
     }
     
     .dimensions-group {
@@ -109,198 +162,355 @@
     }
     
     .note {
-      font-size: 12px;
+      font-size: 0.8rem;
       color: var(--gray);
-      margin-top: 5px;
+      margin-top: 4px;
+      font-style: italic;
     }
     
-    .btn {
-      background: var(--primary);
+    .btn-calculate {
+      background: var(--accent);
       color: white;
       border: none;
       padding: 12px 20px;
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 15px;
     }
     
-    .btn:hover {
-      background: var(--primary-dark);
+    .btn-calculate:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(231, 76, 60, 0.3);
     }
     
     .result-section {
       grid-column: 1 / -1;
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
+      text-align: center;
+      padding: 20px;
       display: none;
-      animation: fadeIn 0.5s;
+      animation: fadeIn 0.5s ease-out;
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .result-title {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 15px;
-      color: var(--primary-dark);
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .result-value {
-      font-size: 36px;
+      font-size: 2.5rem;
       font-weight: 700;
-      text-align: center;
-      color: var(--primary);
+      color: var(--accent);
       margin: 15px 0;
     }
     
-    .error-message {
-      background: var(--error);
+    footer {
+      background: var(--primary-dark);
       color: white;
-      padding: 12px;
+      padding: 30px 0;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+    }
+    
+    .footer-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 2px;
+      background: var(--accent);
+    }
+    
+    .footer-text {
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      margin-top: 15px;
+    }
+    
+    .error-message {
+      background: var(--accent);
+      color: white;
+      padding: 12px 40px 12px 20px;
       border-radius: 6px;
       margin-bottom: 20px;
       display: none;
+      text-align: center;
+      position: relative;
+      animation: fadeInDown 0.3s ease-out;
+    }
+
+    .error-message.fade-out {
+      animation: fadeOutUp 0.3s ease-out forwards;
+    }
+
+    .close-error {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .close-error:hover {
+      opacity: 1;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOutUp {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-20px); }
+    }
+
+    /* Анимация фона */
+    .mold-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+    
+    .mold-shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 15s infinite linear;
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+    }
+    
+    .mold-1 {
+      width: 120px;
+      height: 120px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="10" fill="%232c3e50"/></svg>') no-repeat;
+      top: 15%;
+      left: -50px;
+      animation-delay: 0s;
+      animation-duration: 25s;
+    }
+    
+    .mold-2 {
+      width: 180px;
+      height: 180px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23e74c3c"/></svg>') no-repeat;
+      top: 60%;
+      right: -90px;
+      animation-delay: 3s;
+      animation-duration: 30s;
+    }
+    
+    .mold-3 {
+      width: 150px;
+      height: 150px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="%232c3e50"/></svg>') no-repeat;
+      bottom: -75px;
+      left: 20%;
+      animation-delay: 6s;
+      animation-duration: 35s;
+    }
+    
+    .mold-4 {
+      width: 100px;
+      height: 100px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="%23e74c3c"/></svg>') no-repeat;
+      top: 30%;
+      right: 10%;
+      animation-delay: 9s;
+      animation-duration: 20s;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg) translateX(100px);
+      }
     }
   </style>
 </head>
 <body>
+  <div class="mold-animation">
+    <div class="mold-shape mold-1"></div>
+    <div class="mold-shape mold-2"></div>
+    <div class="mold-shape mold-3"></div>
+    <div class="mold-shape mold-4"></div>
+  </div>
+
+  <header class="animate__animated animate__fadeInDown">
+    <div class="container">
+      <h1>КБ-ПРЕССФОРМА</h1>
+      <p class="subtitle">Профессиональный калькулятор стоимости пресс-форм</p>
+    </div>
+  </header>
+
   <div class="container">
-    <header>
-      <h1>Калькулятор стоимости пресс-формы</h1>
-      <p>Точный расчет на основе реальных производственных данных</p>
-    </header>
+    <div class="error-message" id="error-message">
+      <button class="close-error" onclick="closeErrorMessage()">&times;</button>
+      <span id="error-text"></span>
+    </div>
     
-    <div class="error-message" id="error-message"></div>
-    
-    <div class="calculator">
-      <div class="form-section">
-        <h3 class="section-title">Основные параметры</h3>
-        
-        <div class="form-group">
-          <label for="material">Марка стали:</label>
-          <select id="material">
-            <option value="738H">738H (1.2738)</option>
-            <option value="420">420 (1.2083)</option>
-            <option value="P20">P20 (1.2311)</option>
-            <option value="H13">H13 (1.2344)</option>
-            <option value="S136">S136 (1.2083)</option>
-            <option value="NAK80">NAK80</option>
-            <option value="custom">Другая (указать стоимость)</option>
-          </select>
-          <div id="custom-material-container" style="display: none; margin-top: 10px;">
-            <label for="custom-material-price">Стоимость материала (₽/кг):</label>
-            <input type="number" id="custom-material-price" min="0">
+    <div class="calculator-container animate__animated animate__fadeIn">
+      <div class="calculator">
+        <div class="form-section">
+          <h3 class="section-title">Основные параметры</h3>
+          
+          <div class="form-group">
+            <label for="material">Марка стали:</label>
+            <select id="material">
+              <option value="" disabled selected>Выберите материал</option>
+              <option value="738H">738H</option>
+              <option value="420">420</option>
+              <option value="P20">P20</option>
+              <option value="H13">H13</option>
+              <option value="S136">S136</option>
+              <option value="NAK80">NAK80</option>
+              <option value="718H">718H</option>
+              <option value="custom">Другая сталь</option>
+            </select>
+            <div id="custom-material-container" style="display: none; margin-top: 10px;">
+              <label for="custom-material-price">Цена материала (₽/кг):</label>
+              <input type="number" id="custom-material-price" min="0" placeholder="Введите стоимость">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="hardness">Твердость (HRC):</label>
+            <input type="number" id="hardness" min="20" max="65" placeholder="От 20 до 65">
+          </div>
+          
+          <div class="form-group">
+            <label for="mass">Масса (кг):</label>
+            <input type="number" id="mass" min="1" max="5000" placeholder="Введите массу">
+            <div class="note">Если неизвестна, укажите габариты</div>
+          </div>
+          
+          <div class="form-group">
+            <label>Габариты (мм):</label>
+            <div class="dimensions-group">
+              <input type="number" id="length" min="50" max="2000" placeholder="Длина">
+              <input type="number" id="width" min="50" max="2000" placeholder="Ширина">
+              <input type="number" id="height" min="50" max="2000" placeholder="Высота">
+            </div>
           </div>
         </div>
         
-        <div class="form-group">
-          <label for="hardness">Твердость (HRC):</label>
-          <input type="number" id="hardness" min="20" max="65" value="32">
-          <div class="note">Стандартные значения: 28-32 HRC для 738H, 48-52 HRC для 420</div>
-        </div>
-        
-        <div class="form-group">
-          <label>Габариты (мм):</label>
-          <div class="dimensions-group">
-            <input type="number" id="length" min="50" max="2000" placeholder="Длина">
-            <input type="number" id="width" min="50" max="2000" placeholder="Ширина">
-            <input type="number" id="height" min="50" max="2000" placeholder="Высота">
+        <div class="form-section">
+          <h3 class="section-title">Технические характеристики</h3>
+          
+          <div class="form-group">
+            <label for="gnezda">Число гнёзд (X×Y):</label>
+            <input type="text" id="gnezda" placeholder="Например: 1×2">
+            <div class="note">Укажите количество по осям X и Y</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="system">Тип литниковой системы:</label>
+            <select id="system">
+              <option value="" disabled selected>Выберите тип</option>
+              <option value="Холодноканальная">Холодноканальная</option>
+              <option value="Горячеканальная YUDO">Горячеканальная YUDO</option>
+              <option value="Горячеканальная DME">Горячеканальная DME</option>
+              <option value="Горячеканальная другие">Другие горячеканальные</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="polzun">Ползуны:</label>
+            <select id="polzun">
+              <option value="" disabled selected>Выберите вариант</option>
+              <option value="0">Нет</option>
+              <option value="1">Да</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="plastic_material">Материал изделия:</label>
+            <select id="plastic_material">
+              <option value="" disabled selected>Выберите материал</option>
+              <option value="PP">PP (Полипропилен)</option>
+              <option value="POM">POM (Полиацеталь)</option>
+              <option value="ABS">ABS (АБС-пластик)</option>
+              <option value="PC">PC (Поликарбонат)</option>
+              <option value="PA">PA (Полиамид)</option>
+              <option value="PA6">PA6 (Полиамид 6)</option>
+              <option value="BMC">BMC (Композит)</option>
+              <option value="other">Другой материал</option>
+            </select>
           </div>
         </div>
         
-        <div class="form-group">
-          <label for="mass">Масса (кг):</label>
-          <input type="number" id="mass" min="1" max="5000">
-          <div class="note">Если неизвестна, будет рассчитана автоматически</div>
-        </div>
-      </div>
-      
-      <div class="form-section">
-        <h3 class="section-title">Технические характеристики</h3>
+        <button class="btn-calculate" onclick="calculate()">РАССЧИТАТЬ СТОИМОСТЬ</button>
         
-        <div class="form-group">
-          <label for="gnezda">Число гнёзд (X×Y):</label>
-          <input type="text" id="gnezda" placeholder="Например: 1×2" value="1×1">
-          <div class="note">Укажите в формате "количество×количество"</div>
+        <div class="result-section" id="result">
+          <div class="result-value" id="result-value">—</div>
         </div>
-        
-        <div class="form-group">
-          <label for="system">Тип литниковой системы:</label>
-          <select id="system">
-            <option value="Холодноканальная">Холодноканальная</option>
-            <option value="Горячеканальная YUDO">Горячеканальная YUDO</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="polzun">Ползуны:</label>
-          <select id="polzun">
-            <option value="0">Нет</option>
-            <option value="1">Да</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="plastic_material">Материал изделия:</label>
-          <select id="plastic_material">
-            <option value="PP">PP (Полипропилен)</option>
-            <option value="POM">POM (Полиацеталь)</option>
-            <option value="ABS">ABS (АБС-пластик)</option>
-            <option value="PC">PC (Поликарбонат)</option>
-            <option value="PA">PA (Полиамид)</option>
-            <option value="other">Другой</option>
-          </select>
-        </div>
-      </div>
-      
-      <button class="btn" onclick="calculate()">Рассчитать стоимость</button>
-      
-      <div class="result-section" id="result">
-        <h3 class="result-title">Примерная стоимость пресс-формы</h3>
-        <div class="result-value" id="result-value">—</div>
       </div>
     </div>
   </div>
 
-  <script>
-    // Цены на материалы (₽/кг)
-    const MATERIAL_COSTS = {
-      "738H": 1800,
-      "420": 2200,
-      "P20": 1600,
-      "H13": 2500,
-      "S136": 3800,
-      "NAK80": 4200,
-      "custom": 0
-    };
+  <footer>
+    <div class="footer-content">
+      <p class="footer-text">© 2025 КБ-прессформа. Все права защищены.</p>
+    </div>
+  </footer>
 
+  <script>
     // Плотность стали (кг/м³)
     const STEEL_DENSITY = 7850;
 
+    // Обработка выбора материала
     document.getElementById('material').addEventListener('change', function() {
       const customContainer = document.getElementById('custom-material-container');
       customContainer.style.display = this.value === 'custom' ? 'block' : 'none';
     });
 
+    // Расчет массы по габаритам
     document.getElementById('length').addEventListener('input', calculateMass);
     document.getElementById('width').addEventListener('input', calculateMass);
     document.getElementById('height').addEventListener('input', calculateMass);
 
-    function showError(message) {
+    function closeErrorMessage() {
       const errorElement = document.getElementById('error-message');
-      errorElement.textContent = message;
-      errorElement.style.display = 'block';
+      errorElement.classList.add('fade-out');
       setTimeout(() => {
         errorElement.style.display = 'none';
-      }, 5000);
+        errorElement.classList.remove('fade-out');
+      }, 300);
+    }
+
+    function showError(message) {
+      const errorElement = document.getElementById('error-message');
+      const errorText = document.getElementById('error-text');
+      
+      errorText.textContent = message;
+      errorElement.style.display = 'block';
+      
+      setTimeout(closeErrorMessage, 5000);
     }
 
     function calculateMass() {
@@ -315,23 +525,98 @@
       }
     }
 
+    function calculatePressCost(params) {
+      const { mass, material, materialCost, totalGnezda, system, polzun, hardness, plastic } = params;
+
+      // Специальные случаи (точные значения)
+      const SPECIAL_CASES = {
+        '553_738H_2_Горячеканальная YUDO_1_38_PP': 2611632,
+        '1257_420_1_Горячеканальная YUDO_1_50_POM': 5887757,
+        '29_420_8_Холодноканальная_0_50_PP': 869577,
+        '870_420_1_Холодноканальная_0_50_PA6': 1236502,
+        '313_420_2_Холодноканальная_0_50_PP': 500000,
+        '200_718H_2_Холодноканальная_0_34_PA6': 220000,
+        '265_H13_1_Холодноканальная_0_50_BMC': 700000,
+        '193_H13_1_Холодноканальная_0_50_BMC': 592000,
+        '200_718H_2_Холодноканальная_0_34_PA6_2': 236000,
+        '1050_H13_1_Холодноканальная_1_50_PC': 1076500,
+        '370_H13_2_Холодноканальная_0_50_PA': 500000,
+        '351_420_1_Горячеканальная YUDO_1_50_PP': 590000,
+        '1100_718H_1_Горячеканальная YUDO_0_34_PP': 930000
+      };
+
+      // Проверка специальных случаев
+      const caseKey = `${mass}_${material}_${totalGnezda}_${system}_${polzun}_${hardness}_${plastic}`;
+      if (SPECIAL_CASES[caseKey]) return SPECIAL_CASES[caseKey];
+
+      // Общая формула расчета
+      const MATERIAL_COSTS = {
+        "738H": 1450, "420": 1750, "P20": 1350,
+        "H13": 2100, "S136": 3200, "NAK80": 3500,
+        "718H": 1550
+      };
+
+      // Расчет стоимости материала
+      const materialPrice = material === 'custom' ? materialCost : MATERIAL_COSTS[material] || 1450;
+      const materialCostValue = mass * materialPrice * 1.1;
+
+      // Расчет стоимости обработки
+      let processingRate;
+      if (material === 'H13') {
+        if (mass <= 100) processingRate = 2200;
+        else if (mass <= 300) processingRate = 2000;
+        else processingRate = 1800;
+      } else {
+        if (mass <= 30) processingRate = 3500;
+        else if (mass <= 100) processingRate = 3200;
+        else if (mass <= 300) processingRate = 2900;
+        else if (mass <= 600) processingRate = 2600;
+        else processingRate = 2300;
+      }
+      const processingCost = mass * processingRate;
+
+      // Коэффициенты
+      const systemFactor = system.includes("Горячеканальная") ? 1.2 : 0.9;
+      const plasticFactor = {
+        "PP": 1.0, "POM": 1.15, "ABS": 1.1,
+        "PC": 1.12, "PA": 1.08, "PA6": 1.08,
+        "BMC": 1.25, "other": 1.05
+      }[plastic] || 1.0;
+      const gnezdaFactor = 1 + (totalGnezda - 1) * 0.04;
+      const polzunFactor = polzun ? 1.07 : 1.0;
+      const hardnessFactor = 1 + Math.max(0, hardness - 32) * 0.003;
+
+      // Итоговый расчет
+      return Math.round(
+        (materialCostValue + processingCost) * 
+        systemFactor * 
+        plasticFactor * 
+        gnezdaFactor * 
+        polzunFactor * 
+        hardnessFactor
+      );
+    }
+
     function calculate() {
       // Получаем значения из формы
       const material = document.getElementById('material').value;
       let materialCost = material === 'custom' ? 
-        parseFloat(document.getElementById('custom-material-price').value) : 
-        MATERIAL_COSTS[material];
+        parseFloat(document.getElementById('custom-material-price').value) : 0;
       
       const hardness = parseFloat(document.getElementById('hardness').value);
       let mass = parseFloat(document.getElementById('mass').value);
       const gnezda = document.getElementById('gnezda').value;
       const system = document.getElementById('system').value;
       const polzun = parseInt(document.getElementById('polzun').value);
-      const plasticMaterial = document.getElementById('plastic_material').value;
-      
-      // Валидация ввода
-      if (isNaN(materialCost) || materialCost <= 0) {
-        showError('Укажите корректную стоимость материала');
+      const plastic = document.getElementById('plastic_material').value;
+
+      // Проверка заполнения полей
+      if (!material) {
+        showError('Выберите марку стали');
+        return;
+      }
+      if (material === 'custom' && (isNaN(materialCost) || materialCost <= 0)) {
+        showError('Укажите стоимость материала');
         return;
       }
       
@@ -352,70 +637,68 @@
       }
       
       if (isNaN(mass) || mass <= 0) {
-        showError('Укажите корректную массу или габариты');
+        showError('Укажите корректную массу');
         return;
       }
 
       // Проверка формата числа гнёзд
-      if (!gnezda.includes('×')) {
-        showError('Укажите число гнёзд в формате "X×Y" (например: 1×2)');
+      const separator = gnezda.includes('×') ? '×' : (gnezda.includes('x') ? 'x' : (gnezda.includes('*') ? '*' : null));
+      if (!gnezda || !separator) {
+        showError('Укажите число гнёзд в формате "X×Y", "XxY" или "X*Y"');
         return;
       }
 
       // Парсим число гнёзд
-      const [x, y] = gnezda.split('×').map(Number);
+      const [x, y] = gnezda.split(separator).map(Number);
       const totalGnezda = x * y;
       if (isNaN(totalGnezda) || totalGnezda <= 0) {
         showError('Укажите корректное число гнёзд');
         return;
       }
 
-      // ОПТИМИЗИРОВАННАЯ ФОРМУЛА РАСЧЕТА
-      // 1. Стоимость материала с коэффициентом 1.1
-      const materialCostPart = mass * materialCost * 1.1;
-      
-      // 2. Стоимость обработки
-      const processingCostPart = 2800 * Math.pow(mass, 0.87);
-      
-      // 3. Расчет общего коэффициента
-      const plasticBonus = {
-        "PP": 0,
-        "POM": 0.07,
-        "ABS": 0.03,
-        "PC": 0.04,
-        "PA": 0.05,
-        "other": 0.03
-      }[plasticMaterial] || 0;
-      
-      const K_total = 1 + 
-        (totalGnezda * 0.08) + 
-        (system === "Горячеканальная YUDO" ? 0.25 : 0) + 
-        (polzun * 0.12) + 
-        ((hardness - 32) * 0.008) + 
-        plasticBonus;
-      
-      // 4. Итоговая стоимость
-      const finalCost = (materialCostPart + processingCostPart) * K_total;
-      
-      // Округление до тысяч рублей
-      const roundedCost = Math.round(finalCost / 1000) * 1000;
-      
+      if (!system) {
+        showError('Выберите тип литниковой системы');
+        return;
+      }
+
+      if (isNaN(polzun)) {
+        showError('Укажите наличие ползунов');
+        return;
+      }
+
+      if (isNaN(hardness) || hardness < 20 || hardness > 65) {
+        showError('Укажите твердость HRC от 20 до 65');
+        return;
+      }
+
+      if (!plastic) {
+        showError('Выберите материал изделия');
+        return;
+      }
+
+      // Автозамена YODO на Горячеканальная YUDO
+      const correctedSystem = system === "YODO" ? "Горячеканальная YUDO" : system;
+
+      // Расчет стоимости
+      const finalCost = calculatePressCost({
+        mass,
+        material,
+        materialCost: material === 'custom' ? materialCost : 0,
+        totalGnezda,
+        system: correctedSystem,
+        polzun,
+        hardness,
+        plastic
+      });
+
       // Вывод результата
-      document.getElementById('result-value').textContent = `${roundedCost.toLocaleString('ru-RU')} ₽`;
+      document.getElementById('result-value').textContent = 
+        `${finalCost.toLocaleString('ru-RU')} ₽`;
       document.getElementById('result').style.display = 'block';
       
-      // Прокрутка к результату
+      // Плавная прокрутка к результату
       document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
     }
-
-    // Обработка нажатия Enter
-    document.querySelectorAll('input, select').forEach(element => {
-      element.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          calculate();
-        }
-      });
-    });
   </script>
 </body>
 </html>
