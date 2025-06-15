@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>КБ-ПРЕССФОРМА | Профессиональный калькулятор пресс-форм</title>
+  <title>КБ-ПРЕССФОРМА | Калькулятор пресс-форм</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -15,8 +15,8 @@
       --dark: #172a45;
       --gray: #8b98b2;
       --border: #31456e;
-      --success: #27ae60;
-      --card-bg: rgba(10, 25, 47, 0.9);
+      --card-bg: rgba(10, 25, 47, 0.95);
+      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
     
     * {
@@ -29,7 +29,7 @@
     body {
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       color: var(--light);
-      line-height: 1.6;
+      line-height: 1.7;
       padding: 0;
       margin: 0;
       min-height: 100vh;
@@ -37,6 +37,7 @@
       flex-direction: column;
       position: relative;
       overflow-x: hidden;
+      font-size: 16px;
     }
     
     .container {
@@ -51,12 +52,11 @@
     header {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 50px 0;
+      padding: 40px 0;
       text-align: center;
       position: relative;
       overflow: hidden;
       z-index: 1;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
     
     header::after {
@@ -65,46 +65,41 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 4px;
+      height: 3px;
       background: var(--accent);
+      border-radius: 50%;
+      filter: drop-shadow(0 0 8px var(--accent));
     }
     
     .header-content {
       position: relative;
       z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
     
     h1 {
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       margin-bottom: 0;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 2px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
       background: linear-gradient(45deg, var(--accent), var(--accent-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       position: relative;
       display: inline-block;
-    }
-    
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 25%;
-      width: 50%;
-      height: 3px;
-      background: var(--accent);
-      border-radius: 3px;
+      padding: 0 20px;
     }
     
     .calculator-container {
       background: var(--card-bg);
       border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
       overflow: hidden;
-      margin: 40px auto;
-      max-width: 950px;
+      margin: 30px auto;
+      max-width: 900px;
       position: relative;
       z-index: 1;
       backdrop-filter: blur(10px);
@@ -112,31 +107,20 @@
     }
     
     .calculator {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-wrap: wrap;
       gap: 25px;
-      padding: 40px;
-    }
-    
-    @media (max-width: 900px) {
-      .calculator {
-        grid-template-columns: 1fr;
-        padding: 30px;
-      }
+      padding: 30px;
     }
     
     .form-section {
       background: rgba(23, 42, 69, 0.7);
-      padding: 30px;
+      padding: 25px;
       border-radius: 15px;
       border: 1px solid rgba(212, 175, 55, 0.15);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .form-section:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      flex: 1;
+      min-width: 300px;
     }
     
     .section-title {
@@ -145,7 +129,7 @@
       color: var(--accent-light);
       border-bottom: 2px solid var(--accent);
       padding-bottom: 12px;
-      font-weight: 600;
+      font-weight: 700;
       display: flex;
       align-items: center;
     }
@@ -157,7 +141,7 @@
     }
     
     .form-group {
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       position: relative;
     }
     
@@ -175,18 +159,19 @@
       margin-right: 10px;
       font-size: 0.9em;
       color: var(--accent);
+      min-width: 25px;
     }
     
     input, select {
       width: 100%;
       padding: 14px 18px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.25);
       border-radius: 10px;
       font-size: 1.05rem;
-      transition: all 0.3s ease;
+      transition: var(--transition);
       background: rgba(30, 40, 60, 0.6);
       color: white;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
     }
     
     input::placeholder {
@@ -211,7 +196,13 @@
       color: var(--gray);
       margin-top: 8px;
       font-style: italic;
-      padding-left: 28px;
+      padding-left: 35px;
+    }
+    
+    .btn-container {
+      flex: 0 0 100%;
+      padding: 0 15px;
+      margin: 10px 0 5px;
     }
     
     .btn-calculate {
@@ -220,17 +211,20 @@
       border: none;
       padding: 16px 30px;
       font-size: 1.2rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 12px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
       width: 100%;
-      margin-top: 20px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
       position: relative;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
     
     .btn-calculate::before {
@@ -241,28 +235,32 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: 0.5s;
+      transition: 0.6s;
     }
     
     .btn-calculate:hover {
       background: linear-gradient(135deg, #e6c76a, #d4af37);
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
     }
     
     .btn-calculate:hover::before {
       left: 100%;
     }
     
+    .btn-calculate i {
+      transition: var(--transition);
+    }
+    
     .result-section {
-      grid-column: 1 / -1;
+      flex: 0 0 100%;
       text-align: center;
       padding: 30px;
       display: none;
       animation: fadeIn 0.6s ease-out;
       background: rgba(23, 42, 69, 0.7);
       border-radius: 15px;
-      margin-top: 15px;
+      margin-top: 10px;
       border: 1px solid rgba(212, 175, 55, 0.2);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
@@ -280,7 +278,7 @@
     }
     
     .result-value {
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       font-weight: 800;
       color: var(--accent-light);
       margin: 20px 0;
@@ -288,34 +286,17 @@
       background: linear-gradient(45deg, var(--accent), var(--accent-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-    }
-    
-    .result-details {
-      color: #bdc3c7;
-      font-size: 1.05rem;
-      margin-top: 25px;
-      line-height: 1.7;
-      text-align: left;
-      background: rgba(30, 40, 60, 0.6);
-      padding: 20px;
-      border-radius: 12px;
-      display: none;
-      border-left: 4px solid var(--accent);
-    }
-    
-    .result-details div {
-      margin-bottom: 10px;
-      padding-left: 10px;
+      padding: 5px 0;
     }
     
     footer {
       background: var(--primary-dark);
       color: white;
-      padding: 35px 0;
+      padding: 30px 0;
       text-align: center;
       position: relative;
       z-index: 1;
-      margin-top: 50px;
+      margin-top: 30px;
       border-top: 1px solid rgba(212, 175, 55, 0.2);
     }
     
@@ -347,15 +328,16 @@
     .error-message {
       background: linear-gradient(135deg, #c0392b, #e74c3c);
       color: white;
-      padding: 18px 50px 18px 30px;
+      padding: 15px 45px 15px 25px;
       border-radius: 10px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       display: none;
       text-align: center;
       position: relative;
       animation: fadeInDown 0.4s ease-out;
       box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      border-left: 4px solid #ff6b6b;
+      max-width: 800px;
+      margin: 0 auto 25px;
     }
 
     .error-message.fade-out {
@@ -399,7 +381,7 @@
       height: 100%;
       z-index: 0;
       overflow: hidden;
-      opacity: 0.15;
+      opacity: 0.1;
     }
     
     .mold-shape {
@@ -408,135 +390,147 @@
       filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
       opacity: 0.7;
       z-index: 0;
+      border-radius: 50%;
     }
     
     .mold-1 {
-      width: 180px;
-      height: 180px;
+      width: 150px;
+      height: 150px;
       background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
       top: 15%;
-      left: -80px;
+      left: -70px;
       animation-delay: 0s;
       animation-duration: 40s;
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     }
     
     .mold-2 {
-      width: 250px;
-      height: 250px;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-      top: 60%;
-      right: -110px;
-      animation-delay: 8s;
-      animation-duration: 45s;
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-    }
-    
-    .mold-3 {
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
-      bottom: -100px;
-      left: 25%;
-      animation-delay: 15s;
-      animation-duration: 50s;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    }
-    
-    .mold-4 {
-      width: 160px;
-      height: 160px;
-      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
-      top: 35%;
-      right: 15%;
-      animation-delay: 22s;
-      animation-duration: 35s;
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-    }
-    
-    .mold-5 {
       width: 200px;
       height: 200px;
       background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      top: 65%;
+      right: -90px;
+      animation-delay: 8s;
+      animation-duration: 45s;
+    }
+    
+    .mold-3 {
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+      bottom: -80px;
+      left: 20%;
+      animation-delay: 16s;
+      animation-duration: 50s;
+    }
+    
+    .mold-4 {
+      width: 130px;
+      height: 130px;
+      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+      top: 35%;
+      right: 15%;
+      animation-delay: 24s;
+      animation-duration: 35s;
+    }
+    
+    .mold-5 {
+      width: 170px;
+      height: 170px;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
       bottom: 20%;
       left: 15%;
-      animation-delay: 5s;
+      animation-delay: 6s;
       animation-duration: 55s;
-      border-radius: 70% 30% 30% 70% / 60% 40% 60% 40%;
     }
     
     @keyframes float {
       0% {
-        transform: translate(0, 0) rotate(0deg);
+        transform: translate(0, 0) rotate(0deg) scale(1);
       }
       25% {
-        transform: translate(100px, -150px) rotate(90deg);
+        transform: translate(100px, -150px) rotate(90deg) scale(1.05);
       }
       50% {
-        transform: translate(200px, 0) rotate(180deg);
+        transform: translate(200px, 0) rotate(180deg) scale(1);
       }
       75% {
-        transform: translate(100px, 150px) rotate(270deg);
+        transform: translate(100px, 150px) rotate(270deg) scale(0.95);
       }
       100% {
-        transform: translate(0, 0) rotate(360deg);
+        transform: translate(0, 0) rotate(360deg) scale(1);
       }
     }
-
-    /* Декоративные элементы */
-    .gold-line {
-      position: absolute;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      z-index: 1;
+    
+    /* Адаптивность */
+    @media (max-width: 992px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .calculator {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .form-section {
+        width: 100%;
+      }
     }
     
-    .gold-line.top {
-      top: 20%;
-      left: 0;
-      width: 100%;
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+        padding: 0 15px;
+      }
+      
+      .calculator {
+        padding: 20px;
+      }
+      
+      .form-section {
+        padding: 20px;
+      }
+      
+      .section-title {
+        font-size: 1.3rem;
+      }
+      
+      .btn-calculate {
+        font-size: 1.1rem;
+        padding: 14px 25px;
+      }
+      
+      .result-value {
+        font-size: 2.3rem;
+      }
+      
+      .dimensions-group {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
     }
     
-    .gold-line.bottom {
-      bottom: 20%;
-      left: 0;
-      width: 100%;
-    }
-    
-    .corner-decor {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border: 2px solid var(--accent);
-      z-index: 1;
-    }
-    
-    .corner-decor.tl {
-      top: 20px;
-      left: 20px;
-      border-right: none;
-      border-bottom: none;
-    }
-    
-    .corner-decor.tr {
-      top: 20px;
-      right: 20px;
-      border-left: none;
-      border-bottom: none;
-    }
-    
-    .corner-decor.bl {
-      bottom: 20px;
-      left: 20px;
-      border-right: none;
-      border-top: none;
-    }
-    
-    .corner-decor.br {
-      bottom: 20px;
-      right: 20px;
-      border-left: none;
-      border-top: none;
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.9rem;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+      
+      .calculator-container {
+        margin: 20px auto;
+      }
+      
+      .result-value {
+        font-size: 2rem;
+      }
+      
+      .error-message {
+        padding: 12px 35px 12px 20px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -548,17 +542,9 @@
     <div class="mold-shape mold-4"></div>
     <div class="mold-shape mold-5"></div>
   </div>
-  
-  <div class="gold-line top"></div>
-  <div class="gold-line bottom"></div>
-  
-  <div class="corner-decor tl"></div>
-  <div class="corner-decor tr"></div>
-  <div class="corner-decor bl"></div>
-  <div class="corner-decor br"></div>
 
   <header>
-    <div class="container header-content">
+    <div class="header-content">
       <h1>КБ-ПРЕССФОРМА</h1>
     </div>
   </header>
@@ -659,19 +645,15 @@
           </div>
         </div>
         
-        <button class="btn-calculate" onclick="calculate()">
-          <i class="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ
-        </button>
+        <div class="btn-container">
+          <button class="btn-calculate" onclick="calculate()">
+            <i class="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ
+          </button>
+        </div>
         
         <div class="result-section" id="result">
           <div class="result-title">РАСЧЕТНАЯ СТОИМОСТЬ ПРЕСС-ФОРМЫ</div>
           <div class="result-value" id="result-value">—</div>
-          <div class="result-details" id="result-details">
-            <div><strong><i class="fas fa-list"></i> Компоненты стоимости:</strong></div>
-            <div id="material-cost"><i class="fas fa-cube"></i> Стоимость материала: —</div>
-            <div id="processing-cost"><i class="fas fa-tools"></i> Стоимость обработки: —</div>
-            <div id="coefficients"><i class="fas fa-percent"></i> Коэффициенты: —</div>
-          </div>
         </div>
       </div>
     </div>
@@ -755,12 +737,7 @@
       
       // Проверка специальных случаев
       const caseKey = `${mass}_${material}_${totalGnezda}_${system}_${polzun}_${hardness}_${plastic}`;
-      if (SPECIAL_CASES[caseKey]) return {
-        finalCost: SPECIAL_CASES[caseKey],
-        materialCost: null,
-        processingCost: null,
-        coefficients: "Специальный случай"
-      };
+      if (SPECIAL_CASES[caseKey]) return SPECIAL_CASES[caseKey];
 
       // Обновленные цены на материалы (₽/кг)
       const MATERIAL_COSTS = {
@@ -799,7 +776,7 @@
       const polzunFactor = polzun ? 1.06 : 1.0;
       const hardnessFactor = 1 + Math.max(0, hardness - 36) * 0.0018;
       
-      const finalCost = Math.round(
+      return Math.round(
         (materialCostValue + processingCostValue) * 
         systemFactor * 
         plasticFactor * 
@@ -807,13 +784,6 @@
         polzunFactor * 
         hardnessFactor
       );
-      
-      return {
-        finalCost,
-        materialCost: Math.round(materialCostValue),
-        processingCost: Math.round(processingCostValue),
-        coefficients: `Система: ${systemFactor.toFixed(2)} × Материал: ${plasticFactor.toFixed(2)} × Гнёзда: ${gnezdaFactor.toFixed(3)} × Ползуны: ${polzunFactor.toFixed(2)} × Твердость: ${hardnessFactor.toFixed(4)}`
-      };
     }
 
     function calculate() {
@@ -899,7 +869,7 @@
       const correctedSystem = system === "YODO" ? "Горячеканальная YUDO" : system;
 
       // Расчет стоимости
-      const {finalCost, materialCost: matCost, processingCost, coefficients} = calculatePressCost({
+      const finalCost = calculatePressCost({
         mass,
         material,
         materialCost: material === 'custom' ? materialCost : 0,
@@ -913,16 +883,6 @@
       // Вывод результата
       document.getElementById('result-value').textContent = 
         `${finalCost.toLocaleString('ru-RU')} ₽`;
-      
-      // Детали расчета
-      if (matCost) {
-        document.getElementById('material-cost').textContent = `Стоимость материала: ${matCost.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('processing-cost').textContent = `Стоимость обработки: ${processingCost.toLocaleString('ru-RU')} ₽`;
-        document.getElementById('coefficients').textContent = `Коэффициенты: ${coefficients}`;
-        document.getElementById('result-details').style.display = 'block';
-      } else {
-        document.getElementById('result-details').style.display = 'none';
-      }
       
       document.getElementById('result').style.display = 'block';
       
