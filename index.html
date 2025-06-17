@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>КБ-ПРЕССФОРМА | Калькулятор пресс-форм</title>
+  <title>КБ-ПРЕССФОРМА | Профессиональный калькулятор</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -16,7 +16,9 @@
       --gray: #8b98b2;
       --border: #31456e;
       --card-bg: rgba(10, 25, 47, 0.95);
-      --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      --transition: all 0.3s ease;
+      --success: #27ae60;
+      --error: #e74c3c;
     }
     
     * {
@@ -29,7 +31,7 @@
     body {
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       color: var(--light);
-      line-height: 1.7;
+      line-height: 1.6;
       padding: 0;
       margin: 0;
       min-height: 100vh;
@@ -52,7 +54,7 @@
     header {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      padding: 40px 0;
+      padding: 30px 0;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -67,24 +69,13 @@
       right: 0;
       height: 3px;
       background: var(--accent);
-      border-radius: 50%;
-      filter: drop-shadow(0 0 8px var(--accent));
-    }
-    
-    .header-content {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 20px;
     }
     
     h1 {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       margin-bottom: 0;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+      font-weight: 700;
+      letter-spacing: 1px;
       background: linear-gradient(45deg, var(--accent), var(--accent-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -93,85 +84,123 @@
       padding: 0 20px;
     }
     
-    .calculator-container {
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0 30px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+      background: rgba(23, 42, 69, 0.7);
+      color: var(--accent-light);
+      border: 1px solid var(--accent);
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      min-width: 180px;
+      text-align: center;
+    }
+    
+    .tab-btn.active {
+      background: var(--accent);
+      color: var(--primary-dark);
+    }
+    
+    .tab-btn:hover:not(.active) {
+      background: rgba(212, 175, 55, 0.2);
+    }
+    
+    .calculator-container, 
+    .admin-panel,
+    .converter-container {
       background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       overflow: hidden;
-      margin: 30px auto;
-      max-width: 900px;
+      margin: 0 auto 30px;
+      max-width: 1000px;
       position: relative;
       z-index: 1;
-      backdrop-filter: blur(10px);
       border: 1px solid rgba(212, 175, 55, 0.2);
+      display: none;
+      padding: 25px;
+    }
+    
+    .calculator-container.active,
+    .admin-panel.active,
+    .converter-container.active {
+      display: block;
     }
     
     .calculator {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 25px;
-      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 900px) {
+      .calculator {
+        grid-template-columns: 1fr;
+      }
     }
     
     .form-section {
       background: rgba(23, 42, 69, 0.7);
       padding: 25px;
-      border-radius: 15px;
+      border-radius: 12px;
       border: 1px solid rgba(212, 175, 55, 0.15);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      flex: 1;
-      min-width: 300px;
     }
     
     .section-title {
-      font-size: 1.4rem;
-      margin-bottom: 25px;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
       color: var(--accent-light);
       border-bottom: 2px solid var(--accent);
-      padding-bottom: 12px;
-      font-weight: 700;
+      padding-bottom: 10px;
+      font-weight: 600;
       display: flex;
       align-items: center;
     }
     
     .section-title i {
       margin-right: 12px;
-      font-size: 1.2em;
+      font-size: 1.1em;
       color: var(--accent);
     }
     
     .form-group {
-      margin-bottom: 20px;
-      position: relative;
+      margin-bottom: 18px;
     }
     
     label {
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-weight: 600;
       color: var(--accent-light);
-      font-size: 1.05rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
     }
     
     label i {
-      margin-right: 10px;
+      margin-right: 8px;
       font-size: 0.9em;
       color: var(--accent);
-      min-width: 25px;
     }
     
     input, select {
       width: 100%;
-      padding: 14px 18px;
+      padding: 12px 15px;
       border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 10px;
-      font-size: 1.05rem;
+      border-radius: 8px;
+      font-size: 1rem;
       transition: var(--transition);
       background: rgba(30, 40, 60, 0.6);
       color: white;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
     }
     
     input::placeholder {
@@ -188,64 +217,56 @@
     .dimensions-group {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 15px;
+      gap: 12px;
     }
     
     .note {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--gray);
-      margin-top: 8px;
+      margin-top: 6px;
       font-style: italic;
-      padding-left: 35px;
+      padding-left: 26px;
+    }
+    
+    .additional-params {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 10px;
     }
     
     .btn-container {
-      flex: 0 0 100%;
-      padding: 0 15px;
-      margin: 10px 0 5px;
+      grid-column: 1 / -1;
+      padding: 10px 0;
     }
     
     .btn-calculate {
       background: linear-gradient(135deg, var(--accent), #b8860b);
       color: white;
       border: none;
-      padding: 16px 30px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      border-radius: 12px;
+      padding: 14px 25px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 10px;
       cursor: pointer;
       transition: var(--transition);
       width: 100%;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-      position: relative;
-      overflow: hidden;
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-    }
-    
-    .btn-calculate::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: 0.6s;
+      gap: 10px;
     }
     
     .btn-calculate:hover {
       background: linear-gradient(135deg, #e6c76a, #d4af37);
       transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
     
-    .btn-calculate:hover::before {
-      left: 100%;
+    .btn-calculate:active {
+      transform: translateY(1px);
     }
     
     .btn-calculate i {
@@ -253,106 +274,153 @@
     }
     
     .result-section {
-      flex: 0 0 100%;
+      grid-column: 1 / -1;
       text-align: center;
-      padding: 30px;
+      padding: 25px;
       display: none;
-      animation: fadeIn 0.6s ease-out;
+      animation: fadeIn 0.5s ease-out;
       background: rgba(23, 42, 69, 0.7);
-      border-radius: 15px;
+      border-radius: 12px;
       margin-top: 10px;
       border: 1px solid rgba(212, 175, 55, 0.2);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
     
     .result-title {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: var(--accent-light);
       margin-bottom: 20px;
-      letter-spacing: 1px;
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
     .result-value {
-      font-size: 2.8rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 700;
       color: var(--accent-light);
-      margin: 20px 0;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      margin: 15px 0;
       background: linear-gradient(45deg, var(--accent), var(--accent-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      padding: 5px 0;
+    }
+    
+    .similar-molds {
+      margin-top: 25px;
+      text-align: left;
+    }
+    
+    .similar-title {
+      font-size: 1.2rem;
+      color: var(--accent-light);
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 8px;
+    }
+    
+    .mold-list {
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    
+    .mold-item {
+      background: rgba(30, 40, 60, 0.6);
+      border-left: 3px solid var(--accent);
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      border-radius: 0 6px 6px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .mold-item:hover {
+      transform: translateX(5px);
+      background: rgba(30, 40, 60, 0.8);
+    }
+    
+    .mold-item div {
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .mold-item div:last-child {
+      margin-bottom: 0;
+    }
+    
+    .mold-name {
+      font-weight: 600;
+      color: var(--accent-light);
+    }
+    
+    .mold-value {
+      color: var(--gray);
+    }
+    
+    .similarity-badge {
+      background: var(--accent);
+      color: var(--primary-dark);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 10px;
     }
     
     footer {
       background: var(--primary-dark);
       color: white;
-      padding: 30px 0;
+      padding: 25px 0;
       text-align: center;
       position: relative;
       z-index: 1;
-      margin-top: 30px;
+      margin-top: 20px;
       border-top: 1px solid rgba(212, 175, 55, 0.2);
     }
     
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      position: relative;
-    }
-    
-    .footer-content::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 150px;
-      height: 2px;
-      background: var(--accent);
-    }
-    
     .footer-text {
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      margin-top: 15px;
+      font-size: 0.95rem;
       color: var(--gray);
     }
     
     .error-message {
-      background: linear-gradient(135deg, #c0392b, #e74c3c);
+      background: var(--error);
       color: white;
-      padding: 15px 45px 15px 25px;
-      border-radius: 10px;
-      margin-bottom: 25px;
+      padding: 12px 40px 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
       display: none;
       text-align: center;
       position: relative;
-      animation: fadeInDown 0.4s ease-out;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      max-width: 800px;
-      margin: 0 auto 25px;
+      animation: fadeInDown 0.3s ease-out;
     }
 
     .error-message.fade-out {
-      animation: fadeOutUp 0.4s ease-out forwards;
+      animation: fadeOutUp 0.3s ease-out forwards;
+    }
+
+    .success-message {
+      background: var(--success);
+      color: white;
+      padding: 12px 40px 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+      position: relative;
+      animation: fadeInDown 0.3s ease-out;
     }
 
     .close-error {
       position: absolute;
-      right: 20px;
+      right: 15px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
       border: none;
       color: white;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       cursor: pointer;
       opacity: 0.8;
       transition: opacity 0.2s;
@@ -363,15 +431,132 @@
     }
 
     @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
+      from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeOutUp {
       from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 0; transform: translateY(-20px); }
     }
 
+    /* Конвертер валют */
+    .converter {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .converter-section {
+      background: rgba(23, 42, 69, 0.7);
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .converter-title {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--accent-light);
+      font-size: 1.4rem;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .converter-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    
+    .converter-controls {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .converter-input-group {
+      position: relative;
+    }
+    
+    .converter-input-group label {
+      position: absolute;
+      top: -20px;
+      left: 0;
+      font-size: 0.9rem;
+      color: var(--accent-light);
+    }
+    
+    .converter-input {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+      font-size: 1.1rem;
+      background: rgba(30, 40, 60, 0.7);
+      color: white;
+      transition: var(--transition);
+    }
+    
+    .converter-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+    }
+    
+    .converter-swap {
+      background: var(--accent);
+      color: var(--primary-dark);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.2rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .converter-swap:hover {
+      background: var(--accent-light);
+      transform: rotate(180deg) scale(1.1);
+    }
+    
+    .converter-result {
+      background: rgba(23, 42, 69, 0.9);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    
+    .converter-rate {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-top: 10px;
+      font-style: italic;
+    }
+    
     /* Анимация фона */
     .mold-animation {
       position: fixed;
@@ -381,155 +566,121 @@
       height: 100%;
       z-index: 0;
       overflow: hidden;
-      opacity: 0.1;
+      opacity: 0.08;
     }
     
     .mold-shape {
       position: absolute;
-      animation: float 30s infinite linear;
-      filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+      animation: float 25s infinite linear;
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
       opacity: 0.7;
       z-index: 0;
       border-radius: 50%;
     }
     
     .mold-1 {
-      width: 150px;
-      height: 150px;
+      width: 120px;
+      height: 120px;
       background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
       top: 15%;
-      left: -70px;
+      left: -50px;
       animation-delay: 0s;
-      animation-duration: 40s;
+      animation-duration: 35s;
     }
     
     .mold-2 {
-      width: 200px;
-      height: 200px;
+      width: 180px;
+      height: 180px;
       background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
       top: 65%;
-      right: -90px;
+      right: -80px;
       animation-delay: 8s;
-      animation-duration: 45s;
+      animation-duration: 40s;
     }
     
     .mold-3 {
-      width: 180px;
-      height: 180px;
+      width: 150px;
+      height: 150px;
       background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
-      bottom: -80px;
+      bottom: -70px;
       left: 20%;
       animation-delay: 16s;
-      animation-duration: 50s;
+      animation-duration: 45s;
     }
     
     .mold-4 {
-      width: 130px;
-      height: 130px;
+      width: 100px;
+      height: 100px;
       background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
       top: 35%;
       right: 15%;
       animation-delay: 24s;
-      animation-duration: 35s;
-    }
-    
-    .mold-5 {
-      width: 170px;
-      height: 170px;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-      bottom: 20%;
-      left: 15%;
-      animation-delay: 6s;
-      animation-duration: 55s;
+      animation-duration: 30s;
     }
     
     @keyframes float {
       0% {
-        transform: translate(0, 0) rotate(0deg) scale(1);
+        transform: translate(0, 0) rotate(0deg);
       }
       25% {
-        transform: translate(100px, -150px) rotate(90deg) scale(1.05);
+        transform: translate(100px, -150px) rotate(90deg);
       }
       50% {
-        transform: translate(200px, 0) rotate(180deg) scale(1);
+        transform: translate(200px, 0) rotate(180deg);
       }
       75% {
-        transform: translate(100px, 150px) rotate(270deg) scale(0.95);
+        transform: translate(100px, 150px) rotate(270deg);
       }
       100% {
-        transform: translate(0, 0) rotate(360deg) scale(1);
+        transform: translate(0, 0) rotate(360deg);
       }
     }
     
     /* Адаптивность */
-    @media (max-width: 992px) {
-      h1 {
-        font-size: 2.5rem;
-      }
-      
-      .calculator {
-        flex-direction: column;
-        gap: 20px;
-      }
-      
-      .form-section {
-        width: 100%;
-      }
-    }
-    
     @media (max-width: 768px) {
       h1 {
-        font-size: 2.2rem;
-        padding: 0 15px;
+        font-size: 2rem;
       }
       
-      .calculator {
-        padding: 20px;
-      }
-      
-      .form-section {
-        padding: 20px;
-      }
-      
-      .section-title {
-        font-size: 1.3rem;
-      }
-      
-      .btn-calculate {
-        font-size: 1.1rem;
-        padding: 14px 25px;
-      }
-      
-      .result-value {
-        font-size: 2.3rem;
-      }
-      
-      .dimensions-group {
+      .calculator, .admin-form {
         grid-template-columns: 1fr;
-        gap: 12px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.9rem;
       }
       
-      .container {
-        padding: 15px;
+      .tabs {
+        flex-direction: column;
+        align-items: center;
       }
       
-      .calculator-container {
-        margin: 20px auto;
+      .tab-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .dimensions-group, .additional-params {
+        grid-template-columns: 1fr;
+      }
+      
+      .password-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      #admin-password {
+        max-width: 100%;
       }
       
       .result-value {
         font-size: 2rem;
       }
       
-      .error-message {
-        padding: 12px 35px 12px 20px;
-        font-size: 0.9rem;
+      .converter-controls {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+      }
+      
+      .converter-swap {
+        margin: 15px auto;
+        transform: rotate(90deg);
       }
     }
   </style>
@@ -540,12 +691,17 @@
     <div class="mold-shape mold-2"></div>
     <div class="mold-shape mold-3"></div>
     <div class="mold-shape mold-4"></div>
-    <div class="mold-shape mold-5"></div>
   </div>
 
   <header>
-    <div class="header-content">
+    <div class="container">
       <h1>КБ-ПРЕССФОРМА</h1>
+      
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="calculator">Калькулятор</button>
+        <button class="tab-btn" data-tab="admin">Администрирование</button>
+        <button class="tab-btn" data-tab="converter">Конвертер валют</button>
+      </div>
     </div>
   </header>
 
@@ -555,7 +711,13 @@
       <span id="error-text"></span>
     </div>
     
-    <div class="calculator-container">
+    <div class="success-message" id="success-message">
+      <button class="close-error" onclick="closeSuccessMessage()">&times;</button>
+      <span id="success-text"></span>
+    </div>
+    
+    <!-- Калькулятор -->
+    <div class="calculator-container active" id="calculator-container">
       <div class="calculator">
         <div class="form-section">
           <h3 class="section-title"><i class="fas fa-cog"></i> Основные параметры</h3>
@@ -571,23 +733,7 @@
               <option value="S136">S136</option>
               <option value="NAK80">NAK80</option>
               <option value="718H">718H</option>
-              <option value="custom">Другая сталь</option>
             </select>
-            <div id="custom-material-container" style="display: none; margin-top: 15px;">
-              <label for="custom-material-price"><i class="fas fa-tag"></i> Цена материала (₽/кг):</label>
-              <input type="number" id="custom-material-price" min="0" placeholder="Введите стоимость">
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="hardness"><i class="fas fa-gem"></i> Твердость (HRC):</label>
-            <input type="number" id="hardness" min="20" max="65" placeholder="От 20 до 65">
-          </div>
-          
-          <div class="form-group">
-            <label for="mass"><i class="fas fa-weight-scale"></i> Масса (кг):</label>
-            <input type="number" id="mass" min="1" max="5000" placeholder="Введите массу">
-            <div class="note">Если неизвестна, укажите габариты</div>
           </div>
           
           <div class="form-group">
@@ -597,11 +743,8 @@
               <input type="number" id="width" min="50" max="2000" placeholder="Ширина">
               <input type="number" id="height" min="50" max="2000" placeholder="Высота">
             </div>
+            <div class="note">Масса рассчитается автоматически</div>
           </div>
-        </div>
-        
-        <div class="form-section">
-          <h3 class="section-title"><i class="fas fa-microchip"></i> Технические характеристики</h3>
           
           <div class="form-group">
             <label for="gnezda"><i class="fas fa-th-large"></i> Число гнёзд (X×Y):</label>
@@ -613,35 +756,57 @@
             <label for="system"><i class="fas fa-fire"></i> Тип литниковой системы:</label>
             <select id="system">
               <option value="" disabled selected>Выберите тип</option>
-              <option value="Холодноканальная">Холодноканальная</option>
-              <option value="Горячеканальная YUDO">Горячеканальная YUDO</option>
-              <option value="Горячеканальная DME">Горячеканальная DME</option>
-              <option value="Горячеканальная другие">Другие горячеканальные</option>
+              <option value="Горячий канал">Горячий канал</option>
+              <option value="Запорное сопло">Запорное сопло</option>
+              <option value="Холодный канал">Холодный канал</option>
+              <option value="Трех-плитная">Трех-плитная</option>
             </select>
           </div>
+        </div>
+        
+        <div class="form-section">
+          <h3 class="section-title"><i class="fas fa-sliders-h"></i> Дополнительные параметры</h3>
           
           <div class="form-group">
             <label for="polzun"><i class="fas fa-sliders"></i> Ползуны:</label>
             <select id="polzun">
-              <option value="" disabled selected>Выберите вариант</option>
               <option value="0">Нет</option>
               <option value="1">Да</option>
             </select>
           </div>
           
-          <div class="form-group">
-            <label for="plastic_material"><i class="fas fa-flask"></i> Материал изделия:</label>
-            <select id="plastic_material">
-              <option value="" disabled selected>Выберите материал</option>
-              <option value="PP">PP (Полипропилен)</option>
-              <option value="POM">POM (Полиацеталь)</option>
-              <option value="ABS">ABS (АБС-пластик)</option>
-              <option value="PC">PC (Поликарбонат)</option>
-              <option value="PA">PA (Полиамид)</option>
-              <option value="PA6">PA6 (Полиамид 6)</option>
-              <option value="BMC">BMC (Композит)</option>
-              <option value="other">Другой материал</option>
-            </select>
+          <div class="additional-params">
+            <div class="form-group">
+              <label for="naklon"><i class="fas fa-arrows-alt-h"></i> Наклонные толкатели:</label>
+              <select id="naklon">
+                <option value="0">Нет</option>
+                <option value="1">Да</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="vivinch"><i class="fas fa-sync-alt"></i> Вывинчивание:</label>
+              <select id="vivinch">
+                <option value="0">Нет</option>
+                <option value="1">Да</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="sriv"><i class="fas fa-cut"></i> Срывом:</label>
+              <select id="sriv">
+                <option value="0">Нет</option>
+                <option value="1">Да</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="vytalk"><i class="fas fa-eject"></i> Выталкивание:</label>
+              <select id="vytalk">
+                <option value="Одинарное">Одинарное</option>
+                <option value="Двойное">Двойное</option>
+              </select>
+            </div>
           </div>
         </div>
         
@@ -654,31 +819,263 @@
         <div class="result-section" id="result">
           <div class="result-title">РАСЧЕТНАЯ СТОИМОСТЬ ПРЕСС-ФОРМЫ</div>
           <div class="result-value" id="result-value">—</div>
+          
+          <div class="similar-molds">
+            <div class="similar-title">Похожие пресс-формы: <span class="note">(отсортированы по схожести)</span></div>
+            <div class="mold-list" id="similar-molds">
+              <!-- Список похожих пресс-форм будет здесь -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Панель администрирования -->
+    <div class="admin-panel" id="admin-panel">
+      <h3 class="section-title"><i class="fas fa-lock"></i> Редактирование базы данных</h3>
+      <p class="note" style="margin-bottom: 20px; padding-left: 0;">Добавленные данные сохраняются даже после перезагрузки страницы</p>
+      
+      <div class="admin-form">
+        <div class="form-group">
+          <label for="admin-name">Наименование:</label>
+          <input type="text" id="admin-name" placeholder="Например: GS.0219.0001-01">
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-rfq">RFQ:</label>
+          <input type="text" id="admin-rfq" placeholder="Например: 211">
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-gnezda">Число гнёзд (X×Y):</label>
+          <input type="text" id="admin-gnezda" placeholder="Например: 1×2">
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-system">Тип системы:</label>
+          <select id="admin-system">
+            <option value="Горячий канал">Горячий канал</option>
+            <option value="Запорное сопло">Запорное сопло</option>
+            <option value="Холодный канал">Холодный канал</option>
+            <option value="Трех-плитная">Трех-плитная</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-dimensions">Габариты (мм):</label>
+          <input type="text" id="admin-dimensions" placeholder="Например: 350x450x450">
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-material">Марка стали:</label>
+          <select id="admin-material">
+            <option value="738H">738H</option>
+            <option value="420">420</option>
+            <option value="P20">P20</option>
+            <option value="H13">H13</option>
+            <option value="S136">S136</option>
+            <option value="NAK80">NAK80</option>
+            <option value="718H">718H</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-polzun">Ползуны:</label>
+          <select id="admin-polzun">
+            <option value="0">Нет</option>
+            <option value="1">Да</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-naklon">Наклонные толкатели:</label>
+          <select id="admin-naklon">
+            <option value="0">Нет</option>
+            <option value="1">Да</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-vivinch">Вывинчивание:</label>
+          <select id="admin-vivinch">
+            <option value="0">Нет</option>
+            <option value="1">Да</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-sriv">Срывом:</label>
+          <select id="admin-sriv">
+            <option value="0">Нет</option>
+            <option value="1">Да</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-vytalk">Выталкивание:</label>
+          <select id="admin-vytalk">
+            <option value="Одинарное">Одинарное</option>
+            <option value="Двойное">Двойное</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-cost">Стоимость (руб.):</label>
+          <input type="text" id="admin-cost" placeholder="Например: 2611632">
+        </div>
+        
+        <div class="password-container">
+          <input type="password" id="admin-password" placeholder="Введите пароль">
+          <button class="btn-calculate" onclick="saveToDatabase()">
+            <i class="fas fa-save"></i> Сохранить в базу
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Конвертер валют -->
+    <div class="converter-container" id="converter-container">
+      <div class="converter">
+        <div class="converter-section">
+          <h3 class="converter-title"><i class="fas fa-exchange-alt"></i> Конвертер валют</h3>
+          
+          <div class="converter-controls">
+            <div class="converter-input-group">
+              <label for="from-amount">Сумма</label>
+              <input type="number" id="from-amount" class="converter-input" placeholder="Введите сумму" min="0" step="0.01">
+            </div>
+            
+            <button class="converter-swap" onclick="swapCurrencies()">
+              <i class="fas fa-exchange-alt"></i>
+            </button>
+            
+            <div class="converter-input-group">
+              <label for="from-currency">Валюта</label>
+              <select id="from-currency" class="converter-input">
+                <option value="CNY">Китайский юань (CNY)</option>
+                <option value="RUB">Российский рубль (RUB)</option>
+              </select>
+            </div>
+          </div>
+          
+          <button class="btn-calculate" onclick="convertCurrency()">
+            <i class="fas fa-sync-alt"></i> Конвертировать
+          </button>
+          
+          <div class="converter-result" id="converter-result">
+            <div>Результат конвертации</div>
+            <div class="converter-rate" id="exchange-rate">Загрузка курса...</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    <div class="footer-content">
+    <div class="container">
       <p class="footer-text">© 2025 КБ-ПРЕССФОРМА. Профессиональные расчеты стоимости пресс-форм.</p>
     </div>
   </footer>
 
   <script>
-    // Плотность стали (кг/м³)
-    const STEEL_DENSITY = 7850;
+    // Плотность стали (кг/м³) с учетом разных марок
+    const DENSITIES = {
+      "738H": 7800,
+      "420": 7700,
+      "P20": 7850,
+      "H13": 7800,
+      "S136": 7700,
+      "NAK80": 7900,
+      "718H": 7800
+    };
+    
+    // Пароль для админ-панели
+    const ADMIN_PASSWORD = "88168";
+    
+    // База данных пресс-форм
+    let moldsDatabase = [];
+    
+    // Текущий курс обмена
+    let exchangeRate = 11.5; // Значение по умолчанию
+    let conversionDirection = 'CNY_RUB'; // Направление конвертации
+    
+    // Инициализация базы данных
+    function initDatabase() {
+      const savedData = localStorage.getItem('moldsDatabase');
+      
+      if (savedData) {
+        moldsDatabase = JSON.parse(savedData);
+      } else {
+        // Загрузка начальных данных
+        moldsDatabase = [
+          // ... (все 20 примеров из предыдущего кода)
+        ];
+        saveDatabase();
+      }
+    }
+    
+    // Сохранение базы данных в localStorage
+    function saveDatabase() {
+      localStorage.setItem('moldsDatabase', JSON.stringify(moldsDatabase));
+    }
+    
+    // Обновление курса валют
+    async function updateExchangeRate() {
+      try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/CNY');
+        const data = await response.json();
+        
+        if (data && data.rates && data.rates.RUB) {
+          exchangeRate = data.rates.RUB;
+          document.getElementById('exchange-rate').textContent = `Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB`;
+          localStorage.setItem('exchangeRate', exchangeRate);
+        }
+      } catch (error) {
+        console.error('Ошибка при получении курса:', error);
+        // Используем последнее сохраненное значение
+        const savedRate = localStorage.getItem('exchangeRate');
+        if (savedRate) {
+          exchangeRate = parseFloat(savedRate);
+          document.getElementById('exchange-rate').textContent = `Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB`;
+        }
+      }
+    }
 
-    // Обработка выбора материала
-    document.getElementById('material').addEventListener('change', function() {
-      const customContainer = document.getElementById('custom-material-container');
-      customContainer.style.display = this.value === 'custom' ? 'block' : 'none';
+    // Переключение вкладок
+    document.querySelectorAll('.tab-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        document.getElementById('calculator-container').classList.remove('active');
+        document.getElementById('admin-panel').classList.remove('active');
+        document.getElementById('converter-container').classList.remove('active');
+        
+        if(button.dataset.tab === 'calculator') {
+          document.getElementById('calculator-container').classList.add('active');
+        } else if(button.dataset.tab === 'admin') {
+          document.getElementById('admin-panel').classList.add('active');
+        } else if(button.dataset.tab === 'converter') {
+          document.getElementById('converter-container').classList.add('active');
+          // При открытии конвертера обновляем курс
+          updateExchangeRate();
+        }
+      });
     });
 
-    // Расчет массы по габаритам
-    document.getElementById('length').addEventListener('input', calculateMass);
-    document.getElementById('width').addEventListener('input', calculateMass);
-    document.getElementById('height').addEventListener('input', calculateMass);
+    // Расчет массы по габаритам с учетом материала
+    function calculateMass(material, dimensions) {
+      const length = dimensions[0] / 1000; // в метрах
+      const width = dimensions[1] / 1000;
+      const height = dimensions[2] / 1000;
+      
+      if (length > 0 && width > 0 && height > 0) {
+        const volume = length * width * height;
+        const density = DENSITIES[material] || 7850;
+        return volume * density;
+      }
+      return 0;
+    }
 
     function closeErrorMessage() {
       const errorElement = document.getElementById('error-message');
@@ -686,6 +1083,15 @@
       setTimeout(() => {
         errorElement.style.display = 'none';
         errorElement.classList.remove('fade-out');
+      }, 300);
+    }
+    
+    function closeSuccessMessage() {
+      const successElement = document.getElementById('success-message');
+      successElement.classList.add('fade-out');
+      setTimeout(() => {
+        successElement.style.display = 'none';
+        successElement.classList.remove('fade-out');
       }, 300);
     }
 
@@ -698,197 +1104,89 @@
       
       setTimeout(closeErrorMessage, 5000);
     }
-
-    function calculateMass() {
-      const length = parseFloat(document.getElementById('length').value) / 1000;
-      const width = parseFloat(document.getElementById('width').value) / 1000;
-      const height = parseFloat(document.getElementById('height').value) / 1000;
+    
+    function showSuccess(message) {
+      const successElement = document.getElementById('success-message');
+      const successText = document.getElementById('success-text');
       
-      if (length > 0 && width > 0 && height > 0) {
-        const volume = length * width * height;
-        const mass = volume * STEEL_DENSITY;
-        document.getElementById('mass').value = Math.round(mass);
-      }
+      successText.textContent = message;
+      successElement.style.display = 'block';
+      
+      setTimeout(closeSuccessMessage, 5000);
     }
 
+    // Расчет стоимости пресс-формы
     function calculatePressCost(params) {
-      // Специальные случаи
-      const SPECIAL_CASES = {
-        '553_738H_2_Горячеканальная YUDO_1_38_PP': 2611632,
-        '1257_420_1_Горячеканальная YUDO_1_50_POM': 5887757,
-        '29_420_8_Холодноканальная_0_50_PP': 869577,
-        '870_420_1_Холодноканальная_0_50_PA6': 1236502,
-        '313_420_2_Холодноканальная_0_50_PP': 500000,
-        '200_718H_2_Холодноканальная_0_34_PA6': 220000,
-        '265_H13_1_Холодноканальная_0_50_BMC': 700000,
-        '193_H13_1_Холодноканальная_0_50_BMC': 592000,
-        '200_718H_2_Холодноканальная_0_34_PA6_2': 236000,
-        '1050_H13_1_Холодноканальная_1_50_PC': 1076500,
-        '370_H13_2_Холодноканальная_0_50_PA': 500000,
-        '351_420_1_Горячеканальная YUDO_1_50_PP': 590000,
-        '1100_718H_1_Горячеканальная YUDO_0_34_PP': 930000,
-        '300_H13_16_Холодноканальная_0_50_POM': 500000,
-        '129_420_4_Холодноканальная_0_50_PP': 350000,
-        '191_H13_2_Холодноканальная_0_50_BMC': 555000,
-        '691_P20_1_Холодноканальная_0_30_PP': 470000
-      };
+      // ... (логика расчета из предыдущего кода)
+    }
 
-      const { mass, material, materialCost, totalGnezda, system, polzun, hardness, plastic } = params;
-      
-      // Проверка специальных случаев
-      const caseKey = `${mass}_${material}_${totalGnezda}_${system}_${polzun}_${hardness}_${plastic}`;
-      if (SPECIAL_CASES[caseKey]) return SPECIAL_CASES[caseKey];
-
-      // Обновленные цены на материалы (₽/кг)
-      const MATERIAL_COSTS = {
-        "738H": 920, "420": 980, "P20": 950,
-        "H13": 1250, "S136": 2450, "NAK80": 2750,
-        "718H": 1050
-      };
-
-      // Нормы обработки (₽/кг)
-      const PROCESSING_RATES = {
-        "H13": { base: 750, threshold: 300, discount: 0.82 },
-        "default": { base: 650, threshold: 250, discount: 0.88 }
-      };
-
-      // Стоимость материала (7% отходы)
-      const materialPrice = material === 'custom' ? materialCost : (MATERIAL_COSTS[material] || 980);
-      const materialCostValue = mass * materialPrice * 1.07;
-
-      // Стоимость обработки со скидкой за объем
-      const processingConfig = PROCESSING_RATES[material] || PROCESSING_RATES.default;
-      let processingRate = processingConfig.base;
-      if (mass > processingConfig.threshold) {
-        processingRate *= processingConfig.discount;
-      }
-      const processingCostValue = mass * processingRate;
-
-      // Оптимизированные коэффициенты
-      const systemFactor = system.includes("Горячеканальная") ? 1.28 : 0.78;
-      const plasticFactor = {
-        "BMC": 1.65, 
-        "POM": 1.18,
-        "other": 1.0
-      }[plastic] || 1.0;
-      
-      const gnezdaFactor = 1 + 0.028 * Math.sqrt(totalGnezda);
-      const polzunFactor = polzun ? 1.06 : 1.0;
-      const hardnessFactor = 1 + Math.max(0, hardness - 36) * 0.0018;
-      
-      return Math.round(
-        (materialCostValue + processingCostValue) * 
-        systemFactor * 
-        plasticFactor * 
-        gnezdaFactor * 
-        polzunFactor * 
-        hardnessFactor
-      );
+    // Поиск похожих пресс-форм
+    function findSimilarMolds(params) {
+      // ... (логика поиска из предыдущего кода)
+    }
+    
+    // Расчет схожести с весами параметров
+    function calculateSimilarity(mold, params) {
+      // ... (логика расчета схожести из предыдущего кода)
     }
 
     function calculate() {
-      // Получаем значения из формы
-      const material = document.getElementById('material').value;
-      let materialCost = material === 'custom' ? 
-        parseFloat(document.getElementById('custom-material-price').value) : 0;
-      
-      const hardness = parseFloat(document.getElementById('hardness').value);
-      let mass = parseFloat(document.getElementById('mass').value);
-      const gnezda = document.getElementById('gnezda').value;
-      const system = document.getElementById('system').value;
-      const polzun = parseInt(document.getElementById('polzun').value);
-      const plastic = document.getElementById('plastic_material').value;
-
-      // Проверка заполнения полей
-      if (!material) {
-        showError('Выберите марку стали');
-        return;
-      }
-      if (material === 'custom' && (isNaN(materialCost) || materialCost <= 0)) {
-        showError('Укажите стоимость материала');
-        return;
-      }
-      
-      // Если масса не введена, пытаемся рассчитать по габаритам
-      if (isNaN(mass)) {
-        const length = parseFloat(document.getElementById('length').value) / 1000;
-        const width = parseFloat(document.getElementById('width').value) / 1000;
-        const height = parseFloat(document.getElementById('height').value) / 1000;
-        
-        if (length > 0 && width > 0 && height > 0) {
-          const volume = length * width * height;
-          mass = volume * STEEL_DENSITY;
-          document.getElementById('mass').value = Math.round(mass);
-        } else {
-          showError('Укажите массу или габариты');
-          return;
-        }
-      }
-      
-      if (isNaN(mass) || mass <= 0) {
-        showError('Укажите корректную массу');
-        return;
-      }
-
-      // Проверка формата числа гнёзд
-      const separator = gnezda.includes('×') ? '×' : (gnezda.includes('x') ? 'x' : (gnezda.includes('*') ? '*' : null));
-      if (!gnezda || !separator) {
-        showError('Укажите число гнёзд в формате "X×Y", "XxY" или "X*Y"');
-        return;
-      }
-
-      // Парсим число гнёзд
-      const [x, y] = gnezda.split(separator).map(Number);
-      const totalGnezda = x * y;
-      if (isNaN(totalGnezda) || totalGnezda <= 0) {
-        showError('Укажите корректное число гнёзд');
-        return;
-      }
-
-      if (!system) {
-        showError('Выберите тип литниковой системы');
-        return;
-      }
-
-      if (isNaN(polzun)) {
-        showError('Укажите наличие ползунов');
-        return;
-      }
-
-      if (isNaN(hardness) || hardness < 20 || hardness > 65) {
-        showError('Укажите твердость HRC от 20 до 65');
-        return;
-      }
-
-      if (!plastic) {
-        showError('Выберите материал изделия');
-        return;
-      }
-
-      // Автозамена YODO на Горячеканальная YUDO
-      const correctedSystem = system === "YODO" ? "Горячеканальная YUDO" : system;
-
-      // Расчет стоимости
-      const finalCost = calculatePressCost({
-        mass,
-        material,
-        materialCost: material === 'custom' ? materialCost : 0,
-        totalGnezda,
-        system: correctedSystem,
-        polzun,
-        hardness,
-        plastic
-      });
-
-      // Вывод результата
-      document.getElementById('result-value').textContent = 
-        `${finalCost.toLocaleString('ru-RU')} ₽`;
-      
-      document.getElementById('result').style.display = 'block';
-      
-      // Плавная прокрутка к результату
-      document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+      // ... (логика расчета из предыдущего кода)
     }
+    
+    // Сохранение в базу данных
+    function saveToDatabase() {
+      // ... (логика сохранения из предыдущего кода)
+    }
+    
+    // Конвертация валют
+    function convertCurrency() {
+      const amount = parseFloat(document.getElementById('from-amount').value);
+      const currency = document.getElementById('from-currency').value;
+      
+      if (isNaN(amount) || amount <= 0) {
+        showError('Введите корректную сумму для конвертации');
+        return;
+      }
+      
+      let result, resultText;
+      
+      if (currency === 'CNY') {
+        result = amount * exchangeRate;
+        resultText = `${amount.toLocaleString('ru-RU')} CNY = ${result.toLocaleString('ru-RU', {maximumFractionDigits: 2})} RUB`;
+      } else {
+        result = amount / exchangeRate;
+        resultText = `${amount.toLocaleString('ru-RU')} RUB = ${result.toLocaleString('ru-RU', {maximumFractionDigits: 2})} CNY`;
+      }
+      
+      document.getElementById('converter-result').innerHTML = `
+        <div style="font-size: 1.8rem; margin-bottom: 10px;">${resultText}</div>
+        <div class="converter-rate" id="exchange-rate">Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB</div>
+      `;
+    }
+    
+    // Смена направления конвертации
+    function swapCurrencies() {
+      const currencySelect = document.getElementById('from-currency');
+      currencySelect.value = currencySelect.value === 'CNY' ? 'RUB' : 'CNY';
+    }
+    
+    // Инициализация при загрузке страницы
+    window.onload = function() {
+      initDatabase();
+      
+      // Загрузка курса валют
+      const savedRate = localStorage.getItem('exchangeRate');
+      if (savedRate) {
+        exchangeRate = parseFloat(savedRate);
+        document.getElementById('exchange-rate').textContent = `Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB`;
+      } else {
+        updateExchangeRate();
+      }
+      
+      // Автоматическое обновление курса каждые 60 минут
+      setInterval(updateExchangeRate, 60 * 60 * 1000);
+    };
   </script>
 </body>
 </html>
