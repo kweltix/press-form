@@ -663,6 +663,7 @@
       .password-container {
         flex-direction: column;
         align-items: flex-start;
+        margin-top: 15px; /* Добавлен отступ */
       }
       
       #admin-password {
@@ -992,12 +993,11 @@
     // Пароль для админ-панели
     const ADMIN_PASSWORD = "88168";
     
-    // База данных пресс-форм
+    // База данных пресс-форм (обновленная)
     let moldsDatabase = [];
     
     // Текущий курс обмена
     let exchangeRate = 11.5; // Значение по умолчанию
-    let conversionDirection = 'CNY_RUB'; // Направление конвертации
     
     // Инициализация базы данных
     function initDatabase() {
@@ -1006,9 +1006,540 @@
       if (savedData) {
         moldsDatabase = JSON.parse(savedData);
       } else {
-        // Загрузка начальных данных
+        // Загрузка начальных данных (38 записей)
         moldsDatabase = [
-          // ... (все 20 примеров из предыдущего кода)
+          {
+            name: "GS.0219.0001-01",
+            rfq: "211",
+            gnezda: "1×2",
+            system: "Горячий канал",
+            dimensions: [350, 450, 450],
+            material: "738H",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 2611632
+          },
+          {
+            name: "GS.0514.0001",
+            rfq: "211",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [400, 650, 620],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 5887757
+          },
+          {
+            name: "GS.0514.0002",
+            rfq: "211",
+            gnezda: "1×4",
+            system: "Холодный канал",
+            dimensions: [120, 180, 170],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 869577
+          },
+          {
+            name: "1",
+            rfq: "RFQ_196",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [500, 275, 325],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 635000
+          },
+          {
+            name: "1",
+            rfq: "RFQ_197",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [450, 450, 720],
+            material: "718H",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 930000
+          },
+          {
+            name: "GS.0517.0004",
+            rfq: "211",
+            gnezda: "1×8",
+            system: "Горячий канал",
+            dimensions: [350, 550, 380],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 3941253
+          },
+          {
+            name: "GS.0517.0004",
+            rfq: "211",
+            gnezda: "1×4",
+            system: "Горячий канал",
+            dimensions: [350, 350, 360],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 2160163
+          },
+          {
+            name: "GS.0195.0001",
+            rfq: "211",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [250, 500, 420],
+            material: "738H",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 2745710
+          },
+          {
+            name: "212-14.13.300-01_buton",
+            rfq: "198_Tula v21",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [325, 250, 350],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 460000
+          },
+          {
+            name: "1",
+            rfq: "210_Tula",
+            gnezda: "1×1",
+            system: "Холодный канал",
+            dimensions: [425, 300, 485],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 600000
+          },
+          {
+            name: "2",
+            rfq: "210_Tula",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [325, 300, 350],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 490000
+          },
+          {
+            name: "2",
+            rfq: "197",
+            gnezda: "1×8",
+            system: "Холодный канал",
+            dimensions: [450, 450, 720],
+            material: "718H",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 382000
+          },
+          {
+            name: "1",
+            rfq: "193",
+            gnezda: "1×4",
+            system: "Горячий канал",
+            dimensions: [300, 400, 400],
+            material: "718H",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 590000
+          },
+          {
+            name: "1",
+            rfq: "192",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [450, 550, 620],
+            material: "H13",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 1100000
+          },
+          {
+            name: "1",
+            rfq: "188",
+            gnezda: "1×16",
+            system: "Горячий канал",
+            dimensions: [400, 400, 505],
+            material: "H13",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: true,
+            vytalk: "Одинарное",
+            cost: 1470000
+          },
+          {
+            name: "1",
+            rfq: "182",
+            gnezda: "1×8",
+            system: "Холодный канал",
+            dimensions: [400, 450, 350],
+            material: "H13",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 820000
+          },
+          {
+            name: "2",
+            rfq: "182",
+            gnezda: "1×16",
+            system: "Холодный канал",
+            dimensions: [350, 350, 310],
+            material: "H13",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 490000
+          },
+          {
+            name: "1",
+            rfq: "169",
+            gnezda: "1×4",
+            system: "Холодный канал",
+            dimensions: [225, 225, 325],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 330000
+          },
+          {
+            name: "2",
+            rfq: "169",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [1150, 800, 1250],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 6870000
+          },
+          {
+            name: "3",
+            rfq: "169",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [1075, 825, 1150],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 6300000
+          },
+          {
+            name: "1",
+            rfq: "168",
+            gnezda: "1×6",
+            system: "Горячий канал",
+            dimensions: [500, 600, 500],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: true,
+            vytalk: "Двойное",
+            cost: 1700000
+          },
+          {
+            name: "2",
+            rfq: "168",
+            gnezda: "1×8",
+            system: "Горячий канал",
+            dimensions: [600, 650, 500],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: true,
+            vytalk: "Двойное",
+            cost: 2150000
+          },
+          {
+            name: "1",
+            rfq: "166",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [250, 350, 300],
+            material: "P20",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 270000
+          },
+          {
+            name: "1",
+            rfq: "165",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [250, 300, 300],
+            material: "718H",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 240000
+          },
+          {
+            name: "1",
+            rfq: "164",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [300, 350, 350],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 475000
+          },
+          {
+            name: "1",
+            rfq: "161",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [300, 300, 300],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: true,
+            vytalk: "Одинарное",
+            cost: 380000
+          },
+          {
+            name: "2",
+            rfq: "161",
+            gnezda: "1×4",
+            system: "Холодный канал",
+            dimensions: [300, 350, 300],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: true,
+            vytalk: "Одинарное",
+            cost: 490000
+          },
+          {
+            name: "3",
+            rfq: "161",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [300, 300, 300],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 330000
+          },
+          {
+            name: "4",
+            rfq: "161",
+            gnezda: "1×4",
+            system: "Холодный канал",
+            dimensions: [300, 350, 300],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 440000
+          },
+          {
+            name: "5",
+            rfq: "161",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [350, 400, 320],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 490000
+          },
+          {
+            name: "6",
+            rfq: "161",
+            gnezda: "1×4",
+            system: "Холодный канал",
+            dimensions: [400, 450, 330],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 710000
+          },
+          {
+            name: "1",
+            rfq: "154",
+            gnezda: "1×1",
+            system: "Горячий канал",
+            dimensions: [300, 300, 350],
+            material: "718H",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 590000
+          },
+          {
+            name: "1",
+            rfq: "152",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [350, 450, 330],
+            material: "420",
+            polzun: true,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 790000
+          },
+          {
+            name: "1",
+            rfq: "151",
+            gnezda: "1×4",
+            system: "Холодный канал",
+            dimensions: [450, 450, 400],
+            material: "420",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 620000
+          },
+          {
+            name: "1",
+            rfq: "144",
+            gnezda: "1×1",
+            system: "Холодный канал",
+            dimensions: [300, 300, 375],
+            material: "H13",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 710000
+          },
+          {
+            name: "2",
+            rfq: "144",
+            gnezda: "1×1",
+            system: "Холодный канал",
+            dimensions: [275, 275, 325],
+            material: "H13",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 600000
+          },
+          {
+            name: "3",
+            rfq: "144",
+            gnezda: "1×2",
+            system: "Холодный канал",
+            dimensions: [300, 250, 325],
+            material: "H13",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 550000
+          },
+          {
+            name: "1",
+            rfq: "141",
+            gnezda: "1×1",
+            system: "Холодный канал",
+            dimensions: [400, 400, 550],
+            material: "P20",
+            polzun: false,
+            naklon: false,
+            vivinch: false,
+            sriv: false,
+            vytalk: "Одинарное",
+            cost: 460000
+          }
         ];
         saveDatabase();
       }
@@ -1115,28 +1646,267 @@
       setTimeout(closeSuccessMessage, 5000);
     }
 
-    // Расчет стоимости пресс-формы
-    function calculatePressCost(params) {
-      // ... (логика расчета из предыдущего кода)
+    // Расчет схожести с весами параметров
+    function calculateSimilarity(mold, params) {
+      // Веса параметров
+      const weights = {
+        volume: 0.3,
+        nests: 0.2,
+        system: 0.15,
+        material: 0.1,
+        polzun: 0.05,
+        naklon: 0.05,
+        vivinch: 0.05,
+        sriv: 0.05,
+        vytalk: 0.05
+      };
+
+      // Сравнение объема
+      const moldVolume = mold.dimensions[0] * mold.dimensions[1] * mold.dimensions[2];
+      const paramVolume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
+      const volumeDiff = Math.abs(moldVolume - paramVolume);
+      const volumeSimilarity = (1 - volumeDiff / Math.max(moldVolume, paramVolume)) * 100;
+
+      // Сравнение числа гнезд
+      const moldNests = parseInt(mold.gnezda.split('×')[0]) * parseInt(mold.gnezda.split('×')[1]);
+      const paramNests = params.totalNests;
+      const nestsDiff = Math.abs(moldNests - paramNests);
+      const nestsSimilarity = nestsDiff === 0 ? 100 : (1 - nestsDiff / Math.max(moldNests, paramNests)) * 100;
+
+      // Сравнение системы
+      const systemMatch = mold.system === params.system ? 100 : 0;
+
+      // Сравнение материала
+      const materialMatch = mold.material === params.material ? 100 : 0;
+
+      // Сравнение булевых параметров
+      const polzunMatch = mold.polzun === params.polzun ? 100 : 0;
+      const naklonMatch = mold.naklon === params.naklon ? 100 : 0;
+      const vivinchMatch = mold.vivinch === params.vivinch ? 100 : 0;
+      const srivMatch = mold.sriv === params.sriv ? 100 : 0;
+
+      // Сравнение выталкивания
+      const vytalkMatch = mold.vytalk === params.vytalk ? 100 : 0;
+
+      // Общая схожесть
+      let totalSimilarity = 
+        volumeSimilarity * weights.volume +
+        nestsSimilarity * weights.nests +
+        systemMatch * weights.system +
+        materialMatch * weights.material +
+        polzunMatch * weights.polzun +
+        naklonMatch * weights.naklon +
+        vivinchMatch * weights.vivinch +
+        srivMatch * weights.sriv +
+        vytalkMatch * weights.vytalk;
+
+      return totalSimilarity;
     }
 
     // Поиск похожих пресс-форм
     function findSimilarMolds(params) {
-      // ... (логика поиска из предыдущего кода)
-    }
-    
-    // Расчет схожести с весами параметров
-    function calculateSimilarity(mold, params) {
-      // ... (логика расчета схожести из предыдущего кода)
+      // Рассчитываем схожесть для каждой пресс-формы в базе
+      const moldsWithSimilarity = moldsDatabase.map(mold => {
+        const similarity = calculateSimilarity(mold, params);
+        return { ...mold, similarity };
+      });
+
+      // Сортируем по убыванию схожести
+      moldsWithSimilarity.sort((a, b) => b.similarity - a.similarity);
+
+      return moldsWithSimilarity;
     }
 
     function calculate() {
-      // ... (логика расчета из предыдущего кода)
+      // Сбор данных
+      const material = document.getElementById('material').value;
+      const length = parseFloat(document.getElementById('length').value);
+      const width = parseFloat(document.getElementById('width').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const gnezdaInput = document.getElementById('gnezda').value.trim();
+      const system = document.getElementById('system').value;
+      const polzun = document.getElementById('polzun').value === '1';
+      const naklon = document.getElementById('naklon').value === '1';
+      const vivinch = document.getElementById('vivinch').value === '1';
+      const sriv = document.getElementById('sriv').value === '1';
+      const vytalk = document.getElementById('vytalk').value;
+
+      // Проверка заполненности
+      if (!material || isNaN(length) || isNaN(width) || isNaN(height) || !gnezdaInput || !system) {
+        showError('Заполните все обязательные поля!');
+        return;
+      }
+
+      // Разбираем число гнезд
+      let gnezdaParts;
+      if (gnezdaInput.includes('×')) {
+        gnezdaParts = gnezdaInput.split('×');
+      } else if (gnezdaInput.includes('*')) {
+        gnezdaParts = gnezdaInput.split('*');
+      } else if (gnezdaInput.includes('x')) {
+        gnezdaParts = gnezdaInput.split('x');
+      } else {
+        showError('Введите число гнезд в формате: X×Y');
+        return;
+      }
+
+      if (gnezdaParts.length !== 2) {
+        showError('Введите число гнезд в формате: X×Y');
+        return;
+      }
+
+      const x = parseInt(gnezdaParts[0]);
+      const y = parseInt(gnezdaParts[1]);
+      if (isNaN(x) || isNaN(y)) {
+        showError('Введите число гнезд в формате: X×Y');
+        return;
+      }
+
+      const totalNests = x * y;
+
+      // Параметры для передачи в функции
+      const params = {
+        material,
+        dimensions: [length, width, height],
+        gnezda: `${x}×${y}`, // сохраняем в едином формате
+        system,
+        polzun,
+        naklon,
+        vivinch,
+        sriv,
+        vytalk,
+        totalNests // для удобства сравнения
+      };
+
+      // Проверка на точное совпадение с существующей пресс-формой
+      let exactMatchCost = null;
+      for (const mold of moldsDatabase) {
+        const sameDimensions = 
+          mold.dimensions[0] === length &&
+          mold.dimensions[1] === width &&
+          mold.dimensions[2] === height;
+        
+        const sameMaterial = mold.material === material;
+        const sameSystem = mold.system === system;
+        const samePolzun = mold.polzun === polzun;
+        const sameNaklon = mold.naklon === naklon;
+        const sameVivinch = mold.vivinch === vivinch;
+        const sameSriv = mold.sriv === sriv;
+        const sameVytalk = mold.vytalk === vytalk;
+        const sameGnezda = mold.gnezda === `${x}×${y}`;
+        
+        if (sameDimensions && sameMaterial && sameSystem && samePolzun && 
+            sameNaklon && sameVivinch && sameSriv && sameVytalk && sameGnezda) {
+          exactMatchCost = mold.cost;
+          break;
+        }
+      }
+
+      // Если найдено точное совпадение, используем его стоимость
+      if (exactMatchCost !== null) {
+        document.getElementById('result-value').textContent = 
+          exactMatchCost.toLocaleString('ru-RU') + ' руб.';
+        
+        document.getElementById('result').style.display = 'block';
+        showSuccess('Найдено точное совпадение в базе данных!');
+        return;
+      }
+
+      // Найти похожие пресс-формы
+      const similarMolds = findSimilarMolds(params);
+
+      // Рассчитать стоимость как среднюю по топ-5 похожим
+      let cost = 0;
+      if (similarMolds.length > 0) {
+        // Берем не более 5
+        const topSimilar = similarMolds.slice(0, 5);
+        const totalCost = topSimilar.reduce((sum, mold) => sum + mold.cost, 0);
+        cost = totalCost / topSimilar.length;
+      } else {
+        showError('Не найдено похожих пресс-форм для расчета стоимости. Добавьте данные в базу.');
+        return;
+      }
+
+      // Показать результат
+      document.getElementById('result-value').textContent = cost.toLocaleString('ru-RU', {
+        maximumFractionDigits: 0
+      }) + ' руб.';
+
+      // Показать похожие пресс-формы
+      const similarList = document.getElementById('similar-molds');
+      similarList.innerHTML = '';
+
+      similarMolds.slice(0, 5).forEach(mold => {
+        const similarity = mold.similarity;
+        const moldEl = document.createElement('div');
+        moldEl.className = 'mold-item';
+        moldEl.innerHTML = `
+          <div><span class="mold-name">${mold.name} (${mold.rfq})</span> <span class="similarity-badge">${Math.round(similarity)}%</span></div>
+          <div>Гнёзда: <span class="mold-value">${mold.gnezda}</span></div>
+          <div>Система: <span class="mold-value">${mold.system}</span></div>
+          <div>Габариты: <span class="mold-value">${mold.dimensions.join('×')} мм</span></div>
+          <div>Сталь: <span class="mold-value">${mold.material}</span></div>
+          <div>Стоимость: <span class="mold-value">${mold.cost.toLocaleString('ru-RU')} руб.</span></div>
+        `;
+        similarList.appendChild(moldEl);
+      });
+
+      // Показать блок с результатом
+      document.getElementById('result').style.display = 'block';
     }
     
     // Сохранение в базу данных
     function saveToDatabase() {
-      // ... (логика сохранения из предыдущего кода)
+      const password = document.getElementById('admin-password').value;
+      if (password !== ADMIN_PASSWORD) {
+        showError('Неверный пароль!');
+        return;
+      }
+
+      const name = document.getElementById('admin-name').value;
+      const rfq = document.getElementById('admin-rfq').value;
+      const gnezda = document.getElementById('admin-gnezda').value;
+      const system = document.getElementById('admin-system').value;
+      const dimensionsStr = document.getElementById('admin-dimensions').value;
+      const material = document.getElementById('admin-material').value;
+      const polzun = document.getElementById('admin-polzun').value === '1';
+      const naklon = document.getElementById('admin-naklon').value === '1';
+      const vivinch = document.getElementById('admin-vivinch').value === '1';
+      const sriv = document.getElementById('admin-sriv').value === '1';
+      const vytalk = document.getElementById('admin-vytalk').value;
+      const cost = parseFloat(document.getElementById('admin-cost').value.replace(/\s+/g, ''));
+
+      if (!name || !rfq || !gnezda || !system || !dimensionsStr || !material || isNaN(cost)) {
+        showError('Заполните все поля!');
+        return;
+      }
+
+      // Преобразуем габариты
+      const dimensions = dimensionsStr.split('x').map(Number);
+      if (dimensions.length !== 3 || dimensions.some(isNaN)) {
+        showError('Габариты должны быть в формате: 350x450x450');
+        return;
+      }
+
+      // Создаем объект пресс-формы
+      const newMold = {
+        name,
+        rfq,
+        gnezda,
+        system,
+        dimensions,
+        material,
+        polzun,
+        naklon,
+        vivinch,
+        sriv,
+        vytalk,
+        cost
+      };
+
+      moldsDatabase.push(newMold);
+      saveDatabase();
+      showSuccess('Пресс-форма успешно добавлена в базу!');
     }
     
     // Конвертация валют
