@@ -663,7 +663,7 @@
       .password-container {
         flex-direction: column;
         align-items: flex-start;
-        margin-top: 15px; /* Добавлен отступ */
+        margin-top: 15px;
       }
       
       #admin-password {
@@ -682,6 +682,21 @@
       .converter-swap {
         margin: 15px auto;
         transform: rotate(90deg);
+      }
+    }
+    
+    /* Улучшения для админ-панели */
+    .password-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .password-container {
+        margin-top: 15px;
+        gap: 10px;
       }
     }
   </style>
@@ -1674,27 +1689,42 @@
     function calculateSimilarity(mold, params) {
       // Веса параметров
       const weights = {
-        volume: 0.3,
+        volume: 0.25,
         nests: 0.2,
         system: 0.15,
-        material: 0.1,
-        polzun: 0.05,
+        material: 0.15,
+        polzun: 0.1,
         naklon: 0.05,
         vivinch: 0.05,
         sriv: 0.05,
         vytalk: 0.05
       };
 
-      // Сравнение объема (логарифмическая шкала для уменьшения влияния больших размеров)
-      const moldVolume = Math.log(mold.dimensions[0] * mold.dimensions[1] * mold.dimensions[2] + 1);
-      const paramVolume = Math.log(params.dimensions[0] * params.dimensions[1] * params.dimensions[2] + 1);
-      const volumeDiff = Math.abs(moldVolume - paramVolume);
-      const volumeSimilarity = Math.max(0, 100 - volumeDiff * 10);
+      // Сравнение объема (относительная разница)
+      const moldVolume = mold.dimensions[0] * mold.dimensions[1] * mold.dimensions[2];
+      const paramVolume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
+      const volumeDiff = Math.abs(moldVolume - paramVolume) / Math.max(moldVolume, paramVolume, 1);
+      const volumeSimilarity = Math.max(0, 100 - volumeDiff * 50);
 
       // Сравнение числа гнезд
-      const moldNests = parseInt(mold.gnezda.split('×')[0]) * parseInt(mold.gnezda.split('×')[1]);
-      const paramNests = params.totalNests;
-      const nestsDiff = Math.abs(moldNests - paramNests);
+      let moldNests;
+      try {
+        if (mold.gnezda.includes('×')) {
+          const parts = mold.gnezda.split('×');
+          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
+        } else if (mold.gnezda.includes('*')) {
+          const parts = mold.gnezda.split('*');
+          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
+        } else if (mold.gnezda.includes('x')) {
+          const parts = mold.gnezda.split('x');
+          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
+        } else {
+          moldNests = parseInt(mold.gnezda) || 1;
+        }
+      } catch (e) {
+        moldNests = 1;
+      }
+      const nestsDiff = Math.abs(moldNests - params.totalNests);
       const nestsSimilarity = Math.max(0, 100 - nestsDiff * 5);
 
       // Сравнение системы
@@ -1724,7 +1754,7 @@
         srivMatch * weights.sriv +
         vytalkMatch * weights.vytalk;
 
-      return Math.min(100, Math.max(0, totalSimilarity));
+      return Math.min(100, Math.max(0, Math.round(totalSimilarity)));
     }
 
     // Поиск похожих пресс-форм
@@ -1898,7 +1928,7 @@
       const similarList = document.getElementById('similar-molds');
       similarList.innerHTML = '';
 
-      // Всегда показываем топ-5, даже если схожесть низкая
+      // Всегда показываем топ-5 наиболее похожих
       const topMolds = similarMolds.slice(0, 5);
       
       if (topMolds.length > 0) {
@@ -1907,7 +1937,7 @@
           const moldEl = document.createElement('div');
           moldEl.className = 'mold-item';
           moldEl.innerHTML = `
-            <div><span class="mold-name">${mold.name} (${mold.rfq})</span> <span class="similarity-badge">${Math.round(similarity)}%</span></div>
+            <div><span class="mold-name">${mold.name} (${mold.rfq})</span> <span class="similarity-badge">${similarity}%</span></div>
             <div>Гнёзда: <span class="mold-value">${mold.gnezda}</span></div>
             <div>Система: <span class="mold-value">${mold.system}</span></div>
             <div>Габариты: <span class="mold-value">${mold.dimensions.join('×')} мм</span></div>
