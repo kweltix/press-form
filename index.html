@@ -350,14 +350,9 @@
     }
     
     .mold-name {
-      font-weight: 700;
-      color: var(--accent);
-      font-size: 1.05rem;
-    }
-    
-    .rfq-name {
-      color: var(--accent-light);
       font-weight: 600;
+      color: var(--accent-light);
+      font-size: 1.05rem;
     }
     
     .mold-value {
@@ -372,6 +367,25 @@
       font-size: 0.8rem;
       font-weight: bold;
       margin-left: 10px;
+    }
+    
+    .mold-header {
+      font-size: 1.1rem;
+      color: var(--accent-light);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .mold-title {
+      font-weight: 700;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .mold-rfq {
+      color: var(--accent);
+      font-weight: 600;
     }
     
     footer {
@@ -689,6 +703,11 @@
         margin: 15px auto;
         transform: rotate(90deg);
       }
+      
+      .mold-header {
+        flex-direction: column;
+        gap: 5px;
+      }
     }
     
     /* Улучшения для админ-панели */
@@ -755,7 +774,7 @@
               <option value="S136">S136</option>
               <option value="NAK80">NAK80</option>
               <option value="718H">718H</option>
-              <option value="2316">2316</option> <!-- Добавлена новая сталь -->
+              <option value="2316">2316</option>
             </select>
           </div>
           
@@ -899,7 +918,7 @@
             <option value="S136">S136</option>
             <option value="NAK80">NAK80</option>
             <option value="718H">718H</option>
-            <option value="2316">2316</option> <!-- Добавлена новая сталь -->
+            <option value="2316">2316</option>
           </select>
         </div>
         
@@ -1011,7 +1030,7 @@
       "S136": 7700,
       "NAK80": 7900,
       "718H": 7800,
-      "2316": 7800  // Плотность для новой стали
+      "2316": 7800  // Добавлена новая сталь
     };
     
     // Базовые стоимости материалов (руб/кг)
@@ -1023,7 +1042,7 @@
       "S136": 580,
       "NAK80": 650,
       "718H": 380,
-      "2316": 400  // Стоимость для новой стали
+      "2316": 380  // Добавлена новая сталь
     };
     
     // Коэффициенты сложности
@@ -1042,15 +1061,16 @@
     // Пароль для админ-панели
     const ADMIN_PASSWORD = "88168";
     
-    // База данных пресс-форм
+    // База данных пресс-форм (44 записи)
     let moldsDatabase = [];
     
     // Текущий курс обмена
     let exchangeRate = 11.5; // Значение по умолчанию
     
-    // Начальные данные пресс-форм (44 записи)
+    // Начальные данные пресс-форм
     function populateInitialDatabase() {
       return [
+        // Существующие 38 записей
         {
           name: "GS.0219.0001-01",
           rfq: "211",
@@ -1583,6 +1603,7 @@
           vytalk: "Одинарное",
           cost: 460000
         },
+        
         // Новые пресс-формы (39-44)
         {
           name: "2",
@@ -1791,11 +1812,12 @@
       const similarMaterials = {
         "738H": ["718H"],
         "718H": ["738H"],
-        "420": ["P20"],
-        "P20": ["420"],
+        "420": ["P20", "2316"],
+        "P20": ["420", "2316"],
         "H13": ["S136"],
         "S136": ["H13"],
-        "NAK80": [] // Уникальный материал
+        "NAK80": [], // Уникальный материал
+        "2316": ["420", "P20"] // Новая сталь
       };
 
       // Расчет объема
@@ -1894,16 +1916,17 @@
       else if (params.system === "Запорное сопло") baseCost *= 1.25;
       else if (params.system === "Трех-плитная") baseCost *= 1.40;
       
-      // Учет числа гнезд (более точная формула)
-      const nestFactor = params.totalNests > 1 ? (1 + (params.totalNests - 1) * 0.25) : 1;
-      baseCost *= nestFactor;
+      // Учет числа гнезд (дополнительная сложность)
+      if (params.totalNests > 4) {
+        baseCost *= (1 + (params.totalNests - 1) * 0.25);
+      } else {
+        baseCost *= (1 + (params.totalNests - 1) * 0.3);
+      }
       
-      // Дополнительные корректировки для крупных пресс-форм
+      // Корректировка для больших пресс-форм
       const volume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
-      if (volume > 1000000) { // Для пресс-форм объемом более 1 м³
-        baseCost *= 0.95; // Небольшая скидка
-      } else if (volume < 500000) { // Для небольших пресс-форм
-        baseCost *= 1.1; // Наценка
+      if (volume > 100000000) { // Для пресс-форм объемом > 0.1 м³
+        baseCost *= 1.1;
       }
       
       return baseCost;
@@ -2048,9 +2071,11 @@
           const moldEl = document.createElement('div');
           moldEl.className = 'mold-item';
           moldEl.innerHTML = `
-            <div>
-              <span class="mold-name">${mold.name}</span> 
-              <span class="rfq-name">(${mold.rfq})</span> 
+            <div class="mold-header">
+              <div class="mold-title">
+                <span>${mold.name}</span>
+                <span class="mold-rfq">(${mold.rfq})</span>
+              </div>
               <span class="similarity-badge">${similarity}%</span>
             </div>
             <div>Гнёзда: <span class="mold-value">${mold.gnezda}</span></div>
