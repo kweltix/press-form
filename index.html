@@ -709,6 +709,29 @@
         gap: 10px;
       }
     }
+    
+    /* Улучшенное отображение RFQ и наименования */
+    .mold-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .mold-title {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--accent);
+    }
+    
+    .mold-rfq-badge {
+      background: var(--accent);
+      color: var(--primary-dark);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -1811,7 +1834,7 @@
       
       // Сравнение объема (относительная разница)
       const volumeDiff = Math.abs(moldVolume - paramVolume) / Math.max(moldVolume, paramVolume, 1);
-      const volumeSimilarity = 100 * (1 - Math.min(volumeDiff, 1)); // Максимальное снижение 100%
+      const volumeSimilarity = 100 * (1 - Math.min(volumeDiff, 1)); // Максимальное снижение 100% 
 
       // Сравнение числа гнезд
       let moldNests;
@@ -1833,7 +1856,7 @@
       }
       
       const nestsDiff = Math.abs(moldNests - params.totalNests) / Math.max(moldNests, params.totalNests, 1);
-      const nestsSimilarity = 100 * (1 - Math.min(nestsDiff, 0.5)); // Максимальное снижение 50%
+      const nestsSimilarity = 100 * (1 - Math.min(nestsDiff, 0.5)); // Максимальное снижение 50% 
 
       // Сравнение системы
       const systemMatch = mold.system === params.system ? 100 : 0;
@@ -2054,9 +2077,9 @@
           const moldEl = document.createElement('div');
           moldEl.className = 'mold-item';
           moldEl.innerHTML = `
-            <div>
-              <span class="mold-name">${mold.name}</span>
-              <span class="mold-rfq">${mold.rfq}</span>
+            <div class="mold-header">
+              <div class="mold-title">${mold.name}</div>
+              <div class="mold-rfq-badge">RFQ: ${mold.rfq}</div>
               <span class="similarity-badge">${similarity}%</span>
             </div>
             <div>Гнёзда: <span class="mold-value">${mold.gnezda}</span></div>
@@ -2161,14 +2184,37 @@
     // Инициализация при загрузке страницы
     window.onload = function() {
       // Загрузка начальной базы данных
+      const initialData = populateInitialDatabase();
       const savedData = localStorage.getItem('moldsDatabase');
       
       if (savedData) {
-        moldsDatabase = JSON.parse(savedData);
+        // Объединяем начальные данные и сохраненные
+        const savedMolds = JSON.parse(savedData);
+        
+        // Создаем Set для отслеживания уникальных пресс-форм
+        const uniqueMolds = new Map();
+        
+        // Сначала добавляем начальные данные
+        initialData.forEach(mold => {
+          const key = `${mold.name}|${mold.rfq}`;
+          uniqueMolds.set(key, mold);
+        });
+        
+        // Затем добавляем сохраненные данные (перезаписывают дубликаты)
+        savedMolds.forEach(mold => {
+          const key = `${mold.name}|${mold.rfq}`;
+          uniqueMolds.set(key, mold);
+        });
+        
+        moldsDatabase = Array.from(uniqueMolds.values());
       } else {
-        moldsDatabase = populateInitialDatabase();
-        saveDatabase(); // Гарантированное сохранение при первом запуске
+        moldsDatabase = initialData;
       }
+      
+      // Сохраняем объединенную базу
+      saveDatabase();
+      
+      console.log('Loaded database with', moldsDatabase.length, 'molds');
       
       // Загрузка курса валют
       const savedRate = localStorage.getItem('exchangeRate');
