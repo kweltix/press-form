@@ -19,6 +19,9 @@
       --transition: all 0.3s ease;
       --success: #27ae60;
       --error: #e74c3c;
+      --match-perfect: #27ae60;
+      --match-good: #f39c12;
+      --match-bad: #e74c3c;
     }
     
     * {
@@ -320,62 +323,93 @@
     }
     
     .mold-list {
-      max-height: 300px;
+      max-height: 500px;
       overflow-y: auto;
       padding-right: 10px;
     }
     
     .mold-item {
-      background: rgba(30, 40, 60, 0.6);
+      background: rgba(23, 42, 69, 0.8);
       border-left: 3px solid var(--accent);
-      padding: 12px 15px;
-      margin-bottom: 10px;
-      border-radius: 0 6px 6px 0;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 0 8px 8px 0;
       transition: all 0.3s ease;
     }
     
     .mold-item:hover {
       transform: translateX(5px);
-      background: rgba(30, 40, 60, 0.8);
+      background: rgba(30, 40, 60, 0.9);
     }
     
-    .mold-item div {
-      margin-bottom: 5px;
+    .param-row {
       display: flex;
       justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 4px;
     }
     
-    .mold-item div:last-child {
+    .param-row:last-child {
       margin-bottom: 0;
     }
     
-    .mold-name {
-      font-weight: 700; /* Жирнее текст */
-      color: var(--accent-light);
-      font-size: 1.1rem; /* Немного крупнее */
-    }
-    
-    .mold-rfq {
+    .param-label {
       font-weight: 600;
-      color: var(--accent);
-      background: rgba(212, 175, 55, 0.15);
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-left: 8px;
+      color: var(--accent-light);
     }
     
-    .mold-value {
-      color: var(--gray);
+    .param-value {
+      font-weight: 500;
+    }
+    
+    .match-perfect {
+      background-color: rgba(39, 174, 96, 0.15);
+      color: var(--match-perfect);
+    }
+    
+    .match-good {
+      background-color: rgba(243, 156, 18, 0.15);
+      color: var(--match-good);
+    }
+    
+    .match-bad {
+      background-color: rgba(231, 76, 60, 0.15);
+      color: var(--match-bad);
     }
     
     .similarity-badge {
       background: var(--accent);
       color: var(--primary-dark);
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
       font-weight: bold;
       margin-left: 10px;
+    }
+    
+    .mold-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    
+    .mold-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+    
+    .mold-rfq-badge {
+      background: var(--accent);
+      color: var(--primary-dark);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
     }
     
     footer {
@@ -709,29 +743,6 @@
         gap: 10px;
       }
     }
-    
-    /* Улучшенное отображение RFQ и наименования */
-    .mold-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    .mold-title {
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--accent);
-    }
-    
-    .mold-rfq-badge {
-      background: var(--accent);
-      color: var(--primary-dark);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
   </style>
 </head>
 <body>
@@ -782,7 +793,7 @@
               <option value="S136">S136</option>
               <option value="NAK80">NAK80</option>
               <option value="718H">718H</option>
-              <option value="2316">2316</option> <!-- Новая марка стали -->
+              <option value="2316">2316</option>
             </select>
           </div>
           
@@ -806,10 +817,10 @@
             <label for="system"><i class="fas fa-fire"></i> Тип литниковой системы:</label>
             <select id="system">
               <option value="" disabled selected>Выберите тип</option>
-              <option value="Горячий канал">Горячий канал</option>
-              <option value="Запорное сопло">Запорное сопло</option>
-              <option value="Холодный канал">Холодный канал</option>
-              <option value="Трех-плитная">Трех-плитная</option>
+              <option value="горячеканальная">Горячеканальная</option>
+              <option value="запорное сопло">Запорное сопло</option>
+              <option value="холодноканальная">Холодноканальная</option>
+              <option value="трехплитная">Трехплитная</option>
             </select>
           </div>
         </div>
@@ -904,10 +915,10 @@
         <div class="form-group">
           <label for="admin-system">Тип системы:</label>
           <select id="admin-system">
-            <option value="Горячий канал">Горячий канал</option>
-            <option value="Запорное сопло">Запорное сопло</option>
-            <option value="Холодный канал">Холодный канал</option>
-            <option value="Трех-плитная">Трех-плитная</option>
+            <option value="горячеканальная">Горячеканальная</option>
+            <option value="запорное сопло">Запорное сопло</option>
+            <option value="холодноканальная">Холодноканальная</option>
+            <option value="трехплитная">Трехплитная</option>
           </select>
         </div>
         
@@ -926,7 +937,7 @@
             <option value="S136">S136</option>
             <option value="NAK80">NAK80</option>
             <option value="718H">718H</option>
-            <option value="2316">2316</option> <!-- Новая марка стали -->
+            <option value="2316">2316</option>
           </select>
         </div>
         
@@ -971,8 +982,8 @@
         </div>
         
         <div class="form-group">
-          <label for="admin-cost">Стоимость (руб.):</label>
-          <input type="text" id="admin-cost" placeholder="Например: 2611632">
+          <label for="admin-cost">Стоимость (CNY):</label>
+          <input type="text" id="admin-cost" placeholder="Например: 227100">
         </div>
         
         <div class="password-container">
@@ -1029,7 +1040,7 @@
   </footer>
 
   <script>
-    // Плотность стали (кг/м³) с учетом разных марок
+    // Плотность стали (кг/м³)
     const DENSITIES = {
       "738H": 7800,
       "420": 7700,
@@ -1038,19 +1049,19 @@
       "S136": 7700,
       "NAK80": 7900,
       "718H": 7800,
-      "2316": 7800 // Новая марка стали
+      "2316": 7800
     };
     
-    // Базовые стоимости материалов (руб/кг)
-    const MATERIAL_COSTS = {
-      "738H": 320,
-      "420": 280,
-      "P20": 350,
-      "H13": 420,
-      "S136": 580,
-      "NAK80": 650,
-      "718H": 380,
-      "2316": 450 // Новая марка стали
+    // Базовые стоимости материалов (CNY/кг)
+    const MATERIAL_COSTS_CNY = {
+      "738H": 3680,
+      "420": 3220,
+      "P20": 4025,
+      "H13": 4830,
+      "S136": 6670,
+      "NAK80": 7475,
+      "718H": 4370,
+      "2316": 5175
     };
     
     // Коэффициенты сложности
@@ -1069,21 +1080,23 @@
     // Пароль для админ-панели
     const ADMIN_PASSWORD = "88168";
     
-    // База данных пресс-форм (44 записи)
+    // База данных пресс-форм
     let moldsDatabase = [];
     
     // Текущий курс обмена
-    let exchangeRate = 11.5; // Значение по умолчанию
+    let exchangeRate = 11.5;
+    
+    // Текущие параметры пользователя для сравнения
+    let currentUserParams = null;
     
     // Начальные данные пресс-форм
     function populateInitialDatabase() {
       return [
-        // Первые 38 записей (как в предыдущей версии)
         {
           name: "GS.0219.0001-01",
           rfq: "211",
-          gnezda: "1×2",
-          system: "Горячий канал",
+          gnezda: "1*2",
+          system: "горячеканальная",
           dimensions: [350, 450, 450],
           material: "738H",
           polzun: true,
@@ -1091,13 +1104,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 2611632
+          cost: 227100
         },
         {
           name: "GS.0514.0001",
           rfq: "211",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [400, 650, 620],
           material: "420",
           polzun: true,
@@ -1105,13 +1118,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 5887757
+          cost: 512000
         },
         {
           name: "GS.0514.0002",
           rfq: "211",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [120, 180, 170],
           material: "420",
           polzun: true,
@@ -1119,13 +1132,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 869577
+          cost: 75615
         },
         {
           name: "1",
           rfq: "RFQ_196",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [500, 275, 325],
           material: "420",
           polzun: true,
@@ -1133,13 +1146,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 635000
+          cost: 55217
         },
         {
           name: "1",
           rfq: "RFQ_197",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [450, 450, 720],
           material: "718H",
           polzun: false,
@@ -1147,13 +1160,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 930000
+          cost: 80870
         },
         {
           name: "GS.0517.0004",
           rfq: "211",
-          gnezda: "1×8",
-          system: "Горячий канал",
+          gnezda: "1*8",
+          system: "горячеканальная",
           dimensions: [350, 550, 380],
           material: "420",
           polzun: false,
@@ -1161,13 +1174,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 3941253
+          cost: 342717
         },
         {
           name: "GS.0517.0004",
           rfq: "211",
-          gnezda: "1×4",
-          system: "Горячий канал",
+          gnezda: "1*4",
+          system: "горячеканальная",
           dimensions: [350, 350, 360],
           material: "420",
           polzun: false,
@@ -1175,13 +1188,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 2160163
+          cost: 187840
         },
         {
           name: "GS.0195.0001",
           rfq: "211",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [250, 500, 420],
           material: "738H",
           polzun: true,
@@ -1189,13 +1202,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 2745710
+          cost: 238757
         },
         {
           name: "212-14.13.300-01_buton",
           rfq: "198_Tula v21",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [325, 250, 350],
           material: "420",
           polzun: true,
@@ -1203,13 +1216,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 460000
+          cost: 40000
         },
         {
           name: "1",
           rfq: "210_Tula",
-          gnezda: "1×1",
-          system: "Холодный канал",
+          gnezda: "1*1",
+          system: "холодноканальная",
           dimensions: [425, 300, 485],
           material: "420",
           polzun: false,
@@ -1217,13 +1230,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 600000
+          cost: 52174
         },
         {
           name: "2",
           rfq: "210_Tula",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [325, 300, 350],
           material: "420",
           polzun: false,
@@ -1231,13 +1244,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 490000
+          cost: 42609
         },
         {
           name: "2",
           rfq: "197",
-          gnezda: "1×8",
-          system: "Холодный канал",
+          gnezda: "1*8",
+          system: "холодноканальная",
           dimensions: [450, 450, 720],
           material: "718H",
           polzun: false,
@@ -1245,13 +1258,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 382000
+          cost: 33217
         },
         {
           name: "1",
           rfq: "193",
-          gnezda: "1×4",
-          system: "Горячий канал",
+          gnezda: "1*4",
+          system: "горячеканальная",
           dimensions: [300, 400, 400],
           material: "718H",
           polzun: false,
@@ -1259,13 +1272,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 590000
+          cost: 51304
         },
         {
           name: "1",
           rfq: "192",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [450, 550, 620],
           material: "H13",
           polzun: true,
@@ -1273,13 +1286,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 1100000
+          cost: 95652
         },
         {
           name: "1",
           rfq: "188",
-          gnezda: "1×16",
-          system: "Горячий канал",
+          gnezda: "1*16",
+          system: "горячеканальная",
           dimensions: [400, 400, 505],
           material: "H13",
           polzun: false,
@@ -1287,13 +1300,13 @@
           vivinch: false,
           sriv: true,
           vytalk: "Одинарное",
-          cost: 1470000
+          cost: 127826
         },
         {
           name: "1",
           rfq: "182",
-          gnezda: "1×8",
-          system: "Холодный канал",
+          gnezda: "1*8",
+          system: "холодноканальная",
           dimensions: [400, 450, 350],
           material: "H13",
           polzun: false,
@@ -1301,13 +1314,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 820000
+          cost: 71304
         },
         {
           name: "2",
           rfq: "182",
-          gnezda: "1×16",
-          system: "Холодный канал",
+          gnezda: "1*16",
+          system: "холодноканальная",
           dimensions: [350, 350, 310],
           material: "H13",
           polzun: false,
@@ -1315,13 +1328,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 490000
+          cost: 42609
         },
         {
           name: "1",
           rfq: "169",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [225, 225, 325],
           material: "420",
           polzun: false,
@@ -1329,13 +1342,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 330000
+          cost: 28696
         },
         {
           name: "2",
           rfq: "169",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [1150, 800, 1250],
           material: "420",
           polzun: true,
@@ -1343,13 +1356,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 6870000
+          cost: 597391
         },
         {
           name: "3",
           rfq: "169",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [1075, 825, 1150],
           material: "420",
           polzun: false,
@@ -1357,13 +1370,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 6300000
+          cost: 547826
         },
         {
           name: "1",
           rfq: "168",
-          gnezda: "1×6",
-          system: "Горячий канал",
+          gnezda: "1*6",
+          system: "горячеканальная",
           dimensions: [500, 600, 500],
           material: "420",
           polzun: false,
@@ -1371,13 +1384,13 @@
           vivinch: false,
           sriv: true,
           vytalk: "Двойное",
-          cost: 1700000
+          cost: 147826
         },
         {
           name: "2",
           rfq: "168",
-          gnezda: "1×8",
-          system: "Горячий канал",
+          gnezda: "1*8",
+          system: "горячеканальная",
           dimensions: [600, 650, 500],
           material: "420",
           polzun: false,
@@ -1385,13 +1398,13 @@
           vivinch: false,
           sriv: true,
           vytalk: "Двойное",
-          cost: 2150000
+          cost: 186957
         },
         {
           name: "1",
           rfq: "166",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [250, 350, 300],
           material: "P20",
           polzun: false,
@@ -1399,13 +1412,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 270000
+          cost: 23478
         },
         {
           name: "1",
           rfq: "165",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [250, 300, 300],
           material: "718H",
           polzun: false,
@@ -1413,13 +1426,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 240000
+          cost: 20870
         },
         {
           name: "1",
           rfq: "164",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [300, 350, 350],
           material: "420",
           polzun: true,
@@ -1427,13 +1440,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 475000
+          cost: 41304
         },
         {
           name: "1",
           rfq: "161",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [300, 300, 300],
           material: "420",
           polzun: false,
@@ -1441,13 +1454,13 @@
           vivinch: false,
           sriv: true,
           vytalk: "Одинарное",
-          cost: 380000
+          cost: 33043
         },
         {
           name: "2",
           rfq: "161",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [300, 350, 300],
           material: "420",
           polzun: false,
@@ -1455,13 +1468,13 @@
           vivinch: false,
           sriv: true,
           vytalk: "Одинарное",
-          cost: 490000
+          cost: 42609
         },
         {
           name: "3",
           rfq: "161",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [300, 300, 300],
           material: "420",
           polzun: true,
@@ -1469,13 +1482,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 330000
+          cost: 28696
         },
         {
           name: "4",
           rfq: "161",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [300, 350, 300],
           material: "420",
           polzun: true,
@@ -1483,13 +1496,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 440000
+          cost: 38261
         },
         {
           name: "5",
           rfq: "161",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [350, 400, 320],
           material: "420",
           polzun: false,
@@ -1497,13 +1510,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 490000
+          cost: 42609
         },
         {
           name: "6",
           rfq: "161",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [400, 450, 330],
           material: "420",
           polzun: false,
@@ -1511,13 +1524,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 710000
+          cost: 61739
         },
         {
           name: "1",
           rfq: "154",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [300, 300, 350],
           material: "718H",
           polzun: true,
@@ -1525,13 +1538,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 590000
+          cost: 51304
         },
         {
           name: "1",
           rfq: "152",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [350, 450, 330],
           material: "420",
           polzun: true,
@@ -1539,13 +1552,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 790000
+          cost: 68700
         },
         {
           name: "1",
           rfq: "151",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [450, 450, 400],
           material: "420",
           polzun: false,
@@ -1553,13 +1566,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 620000
+          cost: 53913
         },
         {
           name: "1",
           rfq: "144",
-          gnezda: "1×1",
-          system: "Холодный канал",
+          gnezda: "1*1",
+          system: "холодноканальная",
           dimensions: [300, 300, 375],
           material: "H13",
           polzun: false,
@@ -1567,13 +1580,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 710000
+          cost: 61739
         },
         {
           name: "2",
           rfq: "144",
-          gnezda: "1×1",
-          system: "Холодный канал",
+          gnezda: "1*1",
+          system: "холодноканальная",
           dimensions: [275, 275, 325],
           material: "H13",
           polzun: false,
@@ -1581,13 +1594,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 600000
+          cost: 52174
         },
         {
           name: "3",
           rfq: "144",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [300, 250, 325],
           material: "H13",
           polzun: false,
@@ -1595,13 +1608,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 550000
+          cost: 47826
         },
         {
           name: "1",
           rfq: "141",
-          gnezda: "1×1",
-          system: "Холодный канал",
+          gnezda: "1*1",
+          system: "холодноканальная",
           dimensions: [400, 400, 550],
           material: "P20",
           polzun: false,
@@ -1609,15 +1622,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 460000
+          cost: 40000
         },
-        
-        // Новые записи (39-44)
         {
           name: "2",
           rfq: "RFQ_140",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [300, 500, 320],
           material: "H13",
           polzun: false,
@@ -1625,13 +1636,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 490000
+          cost: 42609
         },
         {
           name: "1",
           rfq: "RFQ_137",
-          gnezda: "1×1",
-          system: "Горячий канал",
+          gnezda: "1*1",
+          system: "горячеканальная",
           dimensions: [400, 450, 620],
           material: "H13",
           polzun: true,
@@ -1639,13 +1650,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 1260000
+          cost: 109565
         },
         {
           name: "1",
           rfq: "RFQ_134",
-          gnezda: "1×2",
-          system: "Холодный канал",
+          gnezda: "1*2",
+          system: "холодноканальная",
           dimensions: [400, 420, 450],
           material: "H13",
           polzun: true,
@@ -1653,13 +1664,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 780000
+          cost: 67826
         },
         {
           name: "1",
           rfq: "RFQ_112",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [350, 500, 361],
           material: "420",
           polzun: false,
@@ -1667,13 +1678,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 880000
+          cost: 76522
         },
         {
           name: "2",
           rfq: "RFQ_112",
-          gnezda: "1×4",
-          system: "Холодный канал",
+          gnezda: "1*4",
+          system: "холодноканальная",
           dimensions: [300, 500, 381],
           material: "420",
           polzun: true,
@@ -1681,13 +1692,13 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 820000
+          cost: 71304
         },
         {
           name: "1",
           rfq: "RFQ_111",
-          gnezda: "1×8",
-          system: "Холодный канал",
+          gnezda: "1*8",
+          system: "холодноканальная",
           dimensions: [550, 750, 525],
           material: "2316",
           polzun: true,
@@ -1695,7 +1706,7 @@
           vivinch: false,
           sriv: false,
           vytalk: "Одинарное",
-          cost: 2390000
+          cost: 207826
         }
       ];
     }
@@ -1718,7 +1729,6 @@
         }
       } catch (error) {
         console.error('Ошибка при получении курса:', error);
-        // Используем последнее сохраненное значение
         const savedRate = localStorage.getItem('exchangeRate');
         if (savedRate) {
           exchangeRate = parseFloat(savedRate);
@@ -1743,7 +1753,6 @@
           document.getElementById('admin-panel').classList.add('active');
         } else if(button.dataset.tab === 'converter') {
           document.getElementById('converter-container').classList.add('active');
-          // При открытии конвертера обновляем курс
           updateExchangeRate();
         }
       });
@@ -1751,7 +1760,7 @@
 
     // Расчет массы по габаритам с учетом материала
     function calculateMass(material, dimensions) {
-      const length = dimensions[0] / 1000; // в метрах
+      const length = dimensions[0] / 1000;
       const width = dimensions[1] / 1000;
       const height = dimensions[2] / 1000;
       
@@ -1801,12 +1810,12 @@
       setTimeout(closeSuccessMessage, 5000);
     }
 
-    // Улучшенный расчет схожести
+    // Расчет схожести с учетом требований
     function calculateSimilarity(mold, params) {
-      // Веса параметров (обновленные)
+      // Веса параметров
       const weights = {
-        volume: 0.3,       // Увеличил важность объема
-        nests: 0.25,       // Увеличил важность числа гнезд
+        volume: 0.3,
+        nests: 0.25,
         system: 0.12,
         material: 0.12,
         polzun: 0.06,
@@ -1824,29 +1833,23 @@
         "P20": ["420"],
         "H13": ["S136"],
         "S136": ["H13"],
-        "NAK80": [], // Уникальный материал
-        "2316": ["420", "P20"] // Новая марка стали
+        "NAK80": [],
+        "2316": ["420", "P20"]
       };
 
       // Расчет объема
       const moldVolume = mold.dimensions[0] * mold.dimensions[1] * mold.dimensions[2];
       const paramVolume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
       
-      // Сравнение объема (относительная разница)
+      // Сравнение объема
       const volumeDiff = Math.abs(moldVolume - paramVolume) / Math.max(moldVolume, paramVolume, 1);
-      const volumeSimilarity = 100 * (1 - Math.min(volumeDiff, 1)); // Максимальное снижение 100% 
+      const volumeSimilarity = 100 * (1 - Math.min(volumeDiff, 1));
 
       // Сравнение числа гнезд
       let moldNests;
       try {
-        if (mold.gnezda.includes('×')) {
-          const parts = mold.gnezda.split('×');
-          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
-        } else if (mold.gnezda.includes('*')) {
+        if (mold.gnezda.includes('*')) {
           const parts = mold.gnezda.split('*');
-          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
-        } else if (mold.gnezda.includes('x')) {
-          const parts = mold.gnezda.split('x');
           moldNests = parseInt(parts[0]) * parseInt(parts[1]);
         } else {
           moldNests = parseInt(mold.gnezda) || 1;
@@ -1856,16 +1859,16 @@
       }
       
       const nestsDiff = Math.abs(moldNests - params.totalNests) / Math.max(moldNests, params.totalNests, 1);
-      const nestsSimilarity = 100 * (1 - Math.min(nestsDiff, 0.5)); // Максимальное снижение 50% 
+      const nestsSimilarity = 100 * (1 - Math.min(nestsDiff, 0.5));
 
       // Сравнение системы
       const systemMatch = mold.system === params.system ? 100 : 0;
 
-      // Сходство материала: 100% для одинаковых, 70% для похожих, 0% для разных
+      // Сходство материала
       const materialSimilarity = mold.material === params.material ? 100 : 
                               (similarMaterials[mold.material] || []).includes(params.material) ? 70 : 0;
 
-      // Сравнение булевых параметров
+      // Сравнение булевых параметров (0% при несовпадении)
       const polzunMatch = mold.polzun === params.polzun ? 100 : 0;
       const naklonMatch = mold.naklon === params.naklon ? 100 : 0;
       const vivinchMatch = mold.vivinch === params.vivinch ? 100 : 0;
@@ -1889,53 +1892,169 @@
       return Math.min(100, Math.max(0, Math.round(totalSimilarity)));
     }
 
-    // Поиск похожих пресс-форм
+    // Поиск похожих пресс-форм (топ-10)
     function findSimilarMolds(params) {
-      // Рассчитываем схожесть для каждой пресс-формы в базе
       const moldsWithSimilarity = moldsDatabase.map(mold => {
         const similarity = calculateSimilarity(mold, params);
         return { ...mold, similarity };
       });
 
-      // Сортируем по убыванию схожести
-      moldsWithSimilarity.sort((a, b) => b.similarity - a.similarity);
+      // Фильтрация по булевым параметрам
+      const filteredMolds = moldsWithSimilarity.filter(mold => {
+        // Если пользователь выбрал "Да" для параметра, то показываем только те, где тоже "Да"
+        if (params.polzun && !mold.polzun) return false;
+        if (params.naklon && !mold.naklon) return false;
+        if (params.vivinch && !mold.vivinch) return false;
+        if (params.sriv && !mold.sriv) return false;
+        return true;
+      });
 
-      return moldsWithSimilarity;
+      // Сортировка по убыванию схожести
+      filteredMolds.sort((a, b) => b.similarity - a.similarity);
+
+      return filteredMolds.slice(0, 10);
     }
 
-    // Расчет стоимости на основе параметров
+    // Расчет стоимости на основе параметров (в CNY)
     function calculateBaseCost(params) {
-      // Расчет массы
       const mass = calculateMass(params.material, params.dimensions);
-      
-      // Базовая стоимость материала
-      const materialCost = MATERIAL_COSTS[params.material] || 350;
+      const materialCost = MATERIAL_COSTS_CNY[params.material] || Math.round(350 * 11.5);
       let baseCost = mass * materialCost;
       
-      // Учет сложности
       if (params.polzun) baseCost *= 1.25;
       if (params.naklon) baseCost *= 1.15;
       if (params.vivinch) baseCost *= 1.30;
       if (params.sriv) baseCost *= 1.20;
       if (params.vytalk === "Двойное") baseCost *= 1.18;
       
-      // Учет системы
-      if (params.system === "Горячий канал") baseCost *= 1.35;
-      else if (params.system === "Запорное сопло") baseCost *= 1.25;
-      else if (params.system === "Трех-плитная") baseCost *= 1.40;
+      if (params.system === "горячеканальная") baseCost *= 1.35;
+      else if (params.system === "запорное сопло") baseCost *= 1.25;
+      else if (params.system === "трехплитная") baseCost *= 1.40;
       
-      // Учет числа гнезд
       baseCost *= (1 + (params.totalNests - 1) * 0.3);
       
-      // Корректировка для больших пресс-форм
       const volume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
-      if (volume > 1000000) { // Для очень больших пресс-форм
-        baseCost *= 1.1;
-      } else if (volume < 50000) { // Для очень маленьких
-        baseCost *= 1.2;
-      }
+      if (volume > 1000000) baseCost *= 1.1;
+      else if (volume < 50000) baseCost *= 1.2;
       
       return baseCost;
+    }
+
+    // Определение класса для подсветки параметров
+    function getMatchClass(value1, value2, paramType) {
+      if (paramType === 'nests') {
+        const diff = Math.abs(value1 - value2);
+        if (diff <= 2) return 'match-perfect';
+        if (diff <= 8) return 'match-good';
+        return 'match-bad';
+      }
+      
+      if (paramType === 'dimensions') {
+        const volume1 = value1[0] * value1[1] * value1[2];
+        const volume2 = value2[0] * value2[1] * value2[2];
+        const diff = Math.abs(volume1 - volume2) / Math.max(volume1, volume2);
+        if (diff <= 0.1) return 'match-perfect';
+        if (diff <= 0.3) return 'match-good';
+        return 'match-bad';
+      }
+      
+      if (paramType === 'boolean') {
+        return value1 === value2 ? 'match-perfect' : 'match-bad';
+      }
+      
+      return value1 === value2 ? 'match-perfect' : 'match-bad';
+    }
+
+    // Отображение похожих пресс-форм с подсветкой
+    function showSimilarMolds(similarMolds, userParams) {
+      const similarList = document.getElementById('similar-molds');
+      similarList.innerHTML = '';
+
+      if (similarMolds.length === 0) {
+        similarList.innerHTML = '<div class="mold-item">Нет похожих пресс-форм в базе данных</div>';
+        return;
+      }
+
+      similarMolds.forEach(mold => {
+        // Преобразуем гнезда в число
+        let moldNests = 1;
+        if (mold.gnezda.includes('*')) {
+          const parts = mold.gnezda.split('*');
+          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
+        }
+        
+        // Определяем классы для подсветки
+        const nestsClass = getMatchClass(moldNests, userParams.totalNests, 'nests');
+        const systemClass = getMatchClass(mold.system, userParams.system, '');
+        const dimensionsClass = getMatchClass(mold.dimensions, userParams.dimensions, 'dimensions');
+        const materialClass = getMatchClass(mold.material, userParams.material, '');
+        const polzunClass = getMatchClass(mold.polzun, userParams.polzun, 'boolean');
+        const naklonClass = getMatchClass(mold.naklon, userParams.naklon, 'boolean');
+        const vivinchClass = getMatchClass(mold.vivinch, userParams.vivinch, 'boolean');
+        const srivClass = getMatchClass(mold.sriv, userParams.sriv, 'boolean');
+        const vytalkClass = getMatchClass(mold.vytalk, userParams.vytalk, '');
+        
+        const moldEl = document.createElement('div');
+        moldEl.className = 'mold-item';
+        moldEl.innerHTML = `
+          <div class="mold-header">
+            <div class="mold-title">${mold.name}</div>
+            <div class="mold-rfq-badge">RFQ: ${mold.rfq}</div>
+            <span class="similarity-badge">${mold.similarity}%</span>
+          </div>
+          
+          <div class="param-row ${nestsClass}">
+            <span class="param-label">Число гнёзд:</span>
+            <span class="param-value">${mold.gnezda}</span>
+          </div>
+          
+          <div class="param-row ${systemClass}">
+            <span class="param-label">Тип системы:</span>
+            <span class="param-value">${mold.system}</span>
+          </div>
+          
+          <div class="param-row ${dimensionsClass}">
+            <span class="param-label">Габариты:</span>
+            <span class="param-value">${mold.dimensions.join('×')} мм</span>
+          </div>
+          
+          <div class="param-row ${materialClass}">
+            <span class="param-label">Марка стали:</span>
+            <span class="param-value">${mold.material}</span>
+          </div>
+          
+          <div class="param-row ${polzunClass}">
+            <span class="param-label">Ползуны:</span>
+            <span class="param-value">${mold.polzun ? 'Да' : 'Нет'}</span>
+          </div>
+          
+          <div class="param-row ${naklonClass}">
+            <span class="param-label">Наклонные толкатели:</span>
+            <span class="param-value">${mold.naklon ? 'Да' : 'Нет'}</span>
+          </div>
+          
+          <div class="param-row ${vivinchClass}">
+            <span class="param-label">Вывинчивание:</span>
+            <span class="param-value">${mold.vivinch ? 'Да' : 'Нет'}</span>
+          </div>
+          
+          <div class="param-row ${srivClass}">
+            <span class="param-label">Срывом:</span>
+            <span class="param-value">${mold.sriv ? 'Да' : 'Нет'}</span>
+          </div>
+          
+          <div class="param-row ${vytalkClass}">
+            <span class="param-label">Выталкивание:</span>
+            <span class="param-value">${mold.vytalk}</span>
+          </div>
+          
+          <div class="param-row">
+            <span class="param-label">Стоимость:</span>
+            <span class="param-value" style="color: var(--accent); font-weight: 600;">${mold.cost.toLocaleString('ru-RU')} CNY</span>
+          </div>
+        `;
+        similarList.appendChild(moldEl);
+      });
     }
 
     function calculate() {
@@ -1960,12 +2079,10 @@
 
       // Разбираем число гнезд
       let gnezdaParts;
-      if (gnezdaInput.includes('×')) {
-        gnezdaParts = gnezdaInput.split('×');
-      } else if (gnezdaInput.includes('*')) {
-        gnezdaParts = gnezdaInput.split('*');
-      } else if (gnezdaInput.includes('x')) {
-        gnezdaParts = gnezdaInput.split('x');
+      if (gnezdaInput.includes('×') || gnezdaInput.includes('x') || gnezdaInput.includes('*')) {
+        const separator = gnezdaInput.includes('×') ? '×' : 
+                         gnezdaInput.includes('x') ? 'x' : '*';
+        gnezdaParts = gnezdaInput.split(separator);
       } else {
         showError('Введите число гнезд в формате: X×Y');
         return;
@@ -1985,11 +2102,11 @@
 
       const totalNests = x * y;
 
-      // Параметры для передачи в функции
-      const params = {
+      // Параметры пользователя
+      const userParams = {
         material,
         dimensions: [length, width, height],
-        gnezda: `${x}×${y}`,
+        gnezda: `${x}*${y}`,
         system,
         polzun,
         naklon,
@@ -1998,8 +2115,11 @@
         vytalk,
         totalNests
       };
+      
+      // Сохраняем для сравнения
+      currentUserParams = userParams;
 
-      // Проверка на точное совпадение с существующей пресс-формой
+      // Проверка на точное совпадение
       let exactMatchCost = null;
       for (const mold of moldsDatabase) {
         const sameDimensions = 
@@ -2014,7 +2134,7 @@
         const sameVivinch = mold.vivinch === vivinch;
         const sameSriv = mold.sriv === sriv;
         const sameVytalk = mold.vytalk === vytalk;
-        const sameGnezda = mold.gnezda === `${x}×${y}`;
+        const sameGnezda = mold.gnezda === `${x}*${y}`;
         
         if (sameDimensions && sameMaterial && sameSystem && samePolzun && 
             sameNaklon && sameVivinch && sameSriv && sameVytalk && sameGnezda) {
@@ -2023,76 +2143,43 @@
         }
       }
 
-      // Если найдено точное совпадение, используем его стоимость
+      // Если найдено точное совпадение
       if (exactMatchCost !== null) {
         document.getElementById('result-value').textContent = 
-          exactMatchCost.toLocaleString('ru-RU') + ' руб.';
+          exactMatchCost.toLocaleString('ru-RU') + ' CNY';
         
         document.getElementById('result').style.display = 'block';
         showSuccess('Найдено точное совпадение в базе данных!');
         
         // Показываем похожие пресс-формы
-        const similarMolds = findSimilarMolds(params);
-        showSimilarMolds(similarMolds);
+        const similarMolds = findSimilarMolds(userParams);
+        showSimilarMolds(similarMolds, userParams);
         return;
       }
 
       // Найти похожие пресс-формы
-      const similarMolds = findSimilarMolds(params);
+      const similarMolds = findSimilarMolds(userParams);
 
       // Рассчитать стоимость как среднюю по топ-5 похожим
       let cost = 0;
       if (similarMolds.length > 0) {
-        // Берем не более 5
         const topSimilar = similarMolds.slice(0, 5);
         const totalCost = topSimilar.reduce((sum, mold) => sum + mold.cost, 0);
         cost = totalCost / topSimilar.length;
       } else {
         // Если нет похожих, используем базовый расчет
-        cost = calculateBaseCost(params);
+        cost = calculateBaseCost(userParams);
       }
 
       // Показать результат
       document.getElementById('result-value').textContent = 
-        Math.round(cost).toLocaleString('ru-RU') + ' руб.';
+        Math.round(cost).toLocaleString('ru-RU') + ' CNY';
       
       // Показать похожие пресс-формы
-      showSimilarMolds(similarMolds);
+      showSimilarMolds(similarMolds, userParams);
 
       // Показать блок с результатом
       document.getElementById('result').style.display = 'block';
-    }
-    
-    // Функция для отображения похожих пресс-форм
-    function showSimilarMolds(similarMolds) {
-      const similarList = document.getElementById('similar-molds');
-      similarList.innerHTML = '';
-
-      // Всегда показываем топ-5 наиболее похожих
-      const topMolds = similarMolds.slice(0, 5);
-      
-      if (topMolds.length > 0) {
-        topMolds.forEach(mold => {
-          const similarity = mold.similarity;
-          const moldEl = document.createElement('div');
-          moldEl.className = 'mold-item';
-          moldEl.innerHTML = `
-            <div class="mold-header">
-              <div class="mold-title">${mold.name}</div>
-              <div class="mold-rfq-badge">RFQ: ${mold.rfq}</div>
-              <span class="similarity-badge">${similarity}%</span>
-            </div>
-            <div>Гнёзда: <span class="mold-value">${mold.gnezda}</span></div>
-            <div>Система: <span class="mold-value">${mold.system}</span></div>
-            <div>Габариты: <span class="mold-value">${mold.dimensions.join('×')} мм</span></div>
-            <div>Сталь: <span class="mold-value">${mold.material}</span></div>
-            <div>Стоимость: <span class="mold-value">${mold.cost.toLocaleString('ru-RU')} руб.</span></div>
-          `;
-          similarList.appendChild(moldEl);
-        });
-      } else {
-        similarList.innerHTML = '<div class="mold-item">Нет похожих пресс-форм в базе данных</div>';
-      }
     }
     
     // Сохранение в базу данных
@@ -2105,7 +2192,7 @@
 
       const name = document.getElementById('admin-name').value;
       const rfq = document.getElementById('admin-rfq').value;
-      const gnezda = document.getElementById('admin-gnezda').value;
+      const gnezdaInput = document.getElementById('admin-gnezda').value;
       const system = document.getElementById('admin-system').value;
       const dimensionsStr = document.getElementById('admin-dimensions').value;
       const material = document.getElementById('admin-material').value;
@@ -2116,7 +2203,7 @@
       const vytalk = document.getElementById('admin-vytalk').value;
       const cost = parseFloat(document.getElementById('admin-cost').value.replace(/\s+/g, ''));
 
-      if (!name || !rfq || !gnezda || !system || !dimensionsStr || !material || isNaN(cost)) {
+      if (!name || !rfq || !gnezdaInput || !system || !dimensionsStr || !material || isNaN(cost)) {
         showError('Заполните все поля!');
         return;
       }
@@ -2125,6 +2212,22 @@
       const dimensions = dimensionsStr.split('x').map(Number);
       if (dimensions.length !== 3 || dimensions.some(isNaN)) {
         showError('Габариты должны быть в формате: 350x450x450');
+        return;
+      }
+
+      // Преобразуем число гнезд
+      let gnezda;
+      if (gnezdaInput.includes('×') || gnezdaInput.includes('x') || gnezdaInput.includes('*')) {
+        const separator = gnezdaInput.includes('×') ? '×' : 
+                         gnezdaInput.includes('x') ? 'x' : '*';
+        const parts = gnezdaInput.split(separator);
+        if (parts.length !== 2 || isNaN(parseInt(parts[0])) || isNaN(parseInt(parts[1]))) {
+          showError('Введите число гнезд в формате: X×Y');
+          return;
+        }
+        gnezda = `${parts[0]}*${parts[1]}`;
+      } else {
+        showError('Введите число гнезд в формате: X×Y');
         return;
       }
 
@@ -2188,19 +2291,14 @@
       const savedData = localStorage.getItem('moldsDatabase');
       
       if (savedData) {
-        // Объединяем начальные данные и сохраненные
         const savedMolds = JSON.parse(savedData);
-        
-        // Создаем Set для отслеживания уникальных пресс-форм
         const uniqueMolds = new Map();
         
-        // Сначала добавляем начальные данные
         initialData.forEach(mold => {
           const key = `${mold.name}|${mold.rfq}`;
           uniqueMolds.set(key, mold);
         });
         
-        // Затем добавляем сохраненные данные (перезаписывают дубликаты)
         savedMolds.forEach(mold => {
           const key = `${mold.name}|${mold.rfq}`;
           uniqueMolds.set(key, mold);
@@ -2211,10 +2309,7 @@
         moldsDatabase = initialData;
       }
       
-      // Сохраняем объединенную базу
       saveDatabase();
-      
-      console.log('Loaded database with', moldsDatabase.length, 'molds');
       
       // Загрузка курса валют
       const savedRate = localStorage.getItem('exchangeRate');
@@ -2225,7 +2320,6 @@
         updateExchangeRate();
       }
       
-      // Автоматическое обновление курса каждые 60 минут
       setInterval(updateExchangeRate, 60 * 60 * 1000);
     };
   </script>
