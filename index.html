@@ -1,2332 +1,1523 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>КБ-ПРЕССФОРМА | Профессиональный калькулятор</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #0a192f;
-      --primary-dark: #020c1b;
-      --accent: #d4af37;
-      --accent-light: #e6c76a;
-      --light: #f8f9fa;
-      --dark: #172a45;
-      --gray: #8b98b2;
-      --border: #31456e;
-      --card-bg: rgba(10, 25, 47, 0.95);
-      --transition: all 0.3s ease;
-      --success: #27ae60;
-      --error: #e74c3c;
-      --match-perfect: #27ae60;
-      --match-good: #f39c12;
-      --match-bad: #e74c3c;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-      color: var(--light);
-      line-height: 1.6;
-      padding: 0;
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow-x: hidden;
-      font-size: 16px;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      flex: 1;
-      position: relative;
-      z-index: 1;
-    }
-    
-    header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 30px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-    
-    header::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--accent);
-    }
-    
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0;
-      font-weight: 700;
-      letter-spacing: 1px;
-      background: linear-gradient(45deg, var(--accent), var(--accent-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      position: relative;
-      display: inline-block;
-      padding: 0 20px;
-    }
-    
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0 30px;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .tab-btn {
-      background: rgba(23, 42, 69, 0.7);
-      color: var(--accent-light);
-      border: 1px solid var(--accent);
-      padding: 12px 25px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: var(--transition);
-      min-width: 180px;
-      text-align: center;
-    }
-    
-    .tab-btn.active {
-      background: var(--accent);
-      color: var(--primary-dark);
-    }
-    
-    .tab-btn:hover:not(.active) {
-      background: rgba(212, 175, 55, 0.2);
-    }
-    
-    .calculator-container, 
-    .admin-panel,
-    .converter-container {
-      background: var(--card-bg);
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      overflow: hidden;
-      margin: 0 auto 30px;
-      max-width: 1000px;
-      position: relative;
-      z-index: 1;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      display: none;
-      padding: 25px;
-    }
-    
-    .calculator-container.active,
-    .admin-panel.active,
-    .converter-container.active {
-      display: block;
-    }
-    
-    .calculator {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    
-    @media (max-width: 900px) {
-      .calculator {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .form-section {
-      background: rgba(23, 42, 69, 0.7);
-      padding: 25px;
-      border-radius: 12px;
-      border: 1px solid rgba(212, 175, 55, 0.15);
-    }
-    
-    .section-title {
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-      color: var(--accent-light);
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 10px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-    }
-    
-    .section-title i {
-      margin-right: 12px;
-      font-size: 1.1em;
-      color: var(--accent);
-    }
-    
-    .form-group {
-      margin-bottom: 18px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--accent-light);
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-    }
-    
-    label i {
-      margin-right: 8px;
-      font-size: 0.9em;
-      color: var(--accent);
-    }
-    
-    input, select {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: var(--transition);
-      background: rgba(30, 40, 60, 0.6);
-      color: white;
-    }
-    
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-    
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
-      background: rgba(40, 50, 70, 0.7);
-    }
-    
-    .dimensions-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-    }
-    
-    .note {
-      font-size: 0.85rem;
-      color: var(--gray);
-      margin-top: 6px;
-      font-style: italic;
-      padding-left: 26px;
-    }
-    
-    .additional-params {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 10px;
-    }
-    
-    .btn-container {
-      grid-column: 1 / -1;
-      padding: 10px 0;
-    }
-    
-    .btn-calculate {
-      background: linear-gradient(135deg, var(--accent), #b8860b);
-      color: white;
-      border: none;
-      padding: 14px 25px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: var(--transition);
-      width: 100%;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .btn-calculate:hover {
-      background: linear-gradient(135deg, #e6c76a, #d4af37);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .btn-calculate:active {
-      transform: translateY(1px);
-    }
-    
-    .btn-calculate i {
-      transition: var(--transition);
-    }
-    
-    .result-section {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 25px;
-      display: none;
-      animation: fadeIn 0.5s ease-out;
-      background: rgba(23, 42, 69, 0.7);
-      border-radius: 12px;
-      margin-top: 10px;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    
-    .result-title {
-      font-size: 1.4rem;
-      color: var(--accent-light);
-      margin-bottom: 20px;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .result-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--accent-light);
-      margin: 15px 0;
-      background: linear-gradient(45deg, var(--accent), var(--accent-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .similar-molds {
-      margin-top: 25px;
-      text-align: left;
-    }
-    
-    .similar-title {
-      font-size: 1.2rem;
-      color: var(--accent-light);
-      margin-bottom: 15px;
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 8px;
-    }
-    
-    .mold-list {
-      max-height: 500px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-    
-    .mold-item {
-      background: rgba(23, 42, 69, 0.8);
-      border-left: 3px solid var(--accent);
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 0 8px 8px 0;
-      transition: all 0.3s ease;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    
-    .mold-item:hover {
-      transform: translateX(5px);
-      background: rgba(30, 40, 60, 0.9);
-    }
-    
-    .param-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      padding: 5px 8px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-    
-    .param-row:last-child {
-      margin-bottom: 0;
-    }
-    
-    .param-label {
-      font-weight: 600;
-      color: var(--accent-light);
-    }
-    
-    .param-value {
-      font-weight: 500;
-    }
-    
-    .match-perfect {
-      background-color: rgba(39, 174, 96, 0.15);
-      color: var(--match-perfect);
-    }
-    
-    .match-good {
-      background-color: rgba(243, 156, 18, 0.15);
-      color: var(--match-good);
-    }
-    
-    .match-bad {
-      background-color: rgba(231, 76, 60, 0.15);
-      color: var(--match-bad);
-    }
-    
-    .similarity-badge {
-      background: var(--accent);
-      color: var(--primary-dark);
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-left: 10px;
-    }
-    
-    .mold-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-    }
-    
-    .mold-title {
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--accent);
-    }
-    
-    .mold-rfq-badge {
-      background: var(--accent);
-      color: var(--primary-dark);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-    
-    footer {
-      background: var(--primary-dark);
-      color: white;
-      padding: 25px 0;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-      margin-top: 20px;
-      border-top: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    
-    .footer-text {
-      font-size: 0.95rem;
-      color: var(--gray);
-    }
-    
-    .error-message {
-      background: var(--error);
-      color: white;
-      padding: 12px 40px 12px 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: none;
-      text-align: center;
-      position: relative;
-      animation: fadeInDown 0.3s ease-out;
-    }
-
-    .error-message.fade-out {
-      animation: fadeOutUp 0.3s ease-out forwards;
-    }
-
-    .success-message {
-      background: var(--success);
-      color: white;
-      padding: 12px 40px 12px 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: none;
-      text-align: center;
-      position: relative;
-      animation: fadeInDown 0.3s ease-out;
-    }
-
-    .close-error {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.4rem;
-      cursor: pointer;
-      opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-
-    .close-error:hover {
-      opacity: 1;
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeOutUp {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(-20px); }
-    }
-
-    /* Конвертер валют */
-    .converter {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    .converter-section {
-      background: rgba(23, 42, 69, 0.7);
-      padding: 25px;
-      border-radius: 12px;
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .converter-title {
-      text-align: center;
-      margin-bottom: 25px;
-      color: var(--accent-light);
-      font-size: 1.4rem;
-      position: relative;
-      padding-bottom: 15px;
-    }
-    
-    .converter-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 3px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-    
-    .converter-controls {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 15px;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .converter-input-group {
-      position: relative;
-    }
-    
-    .converter-input-group label {
-      position: absolute;
-      top: -20px;
-      left: 0;
-      font-size: 0.9rem;
-      color: var(--accent-light);
-    }
-    
-    .converter-input {
-      width: 100%;
-      padding: 14px 15px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      border-radius: 8px;
-      font-size: 1.1rem;
-      background: rgba(30, 40, 60, 0.7);
-      color: white;
-      transition: var(--transition);
-    }
-    
-    .converter-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-    }
-    
-    .converter-swap {
-      background: var(--accent);
-      color: var(--primary-dark);
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 1.2rem;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    }
-    
-    .converter-swap:hover {
-      background: var(--accent-light);
-      transform: rotate(180deg) scale(1.1);
-    }
-    
-    .converter-result {
-      background: rgba(23, 42, 69, 0.9);
-      padding: 25px;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--accent-light);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-    
-    .converter-rate {
-      font-size: 0.9rem;
-      color: var(--gray);
-      margin-top: 10px;
-      font-style: italic;
-    }
-    
-    /* Анимация фона */
-    .mold-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-      opacity: 0.08;
-    }
-    
-    .mold-shape {
-      position: absolute;
-      animation: float 25s infinite linear;
-      filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
-      opacity: 0.7;
-      z-index: 0;
-      border-radius: 50%;
-    }
-    
-    .mold-1 {
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-      top: 15%;
-      left: -50px;
-      animation-delay: 0s;
-      animation-duration: 35s;
-    }
-    
-    .mold-2 {
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-      top: 65%;
-      right: -80px;
-      animation-delay: 8s;
-      animation-duration: 40s;
-    }
-    
-    .mold-3 {
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
-      bottom: -70px;
-      left: 20%;
-      animation-delay: 16s;
-      animation-duration: 45s;
-    }
-    
-    .mold-4 {
-      width: 100px;
-      height: 100px;
-      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
-      top: 35%;
-      right: 15%;
-      animation-delay: 24s;
-      animation-duration: 30s;
-    }
-    
-    @keyframes float {
-      0% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-      25% {
-        transform: translate(100px, -150px) rotate(90deg);
-      }
-      50% {
-        transform: translate(200px, 0) rotate(180deg);
-      }
-      75% {
-        transform: translate(100px, 150px) rotate(270deg);
-      }
-      100% {
-        transform: translate(0, 0) rotate(360deg);
-      }
-    }
-    
-    /* Адаптивность */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2rem;
-      }
-      
-      .calculator, .admin-form {
-        grid-template-columns: 1fr;
-      }
-      
-      .tabs {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .tab-btn {
-        width: 100%;
-        max-width: 300px;
-      }
-      
-      .dimensions-group, .additional-params {
-        grid-template-columns: 1fr;
-      }
-      
-      .password-container {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-top: 15px;
-      }
-      
-      #admin-password {
-        max-width: 100%;
-      }
-      
-      .result-value {
-        font-size: 2rem;
-      }
-      
-      .converter-controls {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-      }
-      
-      .converter-swap {
-        margin: 15px auto;
-        transform: rotate(90deg);
-      }
-    }
-    
-    /* Улучшения для админ-панели */
-    .password-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    
-    @media (max-width: 768px) {
-      .password-container {
-        margin-top: 15px;
-        gap: 10px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Fortune Casino</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0d0c1d;
+            --secondary: #1a1935;
+            --accent: #ffcc00;
+            --accent-dark: #e6b800;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --success: #28a745;
+            --danger: #dc3545;
+            --card-bg: #161432;
+            --slot-bg: #0f0e23;
+            --case-common: #3498db;
+            --case-rare: #9b59b6;
+            --case-epic: #e74c3c;
+            --case-legendary: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(13, 12, 29, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--accent);
+            font-size: 28px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--accent), #ff9900);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .balance-container {
+            background: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+        }
+        
+        .balance-container i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+        
+        .balance {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            background: var(--secondary);
+            border-radius: 30px;
+            padding: 5px;
+            margin-top: 15px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 204, 0, 0.1);
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        
+        /* Main Content Styles */
+        .content-section {
+            display: none;
+            padding: 30px 0;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        /* Slots Section */
+        .slots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .slot-machine {
+            background: var(--slot-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .slot-machine:hover {
+            transform: translateY(-5px);
+        }
+        
+        .slot-header {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .slot-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slot-display {
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 204, 0, 0.3);
+        }
+        
+        .slot-reel {
+            font-size: 50px;
+            width: 33.33%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .slot-reel:last-child {
+            border-right: none;
+        }
+        
+        .slot-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .slot-bet {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .spin-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spin-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Cases Section */
+        .cases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .case-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .case-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .case-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .case-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .case-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .case-price {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .case-common {
+            border-color: var(--case-common);
+        }
+        
+        .case-common .case-header {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        .case-rare {
+            border-color: var(--case-rare);
+        }
+        
+        .case-rare .case-header {
+            background: rgba(155, 89, 182, 0.2);
+        }
+        
+        .case-epic {
+            border-color: var(--case-epic);
+        }
+        
+        .case-epic .case-header {
+            background: rgba(231, 76, 60, 0.2);
+        }
+        
+        .case-legendary {
+            border-color: var(--case-legendary);
+        }
+        
+        .case-legendary .case-header {
+            background: rgba(243, 156, 18, 0.2);
+        }
+        
+        .open-case-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .open-case-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        /* Cards Section */
+        .cards-game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .cards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .game-cost {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .start-game-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .start-game-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+        
+        .card-item {
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        .card-item.flipped {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+        }
+        
+        .card-value {
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Result Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: var(--secondary);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent);
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--accent);
+        }
+        
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .win .result-icon {
+            color: var(--accent);
+        }
+        
+        .lose .result-icon {
+            color: var(--danger);
+        }
+        
+        .result-title {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .result-amount {
+            font-size: 40px;
+            font-weight: 800;
+            margin: 20px 0;
+            color: var(--accent);
+        }
+        
+        .modal-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        /* Tutorial */
+        .tutorial {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tutorial.active {
+            display: flex;
+        }
+        
+        .tutorial-content {
+            background: var(--secondary);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 2px solid var(--accent);
+        }
+        
+        .tutorial-step {
+            display: none;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+        }
+        
+        .tutorial-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: var(--accent);
+        }
+        
+        .tutorial-text {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .tutorial-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .tutorial-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .tutorial-skip {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tutorial-skip:hover {
+            color: var(--text);
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 3000;
+            border: 2px solid var(--accent);
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-title {
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        .admin-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .admin-input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-size: 16px;
+        }
+        
+        .admin-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .admin-info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 10px;
+            background: rgba(255, 204, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(360deg); }
+        }
+        
+        .spinning {
+            animation: spin 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        .bounce {
+            animation: bounce 1s;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-tabs {
+                width: 100%;
+            }
+            
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .admin-panel {
+                right: 10px;
+                left: 10px;
+                bottom: 10px;
+                max-width: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slots-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cases-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="mold-animation">
-    <div class="mold-shape mold-1"></div>
-    <div class="mold-shape mold-2"></div>
-    <div class="mold-shape mold-3"></div>
-    <div class="mold-shape mold-4"></div>
-  </div>
-
-  <header>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                    <h1>Golden Fortune Casino</h1>
+                </div>
+                <div class="balance-container">
+                    <i class="fas fa-coins"></i>
+                    <div class="balance">0 ₽</div>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <div class="tab active" data-tab="slots">Слоты</div>
+                <div class="tab" data-tab="cases">Кейсы</div>
+                <div class="tab" data-tab="cards">Карточки</div>
+            </div>
+        </div>
+    </header>
+    
     <div class="container">
-      <h1>КБ-ПРЕССФОРМА</h1>
-      
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="calculator">Калькулятор</button>
-        <button class="tab-btn" data-tab="admin">Администрирование</button>
-        <button class="tab-btn" data-tab="converter">Конвертер валют</button>
-      </div>
-    </div>
-  </header>
-
-  <div class="container">
-    <div class="error-message" id="error-message">
-      <button class="close-error" onclick="closeErrorMessage()">&times;</button>
-      <span id="error-text"></span>
-    </div>
-    
-    <div class="success-message" id="success-message">
-      <button class="close-error" onclick="closeSuccessMessage()">&times;</button>
-      <span id="success-text"></span>
-    </div>
-    
-    <!-- Калькулятор -->
-    <div class="calculator-container active" id="calculator-container">
-      <div class="calculator">
-        <div class="form-section">
-          <h3 class="section-title"><i class="fas fa-cog"></i> Основные параметры</h3>
-          
-          <div class="form-group">
-            <label for="material"><i class="fas fa-layer-group"></i> Марка стали:</label>
-            <select id="material">
-              <option value="" disabled selected>Выберите материал</option>
-              <option value="738H">738H</option>
-              <option value="420">420</option>
-              <option value="P20">P20</option>
-              <option value="H13">H13</option>
-              <option value="S136">S136</option>
-              <option value="NAK80">NAK80</option>
-              <option value="718H">718H</option>
-              <option value="2316">2316</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label><i class="fas fa-ruler-combined"></i> Габариты (мм):</label>
-            <div class="dimensions-group">
-              <input type="number" id="length" min="50" max="2000" placeholder="Длина">
-              <input type="number" id="width" min="50" max="2000" placeholder="Ширина">
-              <input type="number" id="height" min="50" max="2000" placeholder="Высота">
+        <!-- Slots Section -->
+        <section id="slots" class="content-section active">
+            <h2 class="section-title">Игровые Автоматы</h2>
+            <div class="slots-container">
+                <div class="slot-machine">
+                    <div class="slot-header">Фруктовый Микс</div>
+                    <div class="slot-content">
+                        <div class="slot-display">
+                            <div class="slot-reel">🍒</div>
+                            <div class="slot-reel">🍋</div>
+                            <div class="slot-reel">🍇</div>
+                        </div>
+                        <div class="slot-controls">
+                            <div class="slot-bet">Ставка: 10 ₽</div>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slot-machine">
+                    <div class="slot-header">Золотые Семь</div>
+                    <div class="slot-content">
+                        <div class="slot-display">
+                            <div class="slot-reel">7️⃣</div>
+                            <div class="slot-reel">7️⃣</div>
+                            <div class="slot-reel">7️⃣</div>
+                        </div>
+                        <div class="slot-controls">
+                            <div class="slot-bet">Ставка: 25 ₽</div>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slot-machine">
+                    <div class="slot-header">Алмазное Безумие</div>
+                    <div class="slot-content">
+                        <div class="slot-display">
+                            <div class="slot-reel">💎</div>
+                            <div class="slot-reel">💎</div>
+                            <div class="slot-reel">💎</div>
+                        </div>
+                        <div class="slot-controls">
+                            <div class="slot-bet">Ставка: 50 ₽</div>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="note">Масса рассчитается автоматически</div>
-          </div>
-          
-          <div class="form-group">
-            <label for="gnezda"><i class="fas fa-th-large"></i> Число гнёзд (X×Y):</label>
-            <input type="text" id="gnezda" placeholder="Например: 1×2">
-            <div class="note">Укажите количество по осям X и Y</div>
-          </div>
-          
-          <div class="form-group">
-            <label for="system"><i class="fas fa-fire"></i> Тип литниковой системы:</label>
-            <select id="system">
-              <option value="" disabled selected>Выберите тип</option>
-              <option value="горячеканальная">Горячеканальная</option>
-              <option value="запорное сопло">Запорное сопло</option>
-              <option value="холодноканальная">Холодноканальная</option>
-              <option value="трехплитная">Трехплитная</option>
-            </select>
-          </div>
-        </div>
+        </section>
         
-        <div class="form-section">
-          <h3 class="section-title"><i class="fas fa-sliders-h"></i> Дополнительные параметры</h3>
-          
-          <div class="form-group">
-            <label for="polzun"><i class="fas fa-sliders"></i> Ползуны:</label>
-            <select id="polzun">
-              <option value="0">Нет</option>
-              <option value="1">Да</option>
-            </select>
-          </div>
-          
-          <div class="additional-params">
-            <div class="form-group">
-              <label for="naklon"><i class="fas fa-arrows-alt-h"></i> Наклонные толкатели:</label>
-              <select id="naklon">
-                <option value="0">Нет</option>
-                <option value="1">Да</option>
-              </select>
+        <!-- Cases Section -->
+        <section id="cases" class="content-section">
+            <h2 class="section-title">Коллекционные Кейсы</h2>
+            <div class="cases-container">
+                <!-- Common Cases -->
+                <div class="case-item case-common">
+                    <div class="case-header">Начинающий Удачливый</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-box-open"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 50 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-common">
+                    <div class="case-header">Бронзовый Сундук</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-gem"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 100 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <!-- Rare Cases -->
+                <div class="case-item case-rare">
+                    <div class="case-header">Серебряный Ларец</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-crown"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 250 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-rare">
+                    <div class="case-header">Золотой Кладезь</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-medal"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 500 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <!-- Epic Cases -->
+                <div class="case-item case-epic">
+                    <div class="case-header">Платиновый Сейф</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-key"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 1,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-epic">
+                    <div class="case-header">Аметистовый Тайник</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-lock-open"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 5,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <!-- Legendary Cases -->
+                <div class="case-item case-legendary">
+                    <div class="case-header">Изумрудный Хранилище</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-dragon"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 10,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-legendary">
+                    <div class="case-header">Бриллиантовый Сокровищница</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-infinity"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 50,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-legendary">
+                    <div class="case-header">Мифический Артефакт</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-hat-wizard"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 100,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-legendary">
+                    <div class="case-header">Легенда Казино</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 500,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cards Section -->
+        <section id="cards" class="content-section">
+            <h2 class="section-title">Карточная Игра</h2>
+            <div class="cards-game-container">
+                <div class="cards-header">
+                    <div class="game-cost"><i class="fas fa-coins"></i> Стоимость игры: 100 ₽</div>
+                    <button class="start-game-btn"><i class="fas fa-play"></i> Начать игру</button>
+                </div>
+                <div class="cards-grid">
+                    <!-- Cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Result Modal -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="result-icon"><i class="fas fa-trophy"></i></div>
+            <h2 class="result-title">Поздравляем!</h2>
+            <p>Вы выиграли:</p>
+            <div class="result-amount">+1,500 ₽</div>
+            <button class="modal-btn">Продолжить</button>
+        </div>
+    </div>
+    
+    <!-- Tutorial Modal -->
+    <div class="tutorial" id="tutorial">
+        <div class="tutorial-content">
+            <div class="tutorial-step active" data-step="1">
+                <h2 class="tutorial-title">Добро пожаловать в Golden Fortune Casino!</h2>
+                <p class="tutorial-text">Мы рады приветствовать вас в нашем казино. Прежде чем начать играть, давайте познакомимся с правилами и особенностями нашей платформы.</p>
+                <p class="tutorial-text">Это краткое обучение поможет вам разобраться в основных функциях и играх нашего казино.</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn next-step">Далее</button>
+                    <button class="tutorial-skip"><i class="fas fa-times"></i> Пропустить обучение</button>
+                </div>
             </div>
             
-            <div class="form-group">
-              <label for="vivinch"><i class="fas fa-sync-alt"></i> Вывинчивание:</label>
-              <select id="vivinch">
-                <option value="0">Нет</option>
-                <option value="1">Да</option>
-              </select>
+            <div class="tutorial-step" data-step="2">
+                <h2 class="tutorial-title">Раздел: Игровые Автоматы</h2>
+                <p class="tutorial-text">В разделе "Слоты" вы найдете различные игровые автоматы с уникальными тематиками и ставками.</p>
+                <p class="tutorial-text">Выберите автомат, установите ставку и нажмите "Крутить". Если символы выстроятся в выигрышную комбинацию - вы получите приз!</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn prev-step">Назад</button>
+                    <button class="tutorial-btn next-step">Далее</button>
+                </div>
             </div>
             
-            <div class="form-group">
-              <label for="sriv"><i class="fas fa-cut"></i> Срывом:</label>
-              <select id="sriv">
-                <option value="0">Нет</option>
-                <option value="1">Да</option>
-              </select>
+            <div class="tutorial-step" data-step="3">
+                <h2 class="tutorial-title">Раздел: Коллекционные Кейсы</h2>
+                <p class="tutorial-text">В разделе "Кейсы" вас ждут увлекательные коллекционные наборы с ценными призами.</p>
+                <p class="tutorial-text">Каждый кейс имеет свою стоимость и уникальные награды. Чем дороже кейс - тем ценнее могут быть призы внутри!</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn prev-step">Назад</button>
+                    <button class="tutorial-btn next-step">Далее</button>
+                </div>
             </div>
             
-            <div class="form-group">
-              <label for="vytalk"><i class="fas fa-eject"></i> Выталкивание:</label>
-              <select id="vytalk">
-                <option value="Одинарное">Одинарное</option>
-                <option value="Двойное">Двойное</option>
-              </select>
+            <div class="tutorial-step" data-step="4">
+                <h2 class="tutorial-title">Раздел: Карточная Игра</h2>
+                <p class="tutorial-text">В разделе "Карточки" вас ждет интересная игра на память и удачу.</p>
+                <p class="tutorial-text">Вам предстоит найти три карточки с одинаковыми значениями. Каждая игра стоит 100 рублей, а выигрыш равен сумме на найденных карточках.</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn prev-step">Назад</button>
+                    <button class="tutorial-btn" id="finish-tutorial">Начать играть!</button>
+                </div>
             </div>
-          </div>
         </div>
-        
-        <div class="btn-container">
-          <button class="btn-calculate" onclick="calculate()">
-            <i class="fas fa-calculator"></i> РАССЧИТАТЬ СТОИМОСТЬ
-          </button>
-        </div>
-        
-        <div class="result-section" id="result">
-          <div class="result-title">РАСЧЕТНАЯ СТОИМОСТЬ ПРЕСС-ФОРМЫ</div>
-          <div class="result-value" id="result-value">—</div>
-          
-          <div class="similar-molds">
-            <div class="similar-title">Похожие пресс-формы: <span class="note">(отсортированы по схожести)</span></div>
-            <div class="mold-list" id="similar-molds">
-              <!-- Список похожих пресс-форм будет здесь -->
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     
-    <!-- Панель администрирования -->
-    <div class="admin-panel" id="admin-panel">
-      <h3 class="section-title"><i class="fas fa-lock"></i> Редактирование базы данных</h3>
-      <p class="note" style="margin-bottom: 20px; padding-left: 0;">Добавленные данные сохраняются даже после перезагрузки страницы</p>
-      
-      <div class="admin-form">
-        <div class="form-group">
-          <label for="admin-name">Наименование:</label>
-          <input type="text" id="admin-name" placeholder="Например: GS.0219.0001-01">
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <div class="admin-title">Административная панель</div>
+            <button class="admin-close">&times;</button>
         </div>
-        
-        <div class="form-group">
-          <label for="admin-rfq">RFQ:</label>
-          <input type="text" id="admin-rfq" placeholder="Например: 211">
+        <div class="admin-form">
+            <input type="number" class="admin-input" id="adminAmount" placeholder="Сумма пополнения">
+            <button class="admin-btn" id="adminAddBtn">Пополнить баланс</button>
         </div>
-        
-        <div class="form-group">
-          <label for="admin-gnezda">Число гнёзд (X×Y):</label>
-          <input type="text" id="admin-gnezda" placeholder="Например: 1×2">
+        <div class="admin-info">
+            <p><i class="fas fa-info-circle"></i> Также можно использовать консоль:</p>
+            <p>adminAddFunds(сумма)</p>
+            <p>Пример: adminAddFunds(10000)</p>
         </div>
-        
-        <div class="form-group">
-          <label for="admin-system">Тип системы:</label>
-          <select id="admin-system">
-            <option value="горячеканальная">Горячеканальная</option>
-            <option value="запорное сопло">Запорное сопло</option>
-            <option value="холодноканальная">Холодноканальная</option>
-            <option value="трехплитная">Трехплитная</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-dimensions">Габариты (мм):</label>
-          <input type="text" id="admin-dimensions" placeholder="Например: 350x450x450">
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-material">Марка стали:</label>
-          <select id="admin-material">
-            <option value="738H">738H</option>
-            <option value="420">420</option>
-            <option value="P20">P20</option>
-            <option value="H13">H13</option>
-            <option value="S136">S136</option>
-            <option value="NAK80">NAK80</option>
-            <option value="718H">718H</option>
-            <option value="2316">2316</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-polzun">Ползуны:</label>
-          <select id="admin-polzun">
-            <option value="0">Нет</option>
-            <option value="1">Да</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-naklon">Наклонные толкатели:</label>
-          <select id="admin-naklon">
-            <option value="0">Нет</option>
-            <option value="1">Да</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-vivinch">Вывинчивание:</label>
-          <select id="admin-vivinch">
-            <option value="0">Нет</option>
-            <option value="1">Да</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-sriv">Срывом:</label>
-          <select id="admin-sriv">
-            <option value="0">Нет</option>
-            <option value="1">Да</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-vytalk">Выталкивание:</label>
-          <select id="admin-vytalk">
-            <option value="Одинарное">Одинарное</option>
-            <option value="Двойное">Двойное</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="admin-cost">Стоимость (CNY):</label>
-          <input type="text" id="admin-cost" placeholder="Например: 227100">
-        </div>
-        
-        <div class="password-container">
-          <input type="password" id="admin-password" placeholder="Введите пароль">
-          <button class="btn-calculate" onclick="saveToDatabase()">
-            <i class="fas fa-save"></i> Сохранить в базу
-          </button>
-        </div>
-      </div>
     </div>
     
-    <!-- Конвертер валют -->
-    <div class="converter-container" id="converter-container">
-      <div class="converter">
-        <div class="converter-section">
-          <h3 class="converter-title"><i class="fas fa-exchange-alt"></i> Конвертер валют</h3>
-          
-          <div class="converter-controls">
-            <div class="converter-input-group">
-              <label for="from-amount">Сумма</label>
-              <input type="number" id="from-amount" class="converter-input" placeholder="Введите сумму" min="0" step="0.01">
-            </div>
+    <script>
+        // State management
+        const state = {
+            balance: 0,
+            totalDeposits: 0,
+            tutorialCompleted: localStorage.getItem('tutorialCompleted') === 'true',
+            currentTab: 'slots',
+            slotResults: {},
+            caseItems: {},
+            cardGame: {
+                started: false,
+                cards: [],
+                selected: [],
+                matched: false
+            }
+        };
+        
+        // Encryption and security functions
+        function encryptValue(value) {
+            // Simple XOR encryption for demonstration
+            const key = 0x55AA;
+            return value ^ key;
+        }
+        
+        function decryptValue(value) {
+            // XOR decryption
+            return encryptValue(value);
+        }
+        
+        function generateSecureRandom(min, max) {
+            // More secure random using cryptographic API
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return min + (array[0] % (max - min + 1));
+        }
+        
+        // DOM Elements
+        const balanceEl = document.querySelector('.balance');
+        const tabs = document.querySelectorAll('.tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        const spinButtons = document.querySelectorAll('.spin-btn');
+        const caseButtons = document.querySelectorAll('.open-case-btn');
+        const startGameBtn = document.querySelector('.start-game-btn');
+        const cardsGrid = document.querySelector('.cards-grid');
+        const resultModal = document.getElementById('resultModal');
+        const modalClose = document.querySelector('.modal-close');
+        const modalBtn = document.querySelector('.modal-btn');
+        const tutorialModal = document.getElementById('tutorial');
+        const tutorialSteps = document.querySelectorAll('.tutorial-step');
+        const nextButtons = document.querySelectorAll('.next-step');
+        const prevButtons = document.querySelectorAll('.prev-step');
+        const skipTutorial = document.querySelector('.tutorial-skip');
+        const finishTutorial = document.getElementById('finish-tutorial');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminClose = document.querySelector('.admin-close');
+        const adminAmount = document.getElementById('adminAmount');
+        const adminAddBtn = document.getElementById('adminAddBtn');
+        
+        // Initialize
+        function init() {
+            updateBalance();
+            setupEventListeners();
             
-            <button class="converter-swap" onclick="swapCurrencies()">
-              <i class="fas fa-exchange-alt"></i>
-            </button>
+            // Show tutorial if not completed
+            if (!state.tutorialCompleted) {
+                tutorialModal.classList.add('active');
+                showTutorialStep(1);
+            }
+        }
+        
+        // Update balance display
+        function updateBalance() {
+            balanceEl.textContent = `${state.balance.toLocaleString('ru-RU')} ₽`;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Tab navigation
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
             
-            <div class="converter-input-group">
-              <label for="from-currency">Валюта</label>
-              <select id="from-currency" class="converter-input">
-                <option value="CNY">Китайский юань (CNY)</option>
-                <option value="RUB">Российский рубль (RUB)</option>
-              </select>
-            </div>
-          </div>
-          
-          <button class="btn-calculate" onclick="convertCurrency()">
-            <i class="fas fa-sync-alt"></i> Конвертировать
-          </button>
-          
-          <div class="converter-result" id="converter-result">
-            <div>Результат конвертации</div>
-            <div class="converter-rate" id="exchange-rate">Загрузка курса...</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="container">
-      <p class="footer-text">© 2025 КБ-ПРЕССФОРМА. Профессиональные расчеты стоимости пресс-форм.</p>
-    </div>
-  </footer>
-
-  <script>
-    // Плотность стали (кг/м³)
-    const DENSITIES = {
-      "738H": 7800,
-      "420": 7700,
-      "P20": 7850,
-      "H13": 7800,
-      "S136": 7700,
-      "NAK80": 7900,
-      "718H": 7800,
-      "2316": 7800
-    };
-    
-    // Базовые стоимости материалов (CNY/кг)
-    const MATERIAL_COSTS_CNY = {
-      "738H": 3680,
-      "420": 3220,
-      "P20": 4025,
-      "H13": 4830,
-      "S136": 6670,
-      "NAK80": 7475,
-      "718H": 4370,
-      "2316": 5175
-    };
-    
-    // Коэффициенты сложности
-    const COMPLEXITY_FACTORS = {
-      "polzun": 1.25,
-      "naklon": 1.15,
-      "vivinch": 1.30,
-      "sriv": 1.20,
-      "vytalk_double": 1.18,
-      "system_hot": 1.35,
-      "system_cold": 1.10,
-      "system_nozzle": 1.25,
-      "system_three_plate": 1.40
-    };
-    
-    // Пароль для админ-панели
-    const ADMIN_PASSWORD = "88168";
-    
-    // База данных пресс-форм
-    let moldsDatabase = [];
-    
-    // Текущий курс обмена
-    let exchangeRate = 11.5;
-    
-    // Текущие параметры пользователя для сравнения
-    let currentUserParams = null;
-    
-    // Начальные данные пресс-форм (стоимости в юанях)
-    function populateInitialDatabase() {
-      return [
-        {
-          name: "GS.0219.0001-01",
-          rfq: "211",
-          gnezda: "1*2",
-          system: "горячеканальная",
-          dimensions: [350, 450, 450],
-          material: "738H",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 240000
-        },
-        {
-          name: "GS.0514.0001",
-          rfq: "211",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [400, 650, 620],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 535000
-        },
-        {
-          name: "GS.0514.0002",
-          rfq: "211",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [120, 180, 170],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 80000
-        },
-        {
-          name: "1",
-          rfq: "196",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [500, 275, 325],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 58000
-        },
-        {
-          name: "1",
-          rfq: "197",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [450, 450, 720],
-          material: "718H",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 85000
-        },
-        {
-          name: "GS.0517.0004",
-          rfq: "211",
-          gnezda: "1*8",
-          system: "горячеканальная",
-          dimensions: [350, 550, 380],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 360000
-        },
-        {
-          name: "GS.0517.0004",
-          rfq: "211",
-          gnezda: "1*4",
-          system: "горячеканальная",
-          dimensions: [350, 350, 360],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 200000
-        },
-        {
-          name: "GS.0195.0001",
-          rfq: "211",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [250, 500, 420],
-          material: "738H",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 250000
-        },
-        {
-          name: "212-14.13.300-01_buton",
-          rfq: "198_Tula v21",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [325, 250, 350],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 40000
-        },
-        {
-          name: "1",
-          rfq: "210_Tula",
-          gnezda: "1*1",
-          system: "холодноканальная",
-          dimensions: [425, 300, 485],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 55000
-        },
-        {
-          name: "2",
-          rfq: "210_Tula",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [325, 300, 350],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 45000
-        },
-        {
-          name: "2",
-          rfq: "197",
-          gnezda: "1*8",
-          system: "холодноканальная",
-          dimensions: [450, 450, 720],
-          material: "718H",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 35000
-        },
-        {
-          name: "1",
-          rfq: "193",
-          gnezda: "1*4",
-          system: "горячеканальная",
-          dimensions: [300, 400, 400],
-          material: "718H",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 55000
-        },
-        {
-          name: "1",
-          rfq: "192",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [450, 550, 620],
-          material: "H13",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 100000
-        },
-        {
-          name: "1",
-          rfq: "188",
-          gnezda: "1*16",
-          system: "горячеканальная",
-          dimensions: [400, 400, 505],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: true,
-          vytalk: "Одинарное",
-          cost: 135000
-        },
-        {
-          name: "1",
-          rfq: "182",
-          gnezda: "1*8",
-          system: "холодноканальная",
-          dimensions: [400, 450, 350],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 75000
-        },
-        {
-          name: "2",
-          rfq: "182",
-          gnezda: "1*16",
-          system: "холодноканальная",
-          dimensions: [350, 350, 310],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 45000
-        },
-        {
-          name: "1",
-          rfq: "169",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [225, 225, 325],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 30000
-        },
-        {
-          name: "2",
-          rfq: "169",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [1150, 800, 1250],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 625000
-        },
-        {
-          name: "3",
-          rfq: "169",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [1075, 825, 1150],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 570000
-        },
-        {
-          name: "1",
-          rfq: "168",
-          gnezda: "1*6",
-          system: "горячеканальная",
-          dimensions: [500, 600, 500],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: true,
-          vytalk: "Двойное",
-          cost: 155000
-        },
-        {
-          name: "2",
-          rfq: "168",
-          gnezda: "1*8",
-          system: "горячеканальная",
-          dimensions: [600, 650, 500],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: true,
-          vytalk: "Двойное",
-          cost: 195000
-        },
-        {
-          name: "1",
-          rfq: "166",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [250, 350, 300],
-          material: "P20",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 25000
-        },
-        {
-          name: "1",
-          rfq: "165",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [250, 300, 300],
-          material: "718H",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 22000
-        },
-        {
-          name: "1",
-          rfq: "164",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [300, 350, 350],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 45000
-        },
-        {
-          name: "1",
-          rfq: "161",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [300, 300, 300],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: true,
-          vytalk: "Одинарное",
-          cost: 35000
-        },
-        {
-          name: "2",
-          rfq: "161",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [300, 350, 300],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: true,
-          vytalk: "Одинарное",
-          cost: 45000
-        },
-        {
-          name: "3",
-          rfq: "161",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [300, 300, 300],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 30000
-        },
-        {
-          name: "4",
-          rfq: "161",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [300, 350, 300],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 40000
-        },
-        {
-          name: "5",
-          rfq: "161",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [350, 400, 320],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 45000
-        },
-        {
-          name: "6",
-          rfq: "161",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [400, 450, 330],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 65000
-        },
-        {
-          name: "1",
-          rfq: "154",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [300, 300, 350],
-          material: "718H",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 55000
-        },
-        {
-          name: "1",
-          rfq: "152",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [350, 450, 330],
-          material: "420",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 70000
-        },
-        {
-          name: "1",
-          rfq: "151",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [450, 450, 400],
-          material: "420",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 55000
-        },
-        {
-          name: "1",
-          rfq: "144",
-          gnezda: "1*1",
-          system: "холодноканальная",
-          dimensions: [300, 300, 375],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 65000
-        },
-        {
-          name: "2",
-          rfq: "144",
-          gnezda: "1*1",
-          system: "холодноканальная",
-          dimensions: [275, 275, 325],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 55000
-        },
-        {
-          name: "3",
-          rfq: "144",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [300, 250, 325],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 50000
-        },
-        {
-          name: "1",
-          rfq: "141",
-          gnezda: "1*1",
-          system: "холодноканальная",
-          dimensions: [400, 400, 550],
-          material: "P20",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 42000
-        },
-        {
-          name: "2",
-          rfq: "140",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [300, 500, 320],
-          material: "H13",
-          polzun: false,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 45000
-        },
-        {
-          name: "1",
-          rfq: "137",
-          gnezda: "1*1",
-          system: "горячеканальная",
-          dimensions: [400, 450, 620],
-          material: "H13",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 115000
-        },
-        {
-          name: "1",
-          rfq: "134",
-          gnezda: "1*2",
-          system: "холодноканальная",
-          dimensions: [400, 420, 450],
-          material: "H13",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 70000
-        },
-        {
-          name: "1",
-          rfq: "112",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [350, 500, 361],
-          material: "420",
-          polzun: false,
-          naklon: true,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 80000
-        },
-        {
-          name: "2",
-          rfq: "112",
-          gnezda: "1*4",
-          system: "холодноканальная",
-          dimensions: [300, 500, 381],
-          material: "420",
-          polzun: true,
-          naklon: true,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 75000
-        },
-        {
-          name: "1",
-          rfq: "111",
-          gnezda: "1*8",
-          system: "холодноканальная",
-          dimensions: [550, 750, 525],
-          material: "2316",
-          polzun: true,
-          naklon: false,
-          vivinch: false,
-          sriv: false,
-          vytalk: "Одинарное",
-          cost: 220000
-        }
-      ];
-    }
-    
-    // Сохранение базы данных в localStorage
-    function saveDatabase() {
-      localStorage.setItem('moldsDatabase', JSON.stringify(moldsDatabase));
-    }
-    
-    // Обновление курса валют
-    async function updateExchangeRate() {
-      try {
-        const response = await fetch('https://api.exchangerate-api.com/v4/latest/CNY');
-        const data = await response.json();
-        
-        if (data && data.rates && data.rates.RUB) {
-          exchangeRate = data.rates.RUB;
-          document.getElementById('exchange-rate').textContent = `Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB`;
-          localStorage.setItem('exchangeRate', exchangeRate);
-        }
-      } catch (error) {
-        console.error('Ошибка при получении курса:', error);
-        const savedRate = localStorage.getItem('exchangeRate');
-        if (savedRate) {
-          exchangeRate = parseFloat(savedRate);
-          document.getElementById('exchange-rate').textContent = `Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB`;
-        }
-      }
-    }
-
-    // Переключение вкладок
-    document.querySelectorAll('.tab-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        
-        document.getElementById('calculator-container').classList.remove('active');
-        document.getElementById('admin-panel').classList.remove('active');
-        document.getElementById('converter-container').classList.remove('active');
-        
-        if(button.dataset.tab === 'calculator') {
-          document.getElementById('calculator-container').classList.add('active');
-        } else if(button.dataset.tab === 'admin') {
-          document.getElementById('admin-panel').classList.add('active');
-        } else if(button.dataset.tab === 'converter') {
-          document.getElementById('converter-container').classList.add('active');
-          updateExchangeRate();
-        }
-      });
-    });
-
-    // Расчет массы по габаритам с учетом материала
-    function calculateMass(material, dimensions) {
-      const length = dimensions[0] / 1000;
-      const width = dimensions[1] / 1000;
-      const height = dimensions[2] / 1000;
-      
-      if (length > 0 && width > 0 && height > 0) {
-        const volume = length * width * height;
-        const density = DENSITIES[material] || 7850;
-        return volume * density;
-      }
-      return 0;
-    }
-
-    function closeErrorMessage() {
-      const errorElement = document.getElementById('error-message');
-      errorElement.classList.add('fade-out');
-      setTimeout(() => {
-        errorElement.style.display = 'none';
-        errorElement.classList.remove('fade-out');
-      }, 300);
-    }
-    
-    function closeSuccessMessage() {
-      const successElement = document.getElementById('success-message');
-      successElement.classList.add('fade-out');
-      setTimeout(() => {
-        successElement.style.display = 'none';
-        successElement.classList.remove('fade-out');
-      }, 300);
-    }
-
-    function showError(message) {
-      const errorElement = document.getElementById('error-message');
-      const errorText = document.getElementById('error-text');
-      
-      errorText.textContent = message;
-      errorElement.style.display = 'block';
-      
-      setTimeout(closeErrorMessage, 5000);
-    }
-    
-    function showSuccess(message) {
-      const successElement = document.getElementById('success-message');
-      const successText = document.getElementById('success-text');
-      
-      successText.textContent = message;
-      successElement.style.display = 'block';
-      
-      setTimeout(closeSuccessMessage, 5000);
-    }
-
-    // Расчет схожести с учетом требований
-    function calculateSimilarity(mold, params) {
-      // Веса параметров
-      const weights = {
-        volume: 0.3,
-        nests: 0.25,
-        system: 0.12,
-        material: 0.12,
-        polzun: 0.06,
-        naklon: 0.05,
-        vivinch: 0.05,
-        sriv: 0.05,
-        vytalk: 0.05
-      };
-      
-      // Группы похожих материалов
-      const similarMaterials = {
-        "738H": ["718H"],
-        "718H": ["738H"],
-        "420": ["P20"],
-        "P20": ["420"],
-        "H13": ["S136"],
-        "S136": ["H13"],
-        "NAK80": [],
-        "2316": ["420", "P20"]
-      };
-
-      // Расчет объема
-      const moldVolume = mold.dimensions[0] * mold.dimensions[1] * mold.dimensions[2];
-      const paramVolume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
-      
-      // Сравнение объема
-      const volumeDiff = Math.abs(moldVolume - paramVolume) / Math.max(moldVolume, paramVolume, 1);
-      const volumeSimilarity = 100 * (1 - Math.min(volumeDiff, 1));
-
-      // Сравнение числа гнезд
-      let moldNests;
-      try {
-        if (mold.gnezda.includes('*')) {
-          const parts = mold.gnezda.split('*');
-          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
-        } else {
-          moldNests = parseInt(mold.gnezda) || 1;
-        }
-      } catch (e) {
-        moldNests = 1;
-      }
-      
-      const nestsDiff = Math.abs(moldNests - params.totalNests) / Math.max(moldNests, params.totalNests, 1);
-      const nestsSimilarity = 100 * (1 - Math.min(nestsDiff, 0.5));
-
-      // Сравнение системы
-      const systemMatch = mold.system === params.system ? 100 : 0;
-
-      // Сходство материала
-      const materialSimilarity = mold.material === params.material ? 100 : 
-                              (similarMaterials[mold.material] || []).includes(params.material) ? 70 : 0;
-
-      // Сравнение булевых параметров (0% при несовпадении)
-      const polzunMatch = mold.polzun === params.polzun ? 100 : 0;
-      const naklonMatch = mold.naklon === params.naklon ? 100 : 0;
-      const vivinchMatch = mold.vivinch === params.vivinch ? 100 : 0;
-      const srivMatch = mold.sriv === params.sriv ? 100 : 0;
-
-      // Сравнение выталкивания
-      const vytalkMatch = mold.vytalk === params.vytalk ? 100 : 0;
-
-      // Общая схожесть
-      let totalSimilarity = 
-        volumeSimilarity * weights.volume +
-        nestsSimilarity * weights.nests +
-        systemMatch * weights.system +
-        materialSimilarity * weights.material +
-        polzunMatch * weights.polzun +
-        naklonMatch * weights.naklon +
-        vivinchMatch * weights.vivinch +
-        srivMatch * weights.sriv +
-        vytalkMatch * weights.vytalk;
-
-      return Math.min(100, Math.max(0, Math.round(totalSimilarity)));
-    }
-
-    // Поиск похожих пресс-форм (топ-10)
-    function findSimilarMolds(params) {
-      const moldsWithSimilarity = moldsDatabase.map(mold => {
-        const similarity = calculateSimilarity(mold, params);
-        return { ...mold, similarity };
-      });
-
-      // Фильтрация по булевым параметрам
-      const filteredMolds = moldsWithSimilarity.filter(mold => {
-        if (params.polzun && !mold.polzun) return false;
-        if (params.naklon && !mold.naklon) return false;
-        if (params.vivinch && !mold.vivinch) return false;
-        if (params.sriv && !mold.sriv) return false;
-        return true;
-      });
-
-      // Сортировка по убыванию схожести
-      filteredMolds.sort((a, b) => b.similarity - a.similarity);
-
-      return filteredMolds.slice(0, 10);
-    }
-
-    // Расчет стоимости на основе параметров (в CNY)
-    function calculateBaseCost(params) {
-      const mass = calculateMass(params.material, params.dimensions);
-      const materialCost = MATERIAL_COSTS_CNY[params.material] || Math.round(350 * 11.5);
-      let baseCost = mass * materialCost;
-      
-      if (params.polzun) baseCost *= 1.25;
-      if (params.naklon) baseCost *= 1.15;
-      if (params.vivinch) baseCost *= 1.30;
-      if (params.sriv) baseCost *= 1.20;
-      if (params.vytalk === "Двойное") baseCost *= 1.18;
-      
-      if (params.system === "горячеканальная") baseCost *= 1.35;
-      else if (params.system === "запорное сопло") baseCost *= 1.25;
-      else if (params.system === "трехплитная") baseCost *= 1.40;
-      
-      baseCost *= (1 + (params.totalNests - 1) * 0.3);
-      
-      const volume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
-      if (volume > 1000000) baseCost *= 1.1;
-      else if (volume < 50000) baseCost *= 1.2;
-      
-      // Округление до 10000
-      return Math.round(baseCost / 10000) * 10000;
-    }
-
-    // Определение класса для подсветки параметров
-    function getMatchClass(value1, value2, paramType) {
-      if (paramType === 'nests') {
-        if (value1 === value2) return 'match-perfect';
-        const diff = Math.abs(value1 - value2);
-        if (diff <= 2) return 'match-good';
-        return 'match-bad';
-      }
-      
-      if (paramType === 'dimensions') {
-        const volume1 = value1[0] * value1[1] * value1[2];
-        const volume2 = value2[0] * value2[1] * value2[2];
-        const diff = Math.abs(volume1 - volume2) / Math.max(volume1, volume2);
-        if (diff <= 0.1) return 'match-perfect';
-        if (diff <= 0.3) return 'match-good';
-        return 'match-bad';
-      }
-      
-      if (paramType === 'boolean') {
-        return value1 === value2 ? 'match-perfect' : 'match-bad';
-      }
-      
-      return value1 === value2 ? 'match-perfect' : 'match-bad';
-    }
-
-    // Отображение похожих пресс-форм с подсветкой
-    function showSimilarMolds(similarMolds, userParams) {
-      const similarList = document.getElementById('similar-molds');
-      similarList.innerHTML = '';
-
-      if (similarMolds.length === 0) {
-        similarList.innerHTML = '<div class="mold-item">Нет похожих пресс-форм в базе данных</div>';
-        return;
-      }
-
-      similarMolds.forEach(mold => {
-        // Преобразуем гнезда в число
-        let moldNests = 1;
-        if (mold.gnezda.includes('*')) {
-          const parts = mold.gnezda.split('*');
-          moldNests = parseInt(parts[0]) * parseInt(parts[1]);
+            // Slot spin buttons
+            spinButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const slotMachine = button.closest('.slot-machine');
+                    playSlot(slotMachine);
+                });
+            });
+            
+            // Case open buttons
+            caseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const caseItem = button.closest('.case-item');
+                    openCase(caseItem);
+                });
+            });
+            
+            // Card game start
+            startGameBtn.addEventListener('click', startCardGame);
+            
+            // Modal close
+            modalClose.addEventListener('click', closeResultModal);
+            modalBtn.addEventListener('click', closeResultModal);
+            
+            // Tutorial navigation
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const currentStep = document.querySelector('.tutorial-step.active');
+                    const nextStep = parseInt(currentStep.getAttribute('data-step')) + 1;
+                    showTutorialStep(nextStep);
+                });
+            });
+            
+            prevButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const currentStep = document.querySelector('.tutorial-step.active');
+                    const prevStep = parseInt(currentStep.getAttribute('data-step')) - 1;
+                    showTutorialStep(prevStep);
+                });
+            });
+            
+            skipTutorial.addEventListener('click', finishTutorialFlow);
+            finishTutorial.addEventListener('click', finishTutorialFlow);
+            
+            // Admin panel
+            adminClose.addEventListener('click', () => {
+                adminPanel.style.display = 'none';
+            });
+            
+            adminAddBtn.addEventListener('click', () => {
+                const amount = parseInt(adminAmount.value);
+                if (isNaN(amount) {
+                    showResult("Введите корректную сумму", false);
+                    return;
+                }
+                adminAddFunds(amount);
+                adminAmount.value = '';
+            });
+            
+            // Secret key combination to show admin panel (Ctrl+Alt+A)
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.altKey && e.key === 'a') {
+                    adminPanel.style.display = 'block';
+                }
+                
+                // Close with ESC
+                if (e.key === 'Escape') {
+                    adminPanel.style.display = 'none';
+                }
+            });
         }
         
-        // Определяем классы для подсветки
-        const nestsClass = getMatchClass(moldNests, userParams.totalNests, 'nests');
-        const systemClass = getMatchClass(mold.system, userParams.system, '');
-        const dimensionsClass = getMatchClass(mold.dimensions, userParams.dimensions, 'dimensions');
-        const materialClass = getMatchClass(mold.material, userParams.material, '');
-        const polzunClass = getMatchClass(mold.polzun, userParams.polzun, 'boolean');
-        const naklonClass = getMatchClass(mold.naklon, userParams.naklon, 'boolean');
-        const vivinchClass = getMatchClass(mold.vivinch, userParams.vivinch, 'boolean');
-        const srivClass = getMatchClass(mold.sriv, userParams.sriv, 'boolean');
-        const vytalkClass = getMatchClass(mold.vytalk, userParams.vytalk, '');
-        
-        const moldEl = document.createElement('div');
-        moldEl.className = 'mold-item';
-        moldEl.innerHTML = `
-          <div class="mold-header">
-            <div class="mold-title">${mold.name}</div>
-            <div class="mold-rfq-badge">RFQ: ${mold.rfq}</div>
-            <span class="similarity-badge">${mold.similarity}%</span>
-          </div>
-          
-          <div class="param-row ${nestsClass}">
-            <span class="param-label">Число гнёзд:</span>
-            <span class="param-value">${mold.gnezda}</span>
-          </div>
-          
-          <div class="param-row ${systemClass}">
-            <span class="param-label">Тип системы:</span>
-            <span class="param-value">${mold.system}</span>
-          </div>
-          
-          <div class="param-row ${dimensionsClass}">
-            <span class="param-label">Габариты:</span>
-            <span class="param-value">${mold.dimensions.join('×')} мм</span>
-          </div>
-          
-          <div class="param-row ${materialClass}">
-            <span class="param-label">Марка стали:</span>
-            <span class="param-value">${mold.material}</span>
-          </div>
-          
-          <div class="param-row ${polzunClass}">
-            <span class="param-label">Ползуны:</span>
-            <span class="param-value">${mold.polzun ? 'Да' : 'Нет'}</span>
-          </div>
-          
-          <div class="param-row ${naklonClass}">
-            <span class="param-label">Наклонные толкатели:</span>
-            <span class="param-value">${mold.naklon ? 'Да' : 'Нет'}</span>
-          </div>
-          
-          <div class="param-row ${vivinchClass}">
-            <span class="param-label">Вывинчивание:</span>
-            <span class="param-value">${mold.vivinch ? 'Да' : 'Нет'}</span>
-          </div>
-          
-          <div class="param-row ${srivClass}">
-            <span class="param-label">Срывом:</span>
-            <span class="param-value">${mold.sriv ? 'Да' : 'Нет'}</span>
-          </div>
-          
-          <div class="param-row ${vytalkClass}">
-            <span class="param-label">Выталкивание:</span>
-            <span class="param-value">${mold.vytalk}</span>
-          </div>
-          
-          <div class="param-row">
-            <span class="param-label">Стоимость:</span>
-            <span class="param-value" style="color: var(--accent); font-weight: 600;">${mold.cost.toLocaleString('ru-RU')} CNY</span>
-          </div>
-        `;
-        similarList.appendChild(moldEl);
-      });
-    }
-
-    function calculate() {
-      // Сбор данных
-      const material = document.getElementById('material').value;
-      const length = parseFloat(document.getElementById('length').value);
-      const width = parseFloat(document.getElementById('width').value);
-      const height = parseFloat(document.getElementById('height').value);
-      const gnezdaInput = document.getElementById('gnezda').value.trim();
-      const system = document.getElementById('system').value;
-      const polzun = document.getElementById('polzun').value === '1';
-      const naklon = document.getElementById('naklon').value === '1';
-      const vivinch = document.getElementById('vivinch').value === '1';
-      const sriv = document.getElementById('sriv').value === '1';
-      const vytalk = document.getElementById('vytalk').value;
-
-      // Проверка заполненности
-      if (!material || isNaN(length) || isNaN(width) || isNaN(height) || !gnezdaInput || !system) {
-        showError('Заполните все обязательные поля!');
-        return;
-      }
-
-      // Разбираем число гнезд
-      let gnezdaParts;
-      if (gnezdaInput.includes('×') || gnezdaInput.includes('x') || gnezdaInput.includes('*')) {
-        const separator = gnezdaInput.includes('×') ? '×' : 
-                         gnezdaInput.includes('x') ? 'x' : '*';
-        gnezdaParts = gnezdaInput.split(separator);
-      } else {
-        showError('Введите число гнезд в формате: X×Y');
-        return;
-      }
-
-      if (gnezdaParts.length !== 2) {
-        showError('Введите число гнезд в формате: X×Y');
-        return;
-      }
-
-      const x = parseInt(gnezdaParts[0]);
-      const y = parseInt(gnezdaParts[1]);
-      if (isNaN(x) || isNaN(y)) {
-        showError('Введите число гнезд в формате: X×Y');
-        return;
-      }
-
-      const totalNests = x * y;
-
-      // Параметры пользователя
-      const userParams = {
-        material,
-        dimensions: [length, width, height],
-        gnezda: `${x}*${y}`,
-        system,
-        polzun,
-        naklon,
-        vivinch,
-        sriv,
-        vytalk,
-        totalNests
-      };
-      
-      // Сохраняем для сравнения
-      currentUserParams = userParams;
-
-      // Проверка на точное совпадение
-      let exactMatchCost = null;
-      for (const mold of moldsDatabase) {
-        const sameDimensions = 
-          mold.dimensions[0] === length &&
-          mold.dimensions[1] === width &&
-          mold.dimensions[2] === height;
-        
-        const sameMaterial = mold.material === material;
-        const sameSystem = mold.system === system;
-        const samePolzun = mold.polzun === polzun;
-        const sameNaklon = mold.naklon === naklon;
-        const sameVivinch = mold.vivinch === vivinch;
-        const sameSriv = mold.sriv === sriv;
-        const sameVytalk = mold.vytalk === vytalk;
-        const sameGnezda = mold.gnezda === `${x}*${y}`;
-        
-        if (sameDimensions && sameMaterial && sameSystem && samePolzun && 
-            sameNaklon && sameVivinch && sameSriv && sameVytalk && sameGnezda) {
-          exactMatchCost = mold.cost;
-          break;
+        // Switch tabs
+        function switchTab(tabId) {
+            // Update active tab
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Show active section
+            contentSections.forEach(section => {
+                if (section.id === tabId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            
+            state.currentTab = tabId;
         }
-      }
-
-      // Если найдено точное совпадение
-      if (exactMatchCost !== null) {
-        document.getElementById('result-value').textContent = 
-          exactMatchCost.toLocaleString('ru-RU') + ' CNY';
         
-        document.getElementById('result').style.display = 'block';
-        showSuccess('Найдено точное совпадение в базе данных!');
-        
-        // Показываем похожие пресс-формы
-        const similarMolds = findSimilarMolds(userParams);
-        showSimilarMolds(similarMolds, userParams);
-        return;
-      }
-
-      // Найти похожие пресс-формы
-      const similarMolds = findSimilarMolds(userParams);
-
-      // Рассчитать стоимость как среднюю по топ-5 похожим
-      let cost = 0;
-      if (similarMolds.length > 0) {
-        const topSimilar = similarMolds.slice(0, 5);
-        const totalCost = topSimilar.reduce((sum, mold) => sum + mold.cost, 0);
-        cost = totalCost / topSimilar.length;
-      } else {
-        // Если нет похожих, используем базовый расчет
-        cost = calculateBaseCost(userParams);
-      }
-
-      // Округление до 10000
-      cost = Math.round(cost / 10000) * 10000;
-
-      // Показать результат
-      document.getElementById('result-value').textContent = 
-        cost.toLocaleString('ru-RU') + ' CNY';
-      
-      // Показать похожие пресс-формы
-      showSimilarMolds(similarMolds, userParams);
-
-      // Показать блок с результатом
-      document.getElementById('result').style.display = 'block';
-    }
-    
-    // Сохранение в базу данных
-    function saveToDatabase() {
-      const password = document.getElementById('admin-password').value;
-      if (password !== ADMIN_PASSWORD) {
-        showError('Неверный пароль!');
-        return;
-      }
-
-      const name = document.getElementById('admin-name').value;
-      const rfq = document.getElementById('admin-rfq').value;
-      const gnezdaInput = document.getElementById('admin-gnezda').value;
-      const system = document.getElementById('admin-system').value;
-      const dimensionsStr = document.getElementById('admin-dimensions').value;
-      const material = document.getElementById('admin-material').value;
-      const polzun = document.getElementById('admin-polzun').value === '1';
-      const naklon = document.getElementById('admin-naklon').value === '1';
-      const vivinch = document.getElementById('admin-vivinch').value === '1';
-      const sriv = document.getElementById('admin-sriv').value === '1';
-      const vytalk = document.getElementById('admin-vytalk').value;
-      const cost = parseFloat(document.getElementById('admin-cost').value.replace(/\s+/g, ''));
-
-      if (!name || !rfq || !gnezdaInput || !system || !dimensionsStr || !material || isNaN(cost)) {
-        showError('Заполните все поля!');
-        return;
-      }
-
-      // Преобразуем габариты
-      const dimensions = dimensionsStr.split('x').map(Number);
-      if (dimensions.length !== 3 || dimensions.some(isNaN)) {
-        showError('Габариты должны быть в формате: 350x450x450');
-        return;
-      }
-
-      // Преобразуем число гнезд
-      let gnezda;
-      if (gnezdaInput.includes('×') || gnezdaInput.includes('x') || gnezdaInput.includes('*')) {
-        const separator = gnezdaInput.includes('×') ? '×' : 
-                         gnezdaInput.includes('x') ? 'x' : '*';
-        const parts = gnezdaInput.split(separator);
-        if (parts.length !== 2 || isNaN(parseInt(parts[0])) || isNaN(parseInt(parts[1]))) {
-          showError('Введите число гнезд в формате: X×Y');
-          return;
+        // Slot game logic
+        function playSlot(slotMachine) {
+            const betElement = slotMachine.querySelector('.slot-bet');
+            const betAmount = parseInt(betElement.textContent.match(/\d+/)[0]);
+            
+            // Check if user has enough balance
+            if (state.balance < betAmount) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct bet from balance
+            state.balance -= betAmount;
+            updateBalance();
+            
+            // Get reels
+            const reels = slotMachine.querySelectorAll('.slot-reel');
+            
+            // Add spinning animation
+            reels.forEach(reel => {
+                reel.classList.add('spinning');
+            });
+            
+            // Generate encrypted results
+            setTimeout(() => {
+                reels.forEach(reel => {
+                    reel.classList.remove('spinning');
+                    
+                    // Generate random symbol (encrypted)
+                    const symbols = ['🍒', '🍋', '🍇', '🍉', '🍊', '⭐', '7️⃣', '🔔', '💎'];
+                    const encryptedIndex = generateSecureRandom(0, symbols.length - 1);
+                    const symbol = symbols[decryptValue(encryptedIndex)];
+                    reel.textContent = symbol;
+                });
+                
+                // Check for win
+                checkSlotWin(slotMachine, betAmount);
+            }, 1500);
         }
-        gnezda = `${parts[0]}*${parts[1]}`;
-      } else {
-        showError('Введите число гнезд в формате: X×Y');
-        return;
-      }
-
-      // Создаем объект пресс-формы
-      const newMold = {
-        name,
-        rfq,
-        gnezda,
-        system,
-        dimensions,
-        material,
-        polzun,
-        naklon,
-        vivinch,
-        sriv,
-        vytalk,
-        cost
-      };
-
-      moldsDatabase.push(newMold);
-      saveDatabase();
-      showSuccess('Пресс-форма успешно добавлена в базу!');
-    }
-    
-    // Конвертация валют
-    function convertCurrency() {
-      const amount = parseFloat(document.getElementById('from-amount').value);
-      const currency = document.getElementById('from-currency').value;
-      
-      if (isNaN(amount) || amount <= 0) {
-        showError('Введите корректную сумму для конвертации');
-        return;
-      }
-      
-      let result, resultText;
-      
-      if (currency === 'CNY') {
-        result = amount * exchangeRate;
-        resultText = `${amount.toLocaleString('ru-RU')} CNY = ${result.toLocaleString('ru-RU', {maximumFractionDigits: 2})} RUB`;
-      } else {
-        result = amount / exchangeRate;
-        resultText = `${amount.toLocaleString('ru-RU')} RUB = ${result.toLocaleString('ru-RU', {maximumFractionDigits: 2})} CNY`;
-      }
-      
-      document.getElementById('converter-result').innerHTML = `
-        <div style="font-size: 1.8rem; margin-bottom: 10px;">${resultText}</div>
-        <div class="converter-rate" id="exchange-rate">Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB</div>
-      `;
-    }
-    
-    // Смена направления конвертации
-    function swapCurrencies() {
-      const currencySelect = document.getElementById('from-currency');
-      currencySelect.value = currencySelect.value === 'CNY' ? 'RUB' : 'CNY';
-    }
-    
-    // Инициализация при загрузке страницы
-    window.onload = function() {
-      // Загрузка начальной базы данных
-      const initialData = populateInitialDatabase();
-      const savedData = localStorage.getItem('moldsDatabase');
-      
-      if (savedData) {
-        const savedMolds = JSON.parse(savedData);
-        const uniqueMolds = new Map();
         
-        initialData.forEach(mold => {
-          const key = `${mold.name}|${mold.rfq}`;
-          uniqueMolds.set(key, mold);
-        });
+        function checkSlotWin(slotMachine, betAmount) {
+            const reels = slotMachine.querySelectorAll('.slot-reel');
+            const symbols = Array.from(reels).map(reel => reel.textContent);
+            
+            // Check if all symbols are the same
+            if (symbols[0] === symbols[1] && symbols[1] === symbols[2]) {
+                // Win - payout based on symbol
+                let multiplier = 5;
+                if (symbols[0] === '7️⃣') multiplier = 20;
+                if (symbols[0] === '💎') multiplier = 50;
+                
+                const winAmount = betAmount * multiplier;
+                const maxWin = state.totalDeposits * 0.97; // Casino always keeps 3%
+                
+                // Ensure casino doesn't go negative
+                const actualWin = Math.min(winAmount, maxWin);
+                
+                state.balance += actualWin;
+                updateBalance();
+                showResult(`Вы выиграли ${actualWin.toLocaleString('ru-RU')} ₽!`, true);
+            } else {
+                // Loss
+                showResult("Повезет в следующий раз!", false);
+            }
+        }
         
-        savedMolds.forEach(mold => {
-          const key = `${mold.name}|${mold.rfq}`;
-          uniqueMolds.set(key, mold);
-        });
+        // Case opening logic
+        function openCase(caseItem) {
+            const priceElement = caseItem.querySelector('.case-price');
+            const casePrice = parseInt(priceElement.textContent.match(/[\d,]+/)[0].replace(/,/g, ''));
+            
+            // Check if user has enough balance
+            if (state.balance < casePrice) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct case price from balance
+            state.balance -= casePrice;
+            updateBalance();
+            
+            // Add opening animation
+            caseItem.classList.add('pulse');
+            
+            setTimeout(() => {
+                caseItem.classList.remove('pulse');
+                
+                // Determine case win based on price
+                let minWin, maxWin;
+                
+                if (casePrice <= 100) {
+                    minWin = 10;
+                    maxWin = 200;
+                } else if (casePrice <= 500) {
+                    minWin = 50;
+                    maxWin = 1000;
+                } else if (casePrice <= 5000) {
+                    minWin = 200;
+                    maxWin = 5000;
+                } else {
+                    minWin = 1000;
+                    maxWin = 50000;
+                }
+                
+                // Calculate win with casino profit margin
+                const winAmount = generateSecureRandom(minWin, maxWin);
+                const maxPossibleWin = state.totalDeposits * 0.97; // Casino keeps 3%
+                const actualWin = Math.min(winAmount, maxPossibleWin);
+                
+                state.balance += actualWin;
+                updateBalance();
+                
+                // Add bounce animation for excitement
+                caseItem.classList.add('bounce');
+                setTimeout(() => caseItem.classList.remove('bounce'), 1000);
+                
+                showResult(`Вы выиграли ${actualWin.toLocaleString('ru-RU')} ₽!`, true);
+            }, 1000);
+        }
         
-        moldsDatabase = Array.from(uniqueMolds.values());
-      } else {
-        moldsDatabase = initialData;
-      }
-      
-      saveDatabase();
-      
-      // Загрузка курса валют
-      const savedRate = localStorage.getItem('exchangeRate');
-      if (savedRate) {
-        exchangeRate = parseFloat(savedRate);
-        document.getElementById('exchange-rate').textContent = `Текущий курс: 1 CNY = ${exchangeRate.toFixed(2)} RUB`;
-      } else {
-        updateExchangeRate();
-      }
-      
-      setInterval(updateExchangeRate, 60 * 60 * 1000);
-    };
-  </script>
+        // Card game logic
+        function startCardGame() {
+            // Check if user has enough balance
+            if (state.balance < 100) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct game cost
+            state.balance -= 100;
+            updateBalance();
+            
+            // Reset game state
+            state.cardGame.started = true;
+            state.cardGame.selected = [];
+            state.cardGame.matched = false;
+            
+            // Generate cards
+            generateCards();
+            
+            // Update button
+            startGameBtn.textContent = "Игра началась!";
+            startGameBtn.disabled = true;
+        }
+        
+        function generateCards() {
+            cardsGrid.innerHTML = '';
+            
+            // Create card values (10 cards with 3 pairs and 4 single)
+            const values = [];
+            const pairs = [50, 100, 250];
+            
+            // Add three pairs
+            pairs.forEach(value => {
+                values.push(value, value, value);
+            });
+            
+            // Add four unique cards
+            for (let i = 0; i < 4; i++) {
+                values.push(generateSecureRandom(10, 500));
+            }
+            
+            // Shuffle values
+            for (let i = values.length - 1; i > 0; i--) {
+                const j = generateSecureRandom(0, i);
+                [values[i], values[j]] = [values[j], values[i]];
+            }
+            
+            // Create card elements
+            values.forEach((value, index) => {
+                const card = document.createElement('div');
+                card.className = 'card-item';
+                card.dataset.index = index;
+                card.dataset.value = value;
+                
+                card.innerHTML = `<div class="card-value">${value} ₽</div>`;
+                
+                card.addEventListener('click', () => flipCard(card));
+                cardsGrid.appendChild(card);
+            });
+        }
+        
+        function flipCard(card) {
+            if (!state.cardGame.started || card.classList.contains('flipped') || state.cardGame.selected.length >= 3) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            state.cardGame.selected.push(card);
+            
+            if (state.cardGame.selected.length === 3) {
+                checkCardMatch();
+            }
+        }
+        
+        function checkCardMatch() {
+            const values = state.cardGame.selected.map(card => card.dataset.value);
+            
+            // Check if all three values are the same
+            if (values[0] === values[1] && values[1] === values[2]) {
+                const winAmount = parseInt(values[0]);
+                const maxWin = state.totalDeposits * 0.97; // Casino keeps 3%
+                const actualWin = Math.min(winAmount, maxWin);
+                
+                state.balance += actualWin;
+                updateBalance();
+                state.cardGame.matched = true;
+                
+                setTimeout(() => {
+                    showResult(`Вы нашли три карты! Выигрыш: ${actualWin.toLocaleString('ru-RU')} ₽`, true);
+                    resetCardGame();
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    state.cardGame.selected.forEach(card => {
+                        card.classList.remove('flipped');
+                    });
+                    state.cardGame.selected = [];
+                }, 1000);
+            }
+        }
+        
+        function resetCardGame() {
+            setTimeout(() => {
+                cardsGrid.innerHTML = '';
+                state.cardGame.started = false;
+                startGameBtn.textContent = "Начать игру";
+                startGameBtn.disabled = false;
+            }, 2000);
+        }
+        
+        // Result modal
+        function showResult(message, isWin) {
+            const modal = document.getElementById('resultModal');
+            const icon = modal.querySelector('.result-icon');
+            const title = modal.querySelector('.result-title');
+            const amount = modal.querySelector('.result-amount');
+            
+            // Update content based on win/loss
+            if (isWin) {
+                modal.classList.add('win');
+                icon.innerHTML = '<i class="fas fa-trophy"></i>';
+                title.textContent = 'Поздравляем!';
+            } else {
+                modal.classList.add('lose');
+                icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                title.textContent = 'Увы...';
+            }
+            
+            amount.textContent = message;
+            modal.classList.add('active');
+        }
+        
+        function closeResultModal() {
+            resultModal.classList.remove('active');
+            resultModal.classList.remove('win');
+            resultModal.classList.remove('lose');
+        }
+        
+        // Tutorial functions
+        function showTutorialStep(step) {
+            tutorialSteps.forEach(stepEl => {
+                if (parseInt(stepEl.getAttribute('data-step')) === step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            });
+        }
+        
+        function finishTutorialFlow() {
+            tutorialModal.classList.remove('active');
+            state.tutorialCompleted = true;
+            localStorage.setItem('tutorialCompleted', 'true');
+        }
+        
+        // Admin functionality
+        function adminAddFunds(amount) {
+            if (isNaN(amount) {
+                showResult("Введите корректную сумму", false);
+                return;
+            }
+            
+            state.balance += amount;
+            state.totalDeposits += amount;
+            updateBalance();
+            
+            showResult(`Баланс пополнен на ${amount.toLocaleString('ru-RU')} ₽`, true);
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+        
+        // Expose admin function to console
+        window.adminAddFunds = adminAddFunds;
+        
+        // Admin help in console
+        console.log("%cАдминистративные функции доступны:", "font-size: 16px; color: #ffcc00; font-weight: bold;");
+        console.log("1. Используйте функцию adminAddFunds(сумма) для пополнения баланса");
+        console.log("2. Или нажмите Ctrl+Alt+A для открытия панели администратора");
+        console.log("Пример: adminAddFunds(5000) - пополнит баланс на 5000 рублей");
+    </script>
 </body>
 </html>
