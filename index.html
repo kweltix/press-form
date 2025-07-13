@@ -161,6 +161,25 @@
             border-radius: 3px;
         }
         
+        /* Back Button */
+        .back-btn {
+            background: var(--secondary);
+            color: var(--text);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 204, 0, 0.1);
+        }
+        
         /* Slots Section */
         .slots-container {
             display: grid;
@@ -175,6 +194,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
             border: 1px solid rgba(255, 204, 0, 0.2);
+            cursor: pointer;
         }
         
         .slot-machine:hover {
@@ -299,6 +319,7 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
         
         .case-icon {
@@ -316,12 +337,27 @@
             gap: 5px;
         }
         
+        .case-win-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
         .case-common {
             border-color: var(--case-common);
         }
         
         .case-common .case-header {
             background: rgba(52, 152, 219, 0.2);
+        }
+        
+        .case-common .case-win-display {
+            border: 1px solid var(--case-common);
         }
         
         .case-rare {
@@ -332,6 +368,10 @@
             background: rgba(155, 89, 182, 0.2);
         }
         
+        .case-rare .case-win-display {
+            border: 1px solid var(--case-rare);
+        }
+        
         .case-epic {
             border-color: var(--case-epic);
         }
@@ -340,12 +380,20 @@
             background: rgba(231, 76, 60, 0.2);
         }
         
+        .case-epic .case-win-display {
+            border: 1px solid var(--case-epic);
+        }
+        
         .case-legendary {
             border-color: var(--case-legendary);
         }
         
         .case-legendary .case-header {
             background: rgba(243, 156, 18, 0.2);
+        }
+        
+        .case-legendary .case-win-display {
+            border: 1px solid var(--case-legendary);
         }
         
         .open-case-btn {
@@ -362,6 +410,166 @@
         
         .open-case-btn:hover {
             background: var(--accent-dark);
+        }
+        
+        /* Case Details */
+        .case-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .case-preview {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        .case-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        
+        .case-card {
+            aspect-ratio: 1;
+            background: var(--slot-bg);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        .case-card.flipped {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+        }
+        
+        .case-card-value {
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .case-result {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        /* Slot Details */
+        .slot-details-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .slot-info {
+            background: var(--slot-bg);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .slot-rules {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        .slot-control-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 200px;
+        }
+        
+        .control-label {
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: block;
+        }
+        
+        .bet-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .bet-option {
+            background: var(--secondary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bet-option.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        
+        .slot-grid {
+            display: grid;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+        
+        .slot-cell {
+            background: var(--secondary);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            aspect-ratio: 1;
+            min-width: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slot-symbol {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(0);
         }
         
         /* Cards Section */
@@ -738,6 +946,15 @@
             animation: bounce 1s;
         }
         
+        @keyframes scroll {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        
+        .scrolling {
+            animation: scroll 0.2s linear infinite;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -759,6 +976,15 @@
                 bottom: 10px;
                 max-width: none;
             }
+            
+            .case-cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .slot-control-panel {
+                flex-direction: column;
+            }
         }
         
         @media (max-width: 480px) {
@@ -772,6 +998,11 @@
             
             .cards-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .case-cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
             }
         }
     </style>
@@ -802,8 +1033,8 @@
         <section id="slots" class="content-section active">
             <h2 class="section-title">Игровые Автоматы</h2>
             <div class="slots-container">
-                <div class="slot-machine">
-                    <div class="slot-header">Фруктовый Микс</div>
+                <div class="slot-machine" data-slot="fruit">
+                    <div class="slot-header">Фруктовый Микс 3x3</div>
                     <div class="slot-content">
                         <div class="slot-display">
                             <div class="slot-reel">🍒</div>
@@ -812,13 +1043,13 @@
                         </div>
                         <div class="slot-controls">
                             <div class="slot-bet">Ставка: 10 ₽</div>
-                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Играть</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="slot-machine">
-                    <div class="slot-header">Золотые Семь</div>
+                <div class="slot-machine" data-slot="sevens">
+                    <div class="slot-header">Золотые Семь 5x5</div>
                     <div class="slot-content">
                         <div class="slot-display">
                             <div class="slot-reel">7️⃣</div>
@@ -827,13 +1058,13 @@
                         </div>
                         <div class="slot-controls">
                             <div class="slot-bet">Ставка: 25 ₽</div>
-                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Играть</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="slot-machine">
-                    <div class="slot-header">Алмазное Безумие</div>
+                <div class="slot-machine" data-slot="diamonds">
+                    <div class="slot-header">Алмазное Безумие 9x9</div>
                     <div class="slot-content">
                         <div class="slot-display">
                             <div class="slot-reel">💎</div>
@@ -842,7 +1073,7 @@
                         </div>
                         <div class="slot-controls">
                             <div class="slot-bet">Ставка: 50 ₽</div>
-                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Играть</button>
                         </div>
                     </div>
                 </div>
@@ -859,6 +1090,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-box-open"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 50 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -868,6 +1100,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-gem"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 100 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -878,6 +1111,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-crown"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 250 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -887,6 +1121,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-medal"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 500 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -897,6 +1132,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-key"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 1,000 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -906,6 +1142,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-lock-open"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 5,000 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -916,6 +1153,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-dragon"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 10,000 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -925,6 +1163,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-infinity"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 50,000 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -934,6 +1173,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-hat-wizard"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 100,000 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -943,6 +1183,7 @@
                     <div class="case-content">
                         <div class="case-icon"><i class="fas fa-trophy"></i></div>
                         <div class="case-price"><i class="fas fa-coins"></i> 500,000 ₽</div>
+                        <div class="case-win-display">Выигрыш: 0 ₽</div>
                         <button class="open-case-btn">Открыть</button>
                     </div>
                 </div>
@@ -959,6 +1200,77 @@
                 </div>
                 <div class="cards-grid">
                     <!-- Cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Case Details Section -->
+        <section id="case-details" class="content-section">
+            <button class="back-btn"><i class="fas fa-arrow-left"></i> Назад к кейсам</button>
+            <h2 class="section-title" id="case-title">Открытие кейса</h2>
+            
+            <div class="case-details">
+                <div class="case-preview" id="case-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                
+                <div class="case-cards-grid" id="case-cards-container">
+                    <!-- Cards will be generated here -->
+                </div>
+                
+                <div class="case-result" id="case-result">
+                    <h2>Вы выиграли: <span id="case-win-amount">0</span> ₽!</h2>
+                    <button class="modal-btn" id="case-continue-btn">Продолжить</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slot Details Section -->
+        <section id="slot-details" class="content-section">
+            <button class="back-btn"><i class="fas fa-arrow-left"></i> Назад к слотам</button>
+            <h2 class="section-title" id="slot-title">Игровой Автомат</h2>
+            
+            <div class="slot-details-container">
+                <div class="slot-info">
+                    <div class="slot-rules" id="slot-rules">
+                        <h3>Правила игры:</h3>
+                        <p>Выберите размер ставки и количество линий, затем нажмите "Крутить". Если на линии выпадет 3 или более одинаковых символа подряд, вы выигрываете!</p>
+                    </div>
+                    
+                    <div class="slot-control-panel">
+                        <div class="control-group">
+                            <div class="control-label">Размер ставки:</div>
+                            <div class="bet-selector" id="bet-selector">
+                                <div class="bet-option" data-bet="10">10 ₽</div>
+                                <div class="bet-option" data-bet="25">25 ₽</div>
+                                <div class="bet-option" data-bet="50">50 ₽</div>
+                                <div class="bet-option" data-bet="100">100 ₽</div>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">Количество линий:</div>
+                            <div class="bet-selector" id="lines-selector">
+                                <div class="bet-option" data-lines="5">5 линий</div>
+                                <div class="bet-option" data-lines="10">10 линий</div>
+                                <div class="bet-option" data-lines="20">20 линий</div>
+                                <div class="bet-option" data-lines="50">50 линий</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slot-grid" id="slot-grid">
+                        <!-- Slot grid will be generated here -->
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="spin-btn" id="slot-spin-btn" style="font-size: 20px; padding: 15px 40px;">
+                            <i class="fas fa-play"></i> Крутить
+                        </button>
+                        <div class="slot-bet" style="margin-top: 15px; font-size: 18px;">
+                            Общая ставка: <span id="total-bet">50</span> ₽
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1052,6 +1364,12 @@
                 cards: [],
                 selected: [],
                 matched: false
+            },
+            currentCase: null,
+            currentSlot: null,
+            slotConfig: {
+                bet: 50,
+                lines: 10
             }
         };
         
@@ -1059,7 +1377,7 @@
         const balanceEl = document.querySelector('.balance');
         const tabs = document.querySelectorAll('.tab');
         const contentSections = document.querySelectorAll('.content-section');
-        const spinButtons = document.querySelectorAll('.spin-btn');
+        const slotMachines = document.querySelectorAll('.slot-machine');
         const caseButtons = document.querySelectorAll('.open-case-btn');
         const startGameBtn = document.querySelector('.start-game-btn');
         const cardsGrid = document.querySelector('.cards-grid');
@@ -1076,11 +1394,75 @@
         const adminClose = document.querySelector('.admin-close');
         const adminAmount = document.getElementById('adminAmount');
         const adminAddBtn = document.getElementById('adminAddBtn');
+        const backButtons = document.querySelectorAll('.back-btn');
+        const caseTitle = document.getElementById('case-title');
+        const caseIcon = document.getElementById('case-icon');
+        const caseCardsContainer = document.getElementById('case-cards-container');
+        const caseResult = document.getElementById('case-result');
+        const caseWinAmount = document.getElementById('case-win-amount');
+        const caseContinueBtn = document.getElementById('case-continue-btn');
+        const slotTitle = document.getElementById('slot-title');
+        const slotRules = document.getElementById('slot-rules');
+        const slotGrid = document.getElementById('slot-grid');
+        const betSelector = document.getElementById('bet-selector');
+        const linesSelector = document.getElementById('lines-selector');
+        const totalBetEl = document.getElementById('total-bet');
+        const slotSpinBtn = document.getElementById('slot-spin-btn');
+        
+        // Slot configurations
+        const slotTypes = {
+            fruit: {
+                name: "Фруктовый Микс 3x3",
+                icon: "🍒",
+                size: 3,
+                symbols: ['🍒', '🍋', '🍇', '🍉', '🍊', '⭐', '7️⃣', '🔔', '💎'],
+                rules: "Выигрышные комбинации: 3 одинаковых символа на линии. Особые символы: 💎 (x50), 7️⃣ (x20)"
+            },
+            sevens: {
+                name: "Золотые Семь 5x5",
+                icon: "7️⃣",
+                size: 5,
+                symbols: ['7️⃣', '💰', '💎', '🔔', '🍒', '🍋', '⭐', '🍇', '🔶'],
+                rules: "Выигрышные комбинации: 3-5 одинаковых символов на линии. Особые символы: 7️⃣ (x100), 💰 (x50)"
+            },
+            diamonds: {
+                name: "Алмазное Безумие 9x9",
+                icon: "💎",
+                size: 9,
+                symbols: ['💎', '💰', '👑', '🏆', '💍', '🔶', '🔷', '🪙', '💸'],
+                rules: "Выигрышные комбинации: 5-9 одинаковых символов на линии. Особые символы: 💎 (x500), 👑 (x200)"
+            }
+        };
+        
+        // Case configurations
+        const caseTypes = {
+            common: {
+                minWin: 10,
+                maxWin: 200,
+                multiplier: 2
+            },
+            rare: {
+                minWin: 50,
+                maxWin: 1000,
+                multiplier: 3
+            },
+            epic: {
+                minWin: 200,
+                maxWin: 5000,
+                multiplier: 5
+            },
+            legendary: {
+                minWin: 1000,
+                maxWin: 50000,
+                multiplier: 10
+            }
+        };
         
         // Initialize
         function init() {
             updateBalance();
             setupEventListeners();
+            updateTotalBet();
             
             // Show tutorial if not completed
             if (!state.tutorialCompleted) {
@@ -1104,17 +1486,19 @@
                 });
             });
             
-            // Slot spin buttons
-            spinButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const slotMachine = button.closest('.slot-machine');
-                    playSlot(slotMachine);
+            // Slot selection
+            slotMachines.forEach(slot => {
+                slot.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('spin-btn')) return;
+                    const slotType = slot.getAttribute('data-slot');
+                    openSlot(slotType);
                 });
             });
             
             // Case open buttons
             caseButtons.forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const caseItem = button.closest('.case-item');
                     openCase(caseItem);
                 });
@@ -1162,6 +1546,49 @@
                 adminAmount.value = '';
             });
             
+            // Back buttons
+            backButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (state.currentSlot) {
+                        switchTab('slots');
+                    } else if (state.currentCase) {
+                        switchTab('cases');
+                    }
+                });
+            });
+            
+            // Case continue button
+            caseContinueBtn.addEventListener('click', () => {
+                switchTab('cases');
+            });
+            
+            // Slot bet selection
+            betSelector.querySelectorAll('.bet-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    betSelector.querySelectorAll('.bet-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    option.classList.add('active');
+                    state.slotConfig.bet = parseInt(option.getAttribute('data-bet'));
+                    updateTotalBet();
+                });
+            });
+            
+            // Slot lines selection
+            linesSelector.querySelectorAll('.bet-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    linesSelector.querySelectorAll('.bet-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    option.classList.add('active');
+                    state.slotConfig.lines = parseInt(option.getAttribute('data-lines'));
+                    updateTotalBet();
+                });
+            });
+            
+            // Slot spin button
+            slotSpinBtn.addEventListener('click', playSlotGame);
+            
             // Secret key combination to show admin panel (Ctrl+Alt+A)
             document.addEventListener('keydown', (e) => {
                 if (e.ctrlKey && e.altKey && e.key === 'a') {
@@ -1196,69 +1623,11 @@
             });
             
             state.currentTab = tabId;
+            state.currentCase = null;
+            state.currentSlot = null;
         }
         
-        // Slot game logic
-        function playSlot(slotMachine) {
-            const betElement = slotMachine.querySelector('.slot-bet');
-            const betAmount = parseInt(betElement.textContent.match(/\d+/)[0]);
-            
-            // Check if user has enough balance
-            if (state.balance < betAmount) {
-                showResult("Недостаточно средств", false);
-                return;
-            }
-            
-            // Deduct bet from balance
-            state.balance -= betAmount;
-            updateBalance();
-            
-            // Get reels
-            const reels = slotMachine.querySelectorAll('.slot-reel');
-            
-            // Add spinning animation
-            reels.forEach(reel => {
-                reel.classList.add('spinning');
-            });
-            
-            // Generate results
-            setTimeout(() => {
-                reels.forEach(reel => {
-                    reel.classList.remove('spinning');
-                    
-                    // Generate random symbol
-                    const symbols = ['🍒', '🍋', '🍇', '🍉', '🍊', '⭐', '7️⃣', '🔔', '💎'];
-                    const randomIndex = Math.floor(Math.random() * symbols.length);
-                    reel.textContent = symbols[randomIndex];
-                });
-                
-                // Check for win
-                checkSlotWin(slotMachine, betAmount);
-            }, 1500);
-        }
-        
-        function checkSlotWin(slotMachine, betAmount) {
-            const reels = slotMachine.querySelectorAll('.slot-reel');
-            const symbols = Array.from(reels).map(reel => reel.textContent);
-            
-            // Check if all symbols are the same
-            if (symbols[0] === symbols[1] && symbols[1] === symbols[2]) {
-                // Win - payout based on symbol
-                let multiplier = 5;
-                if (symbols[0] === '7️⃣') multiplier = 20;
-                if (symbols[0] === '💎') multiplier = 50;
-                
-                const winAmount = betAmount * multiplier;
-                state.balance += winAmount;
-                updateBalance();
-                showResult(`Вы выиграли ${winAmount.toLocaleString('ru-RU')} ₽!`, true);
-            } else {
-                // Loss
-                showResult("Повезет в следующий раз!", false);
-            }
-        }
-        
-        // Case opening logic
+        // Open case details
         function openCase(caseItem) {
             const priceElement = caseItem.querySelector('.case-price');
             const casePrice = parseInt(priceElement.textContent.match(/[\d,]+/)[0].replace(/,/g, ''));
@@ -1273,40 +1642,221 @@
             state.balance -= casePrice;
             updateBalance();
             
-            // Add opening animation
-            caseItem.classList.add('pulse');
+            // Determine case type
+            let caseType = "common";
+            if (caseItem.classList.contains('case-rare')) caseType = "rare";
+            if (caseItem.classList.contains('case-epic')) caseType = "epic";
+            if (caseItem.classList.contains('case-legendary')) caseType = "legendary";
             
-            setTimeout(() => {
-                caseItem.classList.remove('pulse');
+            // Store current case
+            state.currentCase = {
+                element: caseItem,
+                price: casePrice,
+                name: caseItem.querySelector('.case-header').textContent,
+                icon: caseItem.querySelector('.case-icon').innerHTML,
+                type: caseType
+            };
+            
+            // Switch to case details tab
+            switchTab('case-details');
+            setupCaseGame();
+        }
+        
+        // Setup case game
+        function setupCaseGame() {
+            caseTitle.textContent = state.currentCase.name;
+            caseIcon.innerHTML = state.currentCase.icon;
+            caseCardsContainer.innerHTML = '';
+            caseResult.style.display = 'none';
+            
+            // Create card values: 3 sets of 3 identical values
+            const values = [];
+            const uniqueValues = [];
+            const caseConfig = caseTypes[state.currentCase.type];
+            
+            for (let i = 0; i < 3; i++) {
+                const value = Math.floor(Math.random() * (caseConfig.maxWin - caseConfig.minWin + 1)) + caseConfig.minWin;
+                uniqueValues.push(value);
                 
-                // Determine case win based on price
-                let minWin, maxWin;
-                
-                if (casePrice <= 100) {
-                    minWin = 10;
-                    maxWin = 200;
-                } else if (casePrice <= 500) {
-                    minWin = 50;
-                    maxWin = 1000;
-                } else if (casePrice <= 5000) {
-                    minWin = 200;
-                    maxWin = 5000;
-                } else {
-                    minWin = 1000;
-                    maxWin = 50000;
+                for (let j = 0; j < 3; j++) {
+                    values.push(value);
                 }
-                
-                // Calculate win
-                const winAmount = Math.floor(Math.random() * (maxWin - minWin + 1)) + minWin;
+            }
+            
+            // Shuffle values
+            shuffleArray(values);
+            
+            // Create cards
+            values.forEach((value, index) => {
+                const card = document.createElement('div');
+                card.className = 'case-card';
+                card.dataset.value = value;
+                card.innerHTML = `<div class="case-card-value">${value} ₽</div>`;
+                card.addEventListener('click', () => flipCaseCard(card));
+                caseCardsContainer.appendChild(card);
+            });
+            
+            // Reset state for case game
+            state.caseGame = {
+                flippedCards: [],
+                matched: false,
+                values: uniqueValues
+            };
+        }
+        
+        // Flip case card
+        function flipCaseCard(card) {
+            if (card.classList.contains('flipped') || state.caseGame.flippedCards.length >= 3 || state.caseGame.matched) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            state.caseGame.flippedCards.push(card);
+            
+            if (state.caseGame.flippedCards.length === 3) {
+                setTimeout(checkCaseMatch, 500);
+            }
+        }
+        
+        // Check case match
+        function checkCaseMatch() {
+            const values = state.caseGame.flippedCards.map(card => parseInt(card.dataset.value));
+            
+            // Check if all three values are the same
+            const allEqual = values.every(val => val === values[0]);
+            const caseConfig = caseTypes[state.currentCase.type];
+            
+            if (allEqual) {
+                // Win
+                const winAmount = values[0] * caseConfig.multiplier;
                 state.balance += winAmount;
                 updateBalance();
+                state.caseGame.matched = true;
                 
-                // Add bounce animation for excitement
-                caseItem.classList.add('bounce');
-                setTimeout(() => caseItem.classList.remove('bounce'), 1000);
+                // Show result
+                caseWinAmount.textContent = winAmount.toLocaleString('ru-RU');
+                caseResult.style.display = 'block';
                 
+                // Update win display in cases section
+                const winDisplay = state.currentCase.element.querySelector('.case-win-display');
+                winDisplay.textContent = `Выигрыш: ${winAmount.toLocaleString('ru-RU')} ₽`;
+                winDisplay.style.display = 'block';
+            } else {
+                // Lose
+                state.caseGame.flippedCards.forEach(card => {
+                    card.classList.remove('flipped');
+                });
+                state.caseGame.flippedCards = [];
+                
+                // Show result
+                showResult("Не повезло! Попробуйте другой кейс.", false);
+            }
+        }
+        
+        // Open slot details
+        function openSlot(slotType) {
+            state.currentSlot = slotType;
+            const slotConfig = slotTypes[slotType];
+            
+            // Switch to slot details tab
+            switchTab('slot-details');
+            setupSlotGame(slotConfig);
+        }
+        
+        // Setup slot game
+        function setupSlotGame(slotConfig) {
+            slotTitle.textContent = slotConfig.name;
+            slotRules.innerHTML = `<h3>Правила игры:</h3><p>${slotConfig.rules}</p>`;
+            slotGrid.innerHTML = '';
+            
+            // Create slot grid
+            slotGrid.style.gridTemplateColumns = `repeat(${slotConfig.size}, 1fr)`;
+            
+            for (let i = 0; i < slotConfig.size * slotConfig.size; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'slot-cell';
+                cell.innerHTML = `<div class="slot-symbol">${slotConfig.symbols[0]}</div>`;
+                slotGrid.appendChild(cell);
+            }
+            
+            // Select first bet and lines options
+            betSelector.querySelector('.bet-option').classList.add('active');
+            linesSelector.querySelector('.bet-option').classList.add('active');
+        }
+        
+        // Update total bet
+        function updateTotalBet() {
+            const totalBet = state.slotConfig.bet * state.slotConfig.lines;
+            totalBetEl.textContent = totalBet.toLocaleString('ru-RU');
+        }
+        
+        // Play slot game
+        function playSlotGame() {
+            const slotConfig = slotTypes[state.currentSlot];
+            const totalBet = state.slotConfig.bet * state.slotConfig.lines;
+            
+            // Check if user has enough balance
+            if (state.balance < totalBet) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct bet from balance
+            state.balance -= totalBet;
+            updateBalance();
+            
+            // Disable spin button during animation
+            slotSpinBtn.disabled = true;
+            
+            // Add spinning animation
+            const cells = slotGrid.querySelectorAll('.slot-cell');
+            cells.forEach(cell => {
+                const symbol = cell.querySelector('.slot-symbol');
+                symbol.classList.add('scrolling');
+                
+                // Set random symbol after animation
+                setTimeout(() => {
+                    const randomIndex = Math.floor(Math.random() * slotConfig.symbols.length);
+                    symbol.textContent = slotConfig.symbols[randomIndex];
+                    symbol.classList.remove('scrolling');
+                }, 1000);
+            });
+            
+            // Check for win after animation
+            setTimeout(() => {
+                checkSlotWin(slotConfig);
+                slotSpinBtn.disabled = false;
+            }, 1500);
+        }
+        
+        // Check slot win
+        function checkSlotWin(slotConfig) {
+            let winAmount = 0;
+            const winMultipliers = {
+                '💎': slotConfig.size === 3 ? 50 : slotConfig.size === 5 ? 100 : 500,
+                '7️⃣': slotConfig.size === 3 ? 20 : slotConfig.size === 5 ? 50 : 100,
+                '💰': 50,
+                '👑': 200
+            };
+            
+            // Simple win check - in real slot this would be more complex
+            const symbols = slotGrid.querySelectorAll('.slot-symbol');
+            const centerIndex = Math.floor(symbols.length / 2);
+            
+            // Check center symbol for win
+            const centerSymbol = symbols[centerIndex].textContent;
+            if (winMultipliers[centerSymbol]) {
+                winAmount = state.slotConfig.bet * winMultipliers[centerSymbol];
+            }
+            
+            // Add win to balance and show result
+            if (winAmount > 0) {
+                state.balance += winAmount;
+                updateBalance();
                 showResult(`Вы выиграли ${winAmount.toLocaleString('ru-RU')} ₽!`, true);
-            }, 1000);
+            } else {
+                showResult("Повезет в следующий раз!", false);
+            }
         }
         
         // Card game logic
@@ -1468,6 +2018,15 @@
             updateBalance();
             
             showResult(`Баланс пополнен на ${amount.toLocaleString('ru-RU')} ₽`, true);
+        }
+        
+        // Utility function to shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
         
         // Initialize on load
