@@ -786,7 +786,7 @@
                 </div>
                 <div class="balance-container">
                     <i class="fas fa-coins"></i>
-                    <div class="balance">0 ₽</div>
+                    <div class="balance">2,000,000 ₽</div>
                 </div>
             </div>
             <div class="nav-tabs">
@@ -1041,8 +1041,8 @@
     <script>
         // State management
         const state = {
-            balance: 0,
-            totalDeposits: 0,
+            balance: 2000000, // 2 миллиона рублей
+            totalDeposits: 2000000,
             tutorialCompleted: localStorage.getItem('tutorialCompleted') === 'true',
             currentTab: 'slots',
             slotResults: {},
@@ -1054,25 +1054,6 @@
                 matched: false
             }
         };
-        
-        // Encryption and security functions
-        function encryptValue(value) {
-            // Simple XOR encryption for demonstration
-            const key = 0x55AA;
-            return value ^ key;
-        }
-        
-        function decryptValue(value) {
-            // XOR decryption
-            return encryptValue(value);
-        }
-        
-        function generateSecureRandom(min, max) {
-            // More secure random using cryptographic API
-            const array = new Uint32Array(1);
-            window.crypto.getRandomValues(array);
-            return min + (array[0] % (max - min + 1));
-        }
         
         // DOM Elements
         const balanceEl = document.querySelector('.balance');
@@ -1173,7 +1154,7 @@
             
             adminAddBtn.addEventListener('click', () => {
                 const amount = parseInt(adminAmount.value);
-                if (isNaN(amount) {
+                if (isNaN(amount)) {
                     showResult("Введите корректную сумму", false);
                     return;
                 }
@@ -1240,16 +1221,15 @@
                 reel.classList.add('spinning');
             });
             
-            // Generate encrypted results
+            // Generate results
             setTimeout(() => {
                 reels.forEach(reel => {
                     reel.classList.remove('spinning');
                     
-                    // Generate random symbol (encrypted)
+                    // Generate random symbol
                     const symbols = ['🍒', '🍋', '🍇', '🍉', '🍊', '⭐', '7️⃣', '🔔', '💎'];
-                    const encryptedIndex = generateSecureRandom(0, symbols.length - 1);
-                    const symbol = symbols[decryptValue(encryptedIndex)];
-                    reel.textContent = symbol;
+                    const randomIndex = Math.floor(Math.random() * symbols.length);
+                    reel.textContent = symbols[randomIndex];
                 });
                 
                 // Check for win
@@ -1269,14 +1249,9 @@
                 if (symbols[0] === '💎') multiplier = 50;
                 
                 const winAmount = betAmount * multiplier;
-                const maxWin = state.totalDeposits * 0.97; // Casino always keeps 3%
-                
-                // Ensure casino doesn't go negative
-                const actualWin = Math.min(winAmount, maxWin);
-                
-                state.balance += actualWin;
+                state.balance += winAmount;
                 updateBalance();
-                showResult(`Вы выиграли ${actualWin.toLocaleString('ru-RU')} ₽!`, true);
+                showResult(`Вы выиграли ${winAmount.toLocaleString('ru-RU')} ₽!`, true);
             } else {
                 // Loss
                 showResult("Повезет в следующий раз!", false);
@@ -1321,19 +1296,16 @@
                     maxWin = 50000;
                 }
                 
-                // Calculate win with casino profit margin
-                const winAmount = generateSecureRandom(minWin, maxWin);
-                const maxPossibleWin = state.totalDeposits * 0.97; // Casino keeps 3%
-                const actualWin = Math.min(winAmount, maxPossibleWin);
-                
-                state.balance += actualWin;
+                // Calculate win
+                const winAmount = Math.floor(Math.random() * (maxWin - minWin + 1)) + minWin;
+                state.balance += winAmount;
                 updateBalance();
                 
                 // Add bounce animation for excitement
                 caseItem.classList.add('bounce');
                 setTimeout(() => caseItem.classList.remove('bounce'), 1000);
                 
-                showResult(`Вы выиграли ${actualWin.toLocaleString('ru-RU')} ₽!`, true);
+                showResult(`Вы выиграли ${winAmount.toLocaleString('ru-RU')} ₽!`, true);
             }, 1000);
         }
         
@@ -1365,23 +1337,18 @@
         function generateCards() {
             cardsGrid.innerHTML = '';
             
-            // Create card values (10 cards with 3 pairs and 4 single)
+            // Create card values (15 cards with 5 sets of 3)
             const values = [];
-            const pairs = [50, 100, 250];
+            const sets = [50, 100, 250, 500, 1000];
             
-            // Add three pairs
-            pairs.forEach(value => {
+            // Add three of each value
+            sets.forEach(value => {
                 values.push(value, value, value);
             });
             
-            // Add four unique cards
-            for (let i = 0; i < 4; i++) {
-                values.push(generateSecureRandom(10, 500));
-            }
-            
             // Shuffle values
             for (let i = values.length - 1; i > 0; i--) {
-                const j = generateSecureRandom(0, i);
+                const j = Math.floor(Math.random() * (i + 1));
                 [values[i], values[j]] = [values[j], values[i]];
             }
             
@@ -1418,15 +1385,12 @@
             // Check if all three values are the same
             if (values[0] === values[1] && values[1] === values[2]) {
                 const winAmount = parseInt(values[0]);
-                const maxWin = state.totalDeposits * 0.97; // Casino keeps 3%
-                const actualWin = Math.min(winAmount, maxWin);
-                
-                state.balance += actualWin;
+                state.balance += winAmount;
                 updateBalance();
                 state.cardGame.matched = true;
                 
                 setTimeout(() => {
-                    showResult(`Вы нашли три карты! Выигрыш: ${actualWin.toLocaleString('ru-RU')} ₽`, true);
+                    showResult(`Вы нашли три карты! Выигрыш: ${winAmount.toLocaleString('ru-RU')} ₽`, true);
                     resetCardGame();
                 }, 1000);
             } else {
@@ -1495,13 +1459,12 @@
         
         // Admin functionality
         function adminAddFunds(amount) {
-            if (isNaN(amount) {
+            if (isNaN(amount)) {
                 showResult("Введите корректную сумму", false);
                 return;
             }
             
             state.balance += amount;
-            state.totalDeposits += amount;
             updateBalance();
             
             showResult(`Баланс пополнен на ${amount.toLocaleString('ru-RU')} ₽`, true);
