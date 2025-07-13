@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Fortune Casino</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0d0c1d;
+            --secondary: #1a1935;
+            --accent: #ffcc00;
+            --accent-dark: #e6b800;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --success: #28a745;
+            --danger: #dc3545;
+            --card-bg: #161432;
+            --slot-bg: #0f0e23;
+            --case-common: #3498db;
+            --case-rare: #9b59b6;
+            --case-epic: #e74c3c;
+            --case-legendary: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: rgba(13, 12, 29, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--accent);
+            font-size: 28px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--accent), #ff9900);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .balance-container {
+            background: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+        }
+        
+        .balance-container i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+        
+        .balance {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            background: var(--secondary);
+            border-radius: 30px;
+            padding: 5px;
+            margin-top: 15px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 204, 0, 0.1);
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        
+        /* Main Content Styles */
+        .content-section {
+            display: none;
+            padding: 30px 0;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        /* Slots Section */
+        .slots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .slot-machine {
+            background: var(--slot-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .slot-machine:hover {
+            transform: translateY(-5px);
+        }
+        
+        .slot-header {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .slot-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slot-display {
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 204, 0, 0.3);
+        }
+        
+        .slot-reel {
+            font-size: 50px;
+            width: 33.33%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .slot-reel:last-child {
+            border-right: none;
+        }
+        
+        .slot-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .slot-bet {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .spin-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spin-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Cases Section */
+        .cases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .case-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .case-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .case-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .case-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .case-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .case-price {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .case-common {
+            border-color: var(--case-common);
+        }
+        
+        .case-common .case-header {
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        .case-rare {
+            border-color: var(--case-rare);
+        }
+        
+        .case-rare .case-header {
+            background: rgba(155, 89, 182, 0.2);
+        }
+        
+        .case-epic {
+            border-color: var(--case-epic);
+        }
+        
+        .case-epic .case-header {
+            background: rgba(231, 76, 60, 0.2);
+        }
+        
+        .case-legendary {
+            border-color: var(--case-legendary);
+        }
+        
+        .case-legendary .case-header {
+            background: rgba(243, 156, 18, 0.2);
+        }
+        
+        .open-case-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .open-case-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        /* Cards Section */
+        .cards-game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+        
+        .cards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .game-cost {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .start-game-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .start-game-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+        
+        .card-item {
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        .card-item.flipped {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+        }
+        
+        .card-value {
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Result Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: var(--secondary);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent);
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--accent);
+        }
+        
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .win .result-icon {
+            color: var(--accent);
+        }
+        
+        .lose .result-icon {
+            color: var(--danger);
+        }
+        
+        .result-title {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .result-amount {
+            font-size: 40px;
+            font-weight: 800;
+            margin: 20px 0;
+            color: var(--accent);
+        }
+        
+        .modal-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        /* Tutorial */
+        .tutorial {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tutorial.active {
+            display: flex;
+        }
+        
+        .tutorial-content {
+            background: var(--secondary);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 2px solid var(--accent);
+        }
+        
+        .tutorial-step {
+            display: none;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+        }
+        
+        .tutorial-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: var(--accent);
+        }
+        
+        .tutorial-text {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .tutorial-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .tutorial-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .tutorial-skip {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tutorial-skip:hover {
+            color: var(--text);
+        }
+        
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 3000;
+            border: 2px solid var(--accent);
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-title {
+            font-size: 20px;
+            color: var(--accent);
+        }
+        
+        .admin-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .admin-input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-size: 16px;
+        }
+        
+        .admin-btn {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .admin-info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 10px;
+            background: rgba(255, 204, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(360deg); }
+        }
+        
+        .spinning {
+            animation: spin 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        .bounce {
+            animation: bounce 1s;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-tabs {
+                width: 100%;
+            }
+            
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .admin-panel {
+                right: 10px;
+                left: 10px;
+                bottom: 10px;
+                max-width: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slots-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cases-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-crown"></i>
+                    <h1>Golden Fortune Casino</h1>
+                </div>
+                <div class="balance-container">
+                    <i class="fas fa-coins"></i>
+                    <div class="balance">0 ₽</div>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <div class="tab active" data-tab="slots">Слоты</div>
+                <div class="tab" data-tab="cases">Кейсы</div>
+                <div class="tab" data-tab="cards">Карточки</div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Slots Section -->
+        <section id="slots" class="content-section active">
+            <h2 class="section-title">Игровые Автоматы</h2>
+            <div class="slots-container">
+                <div class="slot-machine">
+                    <div class="slot-header">Фруктовый Микс</div>
+                    <div class="slot-content">
+                        <div class="slot-display">
+                            <div class="slot-reel">🍒</div>
+                            <div class="slot-reel">🍋</div>
+                            <div class="slot-reel">🍇</div>
+                        </div>
+                        <div class="slot-controls">
+                            <div class="slot-bet">Ставка: 10 ₽</div>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slot-machine">
+                    <div class="slot-header">Золотые Семь</div>
+                    <div class="slot-content">
+                        <div class="slot-display">
+                            <div class="slot-reel">7️⃣</div>
+                            <div class="slot-reel">7️⃣</div>
+                            <div class="slot-reel">7️⃣</div>
+                        </div>
+                        <div class="slot-controls">
+                            <div class="slot-bet">Ставка: 25 ₽</div>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slot-machine">
+                    <div class="slot-header">Алмазное Безумие</div>
+                    <div class="slot-content">
+                        <div class="slot-display">
+                            <div class="slot-reel">💎</div>
+                            <div class="slot-reel">💎</div>
+                            <div class="slot-reel">💎</div>
+                        </div>
+                        <div class="slot-controls">
+                            <div class="slot-bet">Ставка: 50 ₽</div>
+                            <button class="spin-btn"><i class="fas fa-play"></i> Крутить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cases Section -->
+        <section id="cases" class="content-section">
+            <h2 class="section-title">Коллекционные Кейсы</h2>
+            <div class="cases-container">
+                <!-- Common Cases -->
+                <div class="case-item case-common">
+                    <div class="case-header">Начинающий Удачливый</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-box-open"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 50 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-common">
+                    <div class="case-header">Бронзовый Сундук</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-gem"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 100 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <!-- Rare Cases -->
+                <div class="case-item case-rare">
+                    <div class="case-header">Серебряный Ларец</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-crown"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 250 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-rare">
+                    <div class="case-header">Золотой Кладезь</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-medal"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 500 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <!-- Epic Cases -->
+                <div class="case-item case-epic">
+                    <div class="case-header">Платиновый Сейф</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-key"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 1,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-epic">
+                    <div class="case-header">Аметистовый Тайник</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-lock-open"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 5,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <!-- Legendary Cases -->
+                <div class="case-item case-legendary">
+                    <div class="case-header">Изумрудный Хранилище</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-dragon"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 10,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-legendary">
+                    <div class="case-header">Бриллиантовый Сокровищница</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-infinity"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 50,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-legendary">
+                    <div class="case-header">Мифический Артефакт</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-hat-wizard"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 100,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+                
+                <div class="case-item case-legendary">
+                    <div class="case-header">Легенда Казино</div>
+                    <div class="case-content">
+                        <div class="case-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="case-price"><i class="fas fa-coins"></i> 500,000 ₽</div>
+                        <button class="open-case-btn">Открыть</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cards Section -->
+        <section id="cards" class="content-section">
+            <h2 class="section-title">Карточная Игра</h2>
+            <div class="cards-game-container">
+                <div class="cards-header">
+                    <div class="game-cost"><i class="fas fa-coins"></i> Стоимость игры: 100 ₽</div>
+                    <button class="start-game-btn"><i class="fas fa-play"></i> Начать игру</button>
+                </div>
+                <div class="cards-grid">
+                    <!-- Cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Result Modal -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="result-icon"><i class="fas fa-trophy"></i></div>
+            <h2 class="result-title">Поздравляем!</h2>
+            <p>Вы выиграли:</p>
+            <div class="result-amount">+1,500 ₽</div>
+            <button class="modal-btn">Продолжить</button>
+        </div>
+    </div>
+    
+    <!-- Tutorial Modal -->
+    <div class="tutorial" id="tutorial">
+        <div class="tutorial-content">
+            <div class="tutorial-step active" data-step="1">
+                <h2 class="tutorial-title">Добро пожаловать в Golden Fortune Casino!</h2>
+                <p class="tutorial-text">Мы рады приветствовать вас в нашем казино. Прежде чем начать играть, давайте познакомимся с правилами и особенностями нашей платформы.</p>
+                <p class="tutorial-text">Это краткое обучение поможет вам разобраться в основных функциях и играх нашего казино.</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn next-step">Далее</button>
+                    <button class="tutorial-skip"><i class="fas fa-times"></i> Пропустить обучение</button>
+                </div>
+            </div>
+            
+            <div class="tutorial-step" data-step="2">
+                <h2 class="tutorial-title">Раздел: Игровые Автоматы</h2>
+                <p class="tutorial-text">В разделе "Слоты" вы найдете различные игровые автоматы с уникальными тематиками и ставками.</p>
+                <p class="tutorial-text">Выберите автомат, установите ставку и нажмите "Крутить". Если символы выстроятся в выигрышную комбинацию - вы получите приз!</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn prev-step">Назад</button>
+                    <button class="tutorial-btn next-step">Далее</button>
+                </div>
+            </div>
+            
+            <div class="tutorial-step" data-step="3">
+                <h2 class="tutorial-title">Раздел: Коллекционные Кейсы</h2>
+                <p class="tutorial-text">В разделе "Кейсы" вас ждут увлекательные коллекционные наборы с ценными призами.</p>
+                <p class="tutorial-text">Каждый кейс имеет свою стоимость и уникальные награды. Чем дороже кейс - тем ценнее могут быть призы внутри!</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn prev-step">Назад</button>
+                    <button class="tutorial-btn next-step">Далее</button>
+                </div>
+            </div>
+            
+            <div class="tutorial-step" data-step="4">
+                <h2 class="tutorial-title">Раздел: Карточная Игра</h2>
+                <p class="tutorial-text">В разделе "Карточки" вас ждет интересная игра на память и удачу.</p>
+                <p class="tutorial-text">Вам предстоит найти три карточки с одинаковыми значениями. Каждая игра стоит 100 рублей, а выигрыш равен сумме на найденных карточках.</p>
+                <div class="tutorial-buttons">
+                    <button class="tutorial-btn prev-step">Назад</button>
+                    <button class="tutorial-btn" id="finish-tutorial">Начать играть!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <div class="admin-title">Административная панель</div>
+            <button class="admin-close">&times;</button>
+        </div>
+        <div class="admin-form">
+            <input type="number" class="admin-input" id="adminAmount" placeholder="Сумма пополнения">
+            <button class="admin-btn" id="adminAddBtn">Пополнить баланс</button>
+        </div>
+        <div class="admin-info">
+            <p><i class="fas fa-info-circle"></i> Также можно использовать консоль:</p>
+            <p>adminAddFunds(сумма)</p>
+            <p>Пример: adminAddFunds(10000)</p>
+        </div>
+    </div>
+    
+    <script>
+        // State management
+        const state = {
+            balance: 0,
+            totalDeposits: 0,
+            tutorialCompleted: localStorage.getItem('tutorialCompleted') === 'true',
+            currentTab: 'slots',
+            slotResults: {},
+            caseItems: {},
+            cardGame: {
+                started: false,
+                cards: [],
+                selected: [],
+                matched: false
+            }
+        };
+        
+        // Encryption and security functions
+        function encryptValue(value) {
+            // Simple XOR encryption for demonstration
+            const key = 0x55AA;
+            return value ^ key;
+        }
+        
+        function decryptValue(value) {
+            // XOR decryption
+            return encryptValue(value);
+        }
+        
+        function generateSecureRandom(min, max) {
+            // More secure random using cryptographic API
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array);
+            return min + (array[0] % (max - min + 1));
+        }
+        
+        // DOM Elements
+        const balanceEl = document.querySelector('.balance');
+        const tabs = document.querySelectorAll('.tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        const spinButtons = document.querySelectorAll('.spin-btn');
+        const caseButtons = document.querySelectorAll('.open-case-btn');
+        const startGameBtn = document.querySelector('.start-game-btn');
+        const cardsGrid = document.querySelector('.cards-grid');
+        const resultModal = document.getElementById('resultModal');
+        const modalClose = document.querySelector('.modal-close');
+        const modalBtn = document.querySelector('.modal-btn');
+        const tutorialModal = document.getElementById('tutorial');
+        const tutorialSteps = document.querySelectorAll('.tutorial-step');
+        const nextButtons = document.querySelectorAll('.next-step');
+        const prevButtons = document.querySelectorAll('.prev-step');
+        const skipTutorial = document.querySelector('.tutorial-skip');
+        const finishTutorial = document.getElementById('finish-tutorial');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminClose = document.querySelector('.admin-close');
+        const adminAmount = document.getElementById('adminAmount');
+        const adminAddBtn = document.getElementById('adminAddBtn');
+        
+        // Initialize
+        function init() {
+            updateBalance();
+            setupEventListeners();
+            
+            // Show tutorial if not completed
+            if (!state.tutorialCompleted) {
+                tutorialModal.classList.add('active');
+                showTutorialStep(1);
+            }
+        }
+        
+        // Update balance display
+        function updateBalance() {
+            balanceEl.textContent = `${state.balance.toLocaleString('ru-RU')} ₽`;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Tab navigation
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Slot spin buttons
+            spinButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const slotMachine = button.closest('.slot-machine');
+                    playSlot(slotMachine);
+                });
+            });
+            
+            // Case open buttons
+            caseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const caseItem = button.closest('.case-item');
+                    openCase(caseItem);
+                });
+            });
+            
+            // Card game start
+            startGameBtn.addEventListener('click', startCardGame);
+            
+            // Modal close
+            modalClose.addEventListener('click', closeResultModal);
+            modalBtn.addEventListener('click', closeResultModal);
+            
+            // Tutorial navigation
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const currentStep = document.querySelector('.tutorial-step.active');
+                    const nextStep = parseInt(currentStep.getAttribute('data-step')) + 1;
+                    showTutorialStep(nextStep);
+                });
+            });
+            
+            prevButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const currentStep = document.querySelector('.tutorial-step.active');
+                    const prevStep = parseInt(currentStep.getAttribute('data-step')) - 1;
+                    showTutorialStep(prevStep);
+                });
+            });
+            
+            skipTutorial.addEventListener('click', finishTutorialFlow);
+            finishTutorial.addEventListener('click', finishTutorialFlow);
+            
+            // Admin panel
+            adminClose.addEventListener('click', () => {
+                adminPanel.style.display = 'none';
+            });
+            
+            adminAddBtn.addEventListener('click', () => {
+                const amount = parseInt(adminAmount.value);
+                if (isNaN(amount) {
+                    showResult("Введите корректную сумму", false);
+                    return;
+                }
+                adminAddFunds(amount);
+                adminAmount.value = '';
+            });
+            
+            // Secret key combination to show admin panel (Ctrl+Alt+A)
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.altKey && e.key === 'a') {
+                    adminPanel.style.display = 'block';
+                }
+                
+                // Close with ESC
+                if (e.key === 'Escape') {
+                    adminPanel.style.display = 'none';
+                }
+            });
+        }
+        
+        // Switch tabs
+        function switchTab(tabId) {
+            // Update active tab
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Show active section
+            contentSections.forEach(section => {
+                if (section.id === tabId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            
+            state.currentTab = tabId;
+        }
+        
+        // Slot game logic
+        function playSlot(slotMachine) {
+            const betElement = slotMachine.querySelector('.slot-bet');
+            const betAmount = parseInt(betElement.textContent.match(/\d+/)[0]);
+            
+            // Check if user has enough balance
+            if (state.balance < betAmount) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct bet from balance
+            state.balance -= betAmount;
+            updateBalance();
+            
+            // Get reels
+            const reels = slotMachine.querySelectorAll('.slot-reel');
+            
+            // Add spinning animation
+            reels.forEach(reel => {
+                reel.classList.add('spinning');
+            });
+            
+            // Generate encrypted results
+            setTimeout(() => {
+                reels.forEach(reel => {
+                    reel.classList.remove('spinning');
+                    
+                    // Generate random symbol (encrypted)
+                    const symbols = ['🍒', '🍋', '🍇', '🍉', '🍊', '⭐', '7️⃣', '🔔', '💎'];
+                    const encryptedIndex = generateSecureRandom(0, symbols.length - 1);
+                    const symbol = symbols[decryptValue(encryptedIndex)];
+                    reel.textContent = symbol;
+                });
+                
+                // Check for win
+                checkSlotWin(slotMachine, betAmount);
+            }, 1500);
+        }
+        
+        function checkSlotWin(slotMachine, betAmount) {
+            const reels = slotMachine.querySelectorAll('.slot-reel');
+            const symbols = Array.from(reels).map(reel => reel.textContent);
+            
+            // Check if all symbols are the same
+            if (symbols[0] === symbols[1] && symbols[1] === symbols[2]) {
+                // Win - payout based on symbol
+                let multiplier = 5;
+                if (symbols[0] === '7️⃣') multiplier = 20;
+                if (symbols[0] === '💎') multiplier = 50;
+                
+                const winAmount = betAmount * multiplier;
+                const maxWin = state.totalDeposits * 0.97; // Casino always keeps 3%
+                
+                // Ensure casino doesn't go negative
+                const actualWin = Math.min(winAmount, maxWin);
+                
+                state.balance += actualWin;
+                updateBalance();
+                showResult(`Вы выиграли ${actualWin.toLocaleString('ru-RU')} ₽!`, true);
+            } else {
+                // Loss
+                showResult("Повезет в следующий раз!", false);
+            }
+        }
+        
+        // Case opening logic
+        function openCase(caseItem) {
+            const priceElement = caseItem.querySelector('.case-price');
+            const casePrice = parseInt(priceElement.textContent.match(/[\d,]+/)[0].replace(/,/g, ''));
+            
+            // Check if user has enough balance
+            if (state.balance < casePrice) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct case price from balance
+            state.balance -= casePrice;
+            updateBalance();
+            
+            // Add opening animation
+            caseItem.classList.add('pulse');
+            
+            setTimeout(() => {
+                caseItem.classList.remove('pulse');
+                
+                // Determine case win based on price
+                let minWin, maxWin;
+                
+                if (casePrice <= 100) {
+                    minWin = 10;
+                    maxWin = 200;
+                } else if (casePrice <= 500) {
+                    minWin = 50;
+                    maxWin = 1000;
+                } else if (casePrice <= 5000) {
+                    minWin = 200;
+                    maxWin = 5000;
+                } else {
+                    minWin = 1000;
+                    maxWin = 50000;
+                }
+                
+                // Calculate win with casino profit margin
+                const winAmount = generateSecureRandom(minWin, maxWin);
+                const maxPossibleWin = state.totalDeposits * 0.97; // Casino keeps 3%
+                const actualWin = Math.min(winAmount, maxPossibleWin);
+                
+                state.balance += actualWin;
+                updateBalance();
+                
+                // Add bounce animation for excitement
+                caseItem.classList.add('bounce');
+                setTimeout(() => caseItem.classList.remove('bounce'), 1000);
+                
+                showResult(`Вы выиграли ${actualWin.toLocaleString('ru-RU')} ₽!`, true);
+            }, 1000);
+        }
+        
+        // Card game logic
+        function startCardGame() {
+            // Check if user has enough balance
+            if (state.balance < 100) {
+                showResult("Недостаточно средств", false);
+                return;
+            }
+            
+            // Deduct game cost
+            state.balance -= 100;
+            updateBalance();
+            
+            // Reset game state
+            state.cardGame.started = true;
+            state.cardGame.selected = [];
+            state.cardGame.matched = false;
+            
+            // Generate cards
+            generateCards();
+            
+            // Update button
+            startGameBtn.textContent = "Игра началась!";
+            startGameBtn.disabled = true;
+        }
+        
+        function generateCards() {
+            cardsGrid.innerHTML = '';
+            
+            // Create card values (10 cards with 3 pairs and 4 single)
+            const values = [];
+            const pairs = [50, 100, 250];
+            
+            // Add three pairs
+            pairs.forEach(value => {
+                values.push(value, value, value);
+            });
+            
+            // Add four unique cards
+            for (let i = 0; i < 4; i++) {
+                values.push(generateSecureRandom(10, 500));
+            }
+            
+            // Shuffle values
+            for (let i = values.length - 1; i > 0; i--) {
+                const j = generateSecureRandom(0, i);
+                [values[i], values[j]] = [values[j], values[i]];
+            }
+            
+            // Create card elements
+            values.forEach((value, index) => {
+                const card = document.createElement('div');
+                card.className = 'card-item';
+                card.dataset.index = index;
+                card.dataset.value = value;
+                
+                card.innerHTML = `<div class="card-value">${value} ₽</div>`;
+                
+                card.addEventListener('click', () => flipCard(card));
+                cardsGrid.appendChild(card);
+            });
+        }
+        
+        function flipCard(card) {
+            if (!state.cardGame.started || card.classList.contains('flipped') || state.cardGame.selected.length >= 3) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            state.cardGame.selected.push(card);
+            
+            if (state.cardGame.selected.length === 3) {
+                checkCardMatch();
+            }
+        }
+        
+        function checkCardMatch() {
+            const values = state.cardGame.selected.map(card => card.dataset.value);
+            
+            // Check if all three values are the same
+            if (values[0] === values[1] && values[1] === values[2]) {
+                const winAmount = parseInt(values[0]);
+                const maxWin = state.totalDeposits * 0.97; // Casino keeps 3%
+                const actualWin = Math.min(winAmount, maxWin);
+                
+                state.balance += actualWin;
+                updateBalance();
+                state.cardGame.matched = true;
+                
+                setTimeout(() => {
+                    showResult(`Вы нашли три карты! Выигрыш: ${actualWin.toLocaleString('ru-RU')} ₽`, true);
+                    resetCardGame();
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    state.cardGame.selected.forEach(card => {
+                        card.classList.remove('flipped');
+                    });
+                    state.cardGame.selected = [];
+                }, 1000);
+            }
+        }
+        
+        function resetCardGame() {
+            setTimeout(() => {
+                cardsGrid.innerHTML = '';
+                state.cardGame.started = false;
+                startGameBtn.textContent = "Начать игру";
+                startGameBtn.disabled = false;
+            }, 2000);
+        }
+        
+        // Result modal
+        function showResult(message, isWin) {
+            const modal = document.getElementById('resultModal');
+            const icon = modal.querySelector('.result-icon');
+            const title = modal.querySelector('.result-title');
+            const amount = modal.querySelector('.result-amount');
+            
+            // Update content based on win/loss
+            if (isWin) {
+                modal.classList.add('win');
+                icon.innerHTML = '<i class="fas fa-trophy"></i>';
+                title.textContent = 'Поздравляем!';
+            } else {
+                modal.classList.add('lose');
+                icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                title.textContent = 'Увы...';
+            }
+            
+            amount.textContent = message;
+            modal.classList.add('active');
+        }
+        
+        function closeResultModal() {
+            resultModal.classList.remove('active');
+            resultModal.classList.remove('win');
+            resultModal.classList.remove('lose');
+        }
+        
+        // Tutorial functions
+        function showTutorialStep(step) {
+            tutorialSteps.forEach(stepEl => {
+                if (parseInt(stepEl.getAttribute('data-step')) === step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            });
+        }
+        
+        function finishTutorialFlow() {
+            tutorialModal.classList.remove('active');
+            state.tutorialCompleted = true;
+            localStorage.setItem('tutorialCompleted', 'true');
+        }
+        
+        // Admin functionality
+        function adminAddFunds(amount) {
+            if (isNaN(amount) {
+                showResult("Введите корректную сумму", false);
+                return;
+            }
+            
+            state.balance += amount;
+            state.totalDeposits += amount;
+            updateBalance();
+            
+            showResult(`Баланс пополнен на ${amount.toLocaleString('ru-RU')} ₽`, true);
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+        
+        // Expose admin function to console
+        window.adminAddFunds = adminAddFunds;
+        
+        // Admin help in console
+        console.log("%cАдминистративные функции доступны:", "font-size: 16px; color: #ffcc00; font-weight: bold;");
+        console.log("1. Используйте функцию adminAddFunds(сумма) для пополнения баланса");
+        console.log("2. Или нажмите Ctrl+Alt+A для открытия панели администратора");
+        console.log("Пример: adminAddFunds(5000) - пополнит баланс на 5000 рублей");
+    </script>
+</body>
+</html>
