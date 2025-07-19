@@ -1076,16 +1076,16 @@
       "2316": 7800
     };
     
-    // Веса параметров (сумма = 1.0)
+    // Веса параметров (сумма = 1.0) - вернул к предыдущим значениям
     const WEIGHTS = {
-      system: 0.35,   // Тип литниковой системы (самый высокий вес)
-      vytalk: 0.25,   // Выталкивание (высокий вес)
-      polzun: 0.15,   // Ползуны
-      vivinch: 0.10,  // Вывинчивание
-      material: 0.08, // Марка стали
-      volume: 0.05,   // Габариты (низкий вес)
-      naklon: 0.01,   // Наклонные толкатели
-      sriv: 0.01,     // Срывом
+      system: 0.30,   // Тип литниковой системы (высокий вес)
+      vytalk: 0.20,   // Выталкивание (высокий вес)
+      polzun: 0.15,   // Ползуны (средний вес)
+      vivinch: 0.15,  // Вывинчивание (средний вес)
+      volume: 0.08,   // Габариты (низкий вес)
+      material: 0.05, // Марка стали (низкий вес)
+      naklon: 0.04,   // Наклонные толкатели (низкий вес)
+      sriv: 0.03,     // Срывом (низкий вес)
       nests: 0.00     // Число гнезд (практически не влияет)
     };
     
@@ -1726,6 +1726,427 @@
           sriv: false,
           vytalk: "Одинарное",
           cost: 220000
+        },
+        // Новые пресс-формы
+        {
+          name: "Механические ползуны",
+          rfq: "201",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [250, 350, 300],
+          material: "420",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 41150
+        },
+        {
+          name: "Корпус + корпус",
+          rfq: "204",
+          gnezda: "1*2",
+          system: "холодноканальная",
+          dimensions: [300, 350, 300],
+          material: "718H",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 49200
+        },
+        {
+          name: "крышка",
+          rfq: "205",
+          gnezda: "1*1",
+          system: "горячеканальная",
+          dimensions: [250, 250, 320],
+          material: "718H",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: true,
+          vytalk: "Двойное",
+          cost: 61900
+        },
+        {
+          name: "Кредл-вкладыш",
+          rfq: "206",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [350, 350, 450],
+          material: "P20",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 48000
+        },
+        {
+          name: "Стакан защитный",
+          rfq: "209",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [450, 450, 480],
+          material: "H13",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 94000
+        },
+        {
+          name: "213К-2.04.01.00_Resonator case (Part 1)",
+          rfq: "210",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [425, 300, 485],
+          material: "420",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 55000
+        },
+        {
+          name: "Insert",
+          rfq: "211",
+          gnezda: "1*2",
+          system: "горячеканальная",
+          dimensions: [300, 450, 450],
+          material: "738H",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 80000
+        },
+        {
+          name: "Держатель",
+          rfq: "212",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [250, 300, 320],
+          material: "420",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 88140
+        },
+        {
+          name: "Верхняя крышка",
+          rfq: "213",
+          gnezda: "1*1",
+          system: "горячеканальная",
+          dimensions: [300, 400, 330],
+          material: "420",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Двойное",
+          cost: 63600
+        },
+        {
+          name: "Coil frame",
+          rfq: "214",
+          gnezda: "1*2",
+          system: "холодноканальная",
+          dimensions: [450, 450, 420],
+          material: "420",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 85000
+        },
+        {
+          name: "Корпус СМТ-smart",
+          rfq: "215_НОРД",
+          gnezda: "1*2",
+          system: "холодноканальная",
+          dimensions: [500, 550, 450],
+          material: "H13",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 96500
+        },
+        {
+          name: "СРР-225001",
+          rfq: "216_Уральский трубный завод",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [450, 450, 450],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 53500
+        },
+        {
+          name: "Body + Cap",
+          rfq: "218 IZDELKA",
+          gnezda: "1*4",
+          system: "горячеканальная",
+          dimensions: [500, 550, 460],
+          material: "738H",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 112350
+        },
+        {
+          name: "Antenna_cover",
+          rfq: "219_Полиформ",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [350, 300, 300],
+          material: "738H",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 35000
+        },
+        {
+          name: "передняя панель + корпус",
+          rfq: "220",
+          gnezda: "1*2",
+          system: "холодноканальная",
+          dimensions: [400, 550, 450],
+          material: "718H",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 98100
+        },
+        {
+          name: "bottom PNT-36",
+          rfq: "221",
+          gnezda: "1*2",
+          system: "горячеканальная",
+          dimensions: [300, 450, 465],
+          material: "420",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 76000
+        },
+        {
+          name: "колесо лопастное",
+          rfq: "225",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [350, 400, 340],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 67800
+        },
+        {
+          name: "крышка",
+          rfq: "226",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [500, 500, 400],
+          material: "H13",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 132210
+        },
+        {
+          name: "Panel2 v40_1",
+          rfq: "228",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [350, 500, 350],
+          material: "420",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 71200
+        },
+        {
+          name: "крышка",
+          rfq: "230",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [400, 400, 400],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 86450
+        },
+        {
+          name: "1",
+          rfq: "232 Metallico",
+          gnezda: "1*6",
+          system: "холодноканальная",
+          dimensions: [350, 550, 350],
+          material: "H13",
+          polzun: true,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 94920
+        },
+        {
+          name: "blade LEFT + blade RIGHT",
+          rfq: "234",
+          gnezda: "1*2",
+          system: "горячеканальная",
+          dimensions: [600, 1000, 670],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 253900
+        },
+        {
+          name: "Floor brush ГПС-96.013",
+          rfq: "235_Brush",
+          gnezda: "2",
+          system: "холодноканальная",
+          dimensions: [350, 500, 350],
+          material: "420H",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: true,
+          vytalk: "Одинарное",
+          cost: 39500
+        },
+        {
+          name: "булавка",
+          rfq: "236",
+          gnezda: "1*2",
+          system: "холодноканальная",
+          dimensions: [285, 275, 300],
+          material: "P20",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 38000
+        },
+        {
+          name: "Keyboard-2; Bracket",
+          rfq: "238_АО «Завод им. Козицкого»",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [400, 450, 400],
+          material: "420",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 49000
+        },
+        {
+          name: "Заглушка 800",
+          rfq: "241_АО ВНИИР-Прогресс",
+          gnezda: "1*6",
+          system: "холодноканальная",
+          dimensions: [300, 350, 300],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: true,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 32000
+        },
+        {
+          name: "заглушка 21 + заглушка 41",
+          rfq: "242",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [300, 300, 300],
+          material: "738H",
+          polzun: false,
+          naklon: false,
+          vivinch: true,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 28000
+        },
+        {
+          name: "Угловой соединитель 45x45 45 серия",
+          rfq: "243",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [450, 500, 400],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 60000
+        },
+        {
+          name: "Якорь",
+          rfq: "247",
+          gnezda: "1*4",
+          system: "холодноканальная",
+          dimensions: [350, 350, 300],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: true,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 31500
+        },
+        {
+          name: "резиновая прокладка -АГ4С",
+          rfq: "249",
+          gnezda: "1*1",
+          system: "холодноканальная",
+          dimensions: [250, 250, 300],
+          material: "H13",
+          polzun: false,
+          naklon: false,
+          vivinch: false,
+          sriv: false,
+          vytalk: "Одинарное",
+          cost: 44000
         }
       ];
     }
