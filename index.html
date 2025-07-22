@@ -766,6 +766,38 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    
+    /* Новые стили для сообщения о недостатке данных */
+    .no-data-message {
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid var(--error);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .no-data-message h3 {
+      color: var(--error);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .no-data-message ul {
+      text-align: left;
+      margin: 15px 0;
+      padding-left: 20px;
+    }
+    
+    .no-data-message li {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    
+    .no-data-message .highlight {
+      color: var(--accent-light);
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -823,9 +855,9 @@
           <div class="form-group">
             <label><i class="fas fa-ruler-combined"></i> Габариты (мм):</label>
             <div class="dimensions-group">
-              <input type="number" id="length" min="50" max="3000" placeholder="Длина">
-              <input type="number" id="width" min="50" max="3000" placeholder="Ширина">
-              <input type="number" id="height" min="50" max="3000" placeholder="Высота">
+              <input type="number" id="length" min="1" max="2000" placeholder="Длина">
+              <input type="number" id="width" min="1" max="2000" placeholder="Ширина">
+              <input type="number" id="height" min="1" max="2000" placeholder="Высота">
             </div>
             <div class="note">Масса рассчитается автоматически</div>
           </div>
@@ -1787,7 +1819,7 @@
         {
           name: "Стакан защитный",
           rfq: "209",
-          gnezda: "1*1",
+          gnezда: "1*1",
           system: "холодноканальная",
           dimensions: [450, 450, 480],
           material: "H13",
@@ -2422,47 +2454,6 @@
       return Math.round(totalCost / totalWeight);
     }
     
-    // Fallback расчет
-    function fallbackCalculation(params) {
-      // Находим среднюю стоимость/объем в базе
-      const volumeCosts = moldsDatabase.map(m => {
-        const v = m.dimensions[0] * m.dimensions[1] * m.dimensions[2];
-        return m.cost / v;
-      });
-      
-      const avgCostPerVolume = volumeCosts.reduce((sum, val) => sum + val, 0) / volumeCosts.length;
-      
-      // Расчет объема
-      const volume = params.dimensions[0] * params.dimensions[1] * params.dimensions[2];
-      let cost = volume * avgCostPerVolume;
-      
-      // Коэффициенты материала
-      const materialFactors = {
-        "738H": 1.0, "420": 1.0, "P20": 1.1, 
-        "H13": 1.3, "S136": 1.5, "NAK80": 1.6, 
-        "718H": 1.2, "2316": 1.4
-      };
-      
-      // Коэффициенты системы
-      const systemFactors = {
-        "холодноканальная": 1.0,
-        "запорное сопло": 1.2,
-        "горячеканальная": 1.4,
-        "трехплитная": 1.5
-      };
-      
-      // Применяем коэффициенты
-      cost *= materialFactors[params.material] || 1.3;
-      cost *= systemFactors[params.system] || 1.2;
-      
-      // Доплаты за сложность
-      if (params.polzun) cost *= 1.25;
-      if (params.vivinch) cost *= 1.3;
-      if (params.vytalk === "Двойное") cost *= 1.15;
-      
-      return Math.round(cost);
-    }
-
     // Отображение похожих пресс-форм
     function showSimilarMolds(similarMolds, userParams) {
       const similarList = document.getElementById('similar-molds');
@@ -2572,8 +2563,9 @@
       }
 
       // Проверка габаритов
-      if (length < 50 || width < 50 || height < 50 || length > 3000 || width > 3000 || height > 3000) {
-        showError('Габариты должны быть в диапазоне 50-3000 мм!');
+      if (length <= 0 || width <= 0 || height <= 0 || 
+          length > 2000 || width > 2000 || height > 2000) {
+        showError('Габариты должны быть в диапазоне 1-2000 мм!');
         return;
       }
 
@@ -2595,8 +2587,8 @@
 
       const x = parseInt(gnezdaParts[0]);
       const y = parseInt(gnezdaParts[1]);
-      if (isNaN(x) || isNaN(y)) {
-        showError('Введите число гнезд в формате: X×Y');
+      if (isNaN(x) || isNaN(y) || x <= 0 || y <= 0) {
+        showError('Введите число гнезд в формате: X×Y (положительные числа)');
         return;
       }
 
@@ -2669,18 +2661,27 @@
       let finalCost;
       if (similarityCost !== null) {
         finalCost = similarityCost;
+        // Округление до 10000
+        finalCost = Math.round(finalCost / 10000) * 10000;
+        document.getElementById('result-value').textContent = 
+          finalCost.toLocaleString('ru-RU') + ' CNY';
       } else {
-        // Fallback расчет
-        finalCost = fallbackCalculation(userParams);
+        // Нет достаточно похожих пресс-форм
+        document.getElementById('result-value').innerHTML = 
+          '<span style="color: var(--error); font-size: 1.5rem; display: block; margin-bottom: 15px;">Недостаточно данных</span>' +
+          '<div class="no-data-message">' +
+          '<h3><i class="fas fa-exclamation-triangle"></i> Похожих пресс-форм не найдено</h3>' +
+          '<p>В базе данных нет достаточно похожих пресс-форм для расчета стоимости.</p>' +
+          '<p>Пожалуйста:</p>' +
+          '<ul>' +
+          '<li>Проверьте правильность введенных параметров</li>' +
+          '<li>Добавьте новую пресс-форму через <span class="highlight">панель администрирования</span></li>' +
+          '<li>Убедитесь, что указаны все необходимые параметры</li>' +
+          '</ul>' +
+          '<p>Если вы уверены в правильности введенных данных, свяжитесь с нами для индивидуального расчета.</p>' +
+          '</div>';
       }
 
-      // Округление до 10000
-      finalCost = Math.round(finalCost / 10000) * 10000;
-
-      // Показать результат
-      document.getElementById('result-value').textContent = 
-        finalCost.toLocaleString('ru-RU') + ' CNY';
-      
       // Показать похожие пресс-формы
       showSimilarMolds(similarMolds, userParams);
 
@@ -2743,8 +2744,9 @@
 
       // Преобразуем габариты
       const dimensions = dimensionsStr.split('x').map(Number);
-      if (dimensions.length !== 3 || dimensions.some(isNaN)) {
-        showError('Габариты должны быть в формате: 350x450x450');
+      if (dimensions.length !== 3 || dimensions.some(isNaN) || 
+          dimensions.some(dim => dim <= 0 || dim > 2000)) {
+        showError('Габариты должны быть в формате: 350x450x450 (1-2000 мм)');
         return;
       }
 
@@ -2754,8 +2756,9 @@
         const separator = gnezdaInput.includes('×') ? '×' : 
                          gnezdaInput.includes('x') ? 'x' : '*';
         const parts = gnezdaInput.split(separator);
-        if (parts.length !== 2 || isNaN(parseInt(parts[0])) || isNaN(parseInt(parts[1]))) {
-          showError('Введите число гнезд в формате: X×Y');
+        if (parts.length !== 2 || isNaN(parseInt(parts[0])) || isNaN(parseInt(parts[1])) ||
+            parseInt(parts[0]) <= 0 || parseInt(parts[1]) <= 0) {
+          showError('Введите число гнезд в формате: X×Y (положительные числа)');
           return;
         }
         gnezda = `${parts[0]}*${parts[1]}`;
